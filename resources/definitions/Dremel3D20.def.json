@@ -1,0 +1,67 @@
+{
+    "id": "Dremel3D20",
+    "version": 2,
+    "name": "Dremel 3D20",
+    "inherits": "fdmprinter",
+    "metadata": {
+        "visible": true,
+        "author": "Dremel",
+        "manufacturer": "Dremel",
+		"weight": 4,
+        "file_formats": "text/x-gcode",
+        "icon": "icon_ultimaker2",
+        "supports_usb_connection": false,
+        "machine_extruder_trains":
+        {
+            "0": "fdmextruder"
+        }
+    },
+
+    "overrides": {
+        "machine_name": { "default_value": "Dremel3D20" },
+        "machine_nozzle_size": { "default_value": 0.4 },
+        "speed_travel": { "default_value": 120 },
+        "prime_tower_size": { "default_value": 8.660254037844387 },
+        "infill_sparse_density": { "default_value": 20 },
+        "speed_wall_x": { "default_value": 45 },
+        "speed_wall_0": { "default_value": 40 },
+        "speed_topbottom": { "default_value": 35 },
+        "layer_height": { "default_value": 0.2 },
+        "speed_print": { "default_value": 50 },
+        "speed_infill": { "default_value": 60 },
+        "machine_extruder_count": { "default_value": 1 },
+        "machine_heated_bed": { "default_value": false },
+        "machine_center_is_zero": { "default_value": true },
+        "machine_height": { "default_value": 170 },
+        "machine_gcode_flavor": { "default_value": "Marlin" },
+        "machine_depth": { "default_value": 155 },
+        "machine_width": { "default_value": 255 },
+        "material_diameter": { "default_value": 1.75 },
+        "retraction_speed": {"default_value":100},
+        "cool_fan_speed_min": {"default_value": 20},
+        "cool_fan_speed_max": {"default_value": 70},
+        "adhesion_type": { "default_value": "none" },
+        "machine_head_with_fans_polygon": {
+            "default_value": [
+                [-15, -25],
+                [-15, 35],
+                [40, 35],
+                [40, -25]
+            ]
+        },
+        "gantry_height": {
+            "default_value": 30
+        },
+
+        "machine_start_gcode": {
+         "default_value":  "G90\nG28\nM132 X Y Z A\nG1 Z100 F3300\nG1 X-110.5 Y-74 F6000\nM6 T0\nM907 X100 Y100 Z40 A80\nG1 Z0.6 F3300\nG4 P2000\nM108 T0\n"
+		 },
+
+
+        "machine_end_gcode": {
+        "default_value":   "M104 S0 T0\nG1 Z140 F3300\nG28 X0 Y0\nM132 X Y Z A\nG91\nM18\n"
+        }
+    }
+}
+
+
