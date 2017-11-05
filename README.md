@@ -28,6 +28,7 @@ Please note the following:
 * The .g3drem file format is not fully understood yet - I've done a bit of reverse engineering on the file format, as described here: http://forums.reprap.org/read.php?263,785652 and have used this information to create this plugin.
 
 # Wishlist
-The following items would be great to add to this software
+The following items would be great to add to this software - as I get time I'll work on them
 * Optimized Dremel3D20 json file with support for Dremel brand PLA
 * Addition of Dremel brand PLA
+* Replace the generic bitmap with a bitmap of the actual part being printed
