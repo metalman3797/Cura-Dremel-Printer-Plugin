@@ -1,5 +1,5 @@
 # Cura-Dremel-3D20-Plugin
-Dremel Ideabuilder 3d20 plugin for Cura 3.x
+Dremel Ideabuilder 3D20 plugin for Cura 3.x
 
 # Installation
 1. To install, simply clone the repository onto your machine, then copy the plugins/DremelGCodeWriter folder into your <cura install>/plugins folder.
