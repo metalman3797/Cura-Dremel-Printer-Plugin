@@ -1,5 +1,5 @@
-# Copyright (c) 2017 Ultimaker B.V.
-# Cura is released under the terms of the LGPLv3 or higher.
+# Based on the GcodeWriter plugin written by Ultimaker
+# the original source can be found here: https://github.com/Ultimaker/Cura/tree/master/plugins/GCodeWriter
 
 from UM.Mesh.MeshWriter import MeshWriter
 from UM.Logger import Logger
@@ -14,22 +14,10 @@ import copy
 import struct
 import os
 
-##  Writes g-code to a file.
-#
-#   While this poses as a mesh writer, what this really does is take the g-code
-#   in the entire scene and write it to an output device. Since the g-code of a
-#   single mesh isn't separable from the rest what with rafts and travel moves
-#   and all, it doesn't make sense to write just a single mesh.
-#
-#   So this plug-in takes the g-code that is stored in the root of the scene
-#   node tree, adds a bit of extra information about the profiles and writes
-#   that to the output device.
+##  Writes a .g3drem file.
+
 class DremelGCodeWriter(MeshWriter):
     ##  The file format version of the serialised g-code.
-    #
-    #   It can only read settings with the same version as the version it was
-    #   written with. If the file format is changed in a way that breaks reverse
-    #   compatibility, increment this version number!
     version = 3
 
     ##  Dictionary that defines how characters are escaped when embedded in
@@ -46,24 +34,19 @@ class DremelGCodeWriter(MeshWriter):
     def __init__(self):
         super().__init__()
 
-    ##  Writes the g-code for the entire scene to a stream.
-    #
-    #   Note that even though the function accepts a collection of nodes, the
-    #   entire scene is always written to the file since it is not possible to
-    #   separate the g-code for just specific nodes.
-    #
-    #   \param stream The stream to write the g-code to.
-    #   \param nodes This is ignored.
-    #   \param mode Additional information on how to format the g-code in the
-    #   file. This must always be text mode.
+    ##  Performs the writing of the dremel header and gcode
+
     def write(self, stream, nodes, mode = MeshWriter.OutputMode.BinaryMode):
         if mode != MeshWriter.OutputMode.BinaryMode:
-            Logger.log("e", "GCode Writer does not support non-text mode.")
+            Logger.log("e", "GCode Writer does not support non-binary mode.")
             return False
 
         #write the g3drem header
         stream.write("g3drem 1.0      ".encode())
+		#write 3 magic numbers
         stream.write(struct.pack('<lll',58,14512,14512))
+		
+		#get the filament length and number of seconds
         global_container_stack = Application.getInstance().getGlobalContainerStack()
         print_information = Application.getInstance().getPrintInformation()
         extruders = [global_container_stack]
@@ -71,7 +54,8 @@ class DremelGCodeWriter(MeshWriter):
         length = int(print_information.materialLengths[int(extruder.getMetaDataEntry("position", "0"))]*1000)
         #write the 4 byte number of seconds and the 4 byte filament length
         seconds = int(print_information.currentPrintTime.getDisplayString(DurationFormat.Format.Seconds))
-        stream.write(struct.pack('<ll',seconds,length))
+        stream.write(struct.pack('<ll',seconds,length))		#write 3 magic numbers
+		#write some more magic numbers
         stream.write(struct.pack('<lllllh',0,1,196633,100,220,-255))
 
         #now write the bitmap
