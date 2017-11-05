@@ -12,7 +12,7 @@ Dremel Ideabuilder 3D20 plugin for Cura 3.x.  This code is **heavily** based upo
 3.  You should be all set
 
 # Usage
-Once installed, 
+Once the plugin has been installed you can use it by following the steps outlined below:
 1. open cura 
 2. select the Dremel 3D20 as your printer (cura->preferences->printers->add)
 3. select PLA as your filament type, and slice the print with the options you want. 
@@ -20,7 +20,11 @@ Once installed,
 
 ![Save as .g3drem file](/docs/saveas.PNG)
 
- Save this file to a SD card, insert the SD card into your IdeaBuilder 3D20, and print.
+5. Save this file to a SD card
+6. Insert the SD card into your IdeaBuilder 3D20
+7. Turn on the printer
+8. Select the appropriate file to print
+9. Click print
 
 Enjoy!
 
