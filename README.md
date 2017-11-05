@@ -22,7 +22,7 @@ Enjoy!
 
 # Note
 Please note the following:
-* This plugin has been tested on Cura 3.0.4 on Windows 10.
+* This plugin has only been tested on Cura 3.0.4 on Windows 10.
 * The Dremel 3D20 printer file json has not been optimized at all - if you have time and want to improve this file please do so and contribute the changes back.
 * While this plugin works in the basic print case, you may encounter problems if you attempt to print multiple parts on the same print bed one-after-another instead of all-at-once.  
 * The .g3drem file format is not fully understood yet - I've done a bit of reverse engineering on the file format, as described here: http://forums.reprap.org/read.php?263,785652 and have used this information to create this plugin.
