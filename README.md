@@ -54,6 +54,7 @@ Please note the following:
 
 # Wishlist
 The following items would be great to add to this software - as I get time I'll work on them
+* Better understanding of the remaining unknown items in the Dremel .g3drem file format
 * Optimized Dremel3D20 json file with support for Dremel brand PLA
 * Addition of Dremel brand PLA
 * Replace the generic bitmap with a bitmap of the actual part being printed
