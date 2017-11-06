@@ -19,23 +19,27 @@ To install, follow the instructions below:
  
 2.  Navigate to the folder where you downloaded or extracted the plugin
 
-3.  Copy the plugins/DremelOutputDevice folder into your <cura install>/plugins folder.
+3.  Copy the plugins/DremelOutputDevice folder into your %CURA_DIR%/plugins folder.
 
 ![Copy the contents of DremelOutputDevice to the plugin directory of cura](/docs/plugindir.PNG)
 
-4.   Copy the resources/definitions/Dremel3D20.def.json file into the <cura install>/resources/definitions folder
+4.   Copy the resources/definitions/Dremel3D20.def.json file into the %CURA_DIR%/resources/definitions folder
 ![Copy the contents of Dremel printer json file to the definitions directory of cura](/docs/dremelresource.PNG)
 
-5.  Copy the meshes/dremel_3D20_platform.stl to the <cura install>/meshes folder
+5.  Copy the resources/meshes/dremel_3D20_platform.stl to the %CURA_DIR%/resources/meshes folder
 ![Copy the contents of Dremel print bed file to the meshes directory of cura](/docs/meshesdir.png)
     
-6.  You should be all set
+6.  Copy the resources/materials/dremel_pla.xml.fdm_material to the %CURA_DIR%/resources/materials folder
+![Copy the contents of Dremel PLA material to the materials directory of cura](/docs/material.png)    
+    
+7.  Congratulations - the plugin is now installed!
 
 # Usage
 Once the plugin has been installed you can use it by following the steps outlined below:
 1. open cura 
 2. select the Dremel 3D20 as your printer (cura->preferences->printers->add)
-3. select PLA as your filament type, and slice the print with the options you want. 
+3. select Dremel PLA as your filament type (or any other PLA filament)
+4. Set the slicing options that you want. 
 4. Save to file, selecting .g3drem as the output file format. 
 
 ![Save as .g3drem file](/docs/saveas.PNG)
@@ -59,5 +63,5 @@ Please note the following:
 The following items would be great to add to this plugin - as I get time I'll work on them, but I'd welcome any collaboration
 * Better understanding of the remaining unknown items in the Dremel .g3drem file format
 * Optimized Dremel3D20 json file with support for Dremel brand PLA
-* Addition of Dremel brand PLA
+* Optimization of Dremel brand PLA settings
 * Replace the generic bitmap with a bitmap of the actual part being printed
