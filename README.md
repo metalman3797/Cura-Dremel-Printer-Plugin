@@ -53,7 +53,7 @@ Please note the following:
 * The .g3drem file format is not fully understood yet - I've done a bit of reverse engineering on the file format, as described here: http://forums.reprap.org/read.php?263,785652 and have used the information I discovered to create this plugin, however there are still magic numbers in the dremel header that may or may not have an effect on the print.
 
 # Wishlist
-The following items would be great to add to this software - as I get time I'll work on them
+The following items would be great to add to this plugin - as I get time I'll work on them, but I'd welcome any collaboration
 * Better understanding of the remaining unknown items in the Dremel .g3drem file format
 * Optimized Dremel3D20 json file with support for Dremel brand PLA
 * Addition of Dremel brand PLA
