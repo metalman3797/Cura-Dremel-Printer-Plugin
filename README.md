@@ -40,6 +40,8 @@ To install, follow the instructions below:
 Once the plugin has been installed you can use it by following the steps outlined below:
 1. open cura 
 2. select the Dremel 3D20 as your printer (cura->preferences->printers->add)
+![Select the Dremel 3D20](/docs/addprinter.png) 
+
 3. select Dremel PLA as your filament type (or any other PLA filament)
 4. Set the slicing options that you want. 
 4. Save to file, selecting .g3drem as the output file format. 
