@@ -9,6 +9,7 @@
         "manufacturer": "Dremel",
 		"weight": 4,
         "file_formats": "text/x-gcode",
+		"platform": "dremel_3D20_platform.stl",
         "icon": "icon_ultimaker2",
         "supports_usb_connection": false,
         "machine_extruder_trains":
