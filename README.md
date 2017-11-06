@@ -26,7 +26,10 @@ To install, follow the instructions below:
 4.   Copy the resources/definitions/Dremel3D20.def.json file into the <cura install>/resources/definitions folder
 ![Copy the contents of Dremel printer json file to the definitions directory of cura](/docs/dremelresource.PNG)
 
-5.  You should be all set
+5.  Copy the meshes/dremel_3D20_platform.stl to the <cura install>/meshes folder
+![Copy the contents of Dremel print bed file to the meshes directory of cura](/docs/meshesdir.png)
+    
+6.  You should be all set
 
 # Usage
 Once the plugin has been installed you can use it by following the steps outlined below:
