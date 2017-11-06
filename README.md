@@ -40,7 +40,7 @@ Once the plugin has been installed you can use it by following the steps outline
 5. Save this file to a SD card
 6. Insert the SD card into your IdeaBuilder 3D20
 7. Turn on the printer
-8. Select the appropriate file to print
+8. Select the appropriate file to print (currently a cura icon will be shown on the Dremel screen)
 9. Click print
 
 Enjoy!
