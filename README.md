@@ -30,7 +30,7 @@ To install, follow the instructions below:
 ![Copy the contents of Dremel print bed file to the meshes directory of cura](/docs/meshesdir.png)
     
 6.  Copy the resources/materials/dremel_pla.xml.fdm_material to the %CURA_DIR%/resources/materials folder
-![Copy the contents of Dremel PLA material to the materials directory of cura](/docs/materials.png)    
+![Copy the contents of Dremel PLA material to the materials directory of cura](/docs/material.png)    
     
 7.  Congratulations - the plugin is now installed!
 
