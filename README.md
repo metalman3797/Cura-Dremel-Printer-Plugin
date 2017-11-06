@@ -19,9 +19,9 @@ To install, follow the instructions below:
  
 2.  Navigate to the folder where you downloaded or extracted the plugin
 
-3.  Copy the plugins/DremelGCodeWriter folder into your <cura install>/plugins folder.
+3.  Copy the plugins/DremelOutputDevice folder into your <cura install>/plugins folder.
 
-![Copy the contents of DremelGCodeWriter to the plugin directory of cura](/docs/plugindir.PNG)
+![Copy the contents of DremelOutputDevice to the plugin directory of cura](/docs/plugindir.PNG)
 
 4.   Copy the resources/definitions/Dremel3D20.def.json file into the <cura install>/resources/definitions folder
 ![Copy the contents of Dremel printer json file to the definitions directory of cura](/docs/dremelresource.PNG)
