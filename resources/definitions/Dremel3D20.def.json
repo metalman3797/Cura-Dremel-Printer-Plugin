@@ -7,15 +7,17 @@
         "visible": true,
         "author": "Dremel",
         "manufacturer": "Dremel",
-		"weight": 4,
+		"category": "Dremel",
         "file_formats": "text/x-gcode",
-		"platform": "dremel_3D20_platform.stl",
-        "icon": "icon_ultimaker2",
+		"icon": "icon_ultimaker2",
         "supports_usb_connection": false,
+		"platform": "dremel_3D20_platform.stl",
         "machine_extruder_trains":
         {
             "0": "fdmextruder"
-        }
+        },
+        "has_materials": true,
+        "preferred_material": "dremel_pla"
     },
 
     "overrides": {
@@ -33,14 +35,14 @@
         "machine_extruder_count": { "default_value": 1 },
         "machine_heated_bed": { "default_value": false },
         "machine_center_is_zero": { "default_value": true },
-        "machine_height": { "default_value": 170 },
+        "machine_height": { "default_value": 140 },
         "machine_gcode_flavor": { "default_value": "Marlin" },
-        "machine_depth": { "default_value": 155 },
-        "machine_width": { "default_value": 255 },
+        "machine_depth": { "default_value": 150 },
+        "machine_width": { "default_value": 230 },
         "material_diameter": { "default_value": 1.75 },
-        "retraction_speed": {"default_value":100},
-        "cool_fan_speed_min": {"default_value": 20},
-        "cool_fan_speed_max": {"default_value": 70},
+        "retraction_speed": {"default_value":120},
+        "cool_fan_speed_min": {"default_value": 0},
+        "cool_fan_speed_max": {"default_value": 100},
         "adhesion_type": { "default_value": "none" },
         "machine_head_with_fans_polygon": {
             "default_value": [
