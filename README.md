@@ -43,18 +43,19 @@ Once the plugin has been installed you can use it by following the steps outline
 ![Select the Dremel 3D20](/docs/addprinter.png) 
 
 3. select Dremel PLA as your filament type (or any other PLA filament)
+![Select the dremel pla](/docs/selectpla.png)
+
 4. Set the slicing options that you want. 
-4. Save to file, selecting .g3drem as the output file format. 
+
+5. Save to file, selecting .g3drem as the output file format. 
 
 ![Save as .g3drem file](/docs/saveas.PNG)
 
-5. Save this file to a SD card
-6. Insert the SD card into your IdeaBuilder 3D20
-7. Turn on the printer
-8. Select the appropriate file to print (currently a cura icon will be shown on the Dremel screen)
-9. Click print
-
-Enjoy!
+6. Save this file to a SD card
+7. Insert the SD card into your IdeaBuilder 3D20
+8. Turn on the printer
+9. Select the appropriate file to print (currently a cura icon will be shown on the Dremel screen)
+10. Click print & Enjoy!
 
 # Note
 Please note the following:
