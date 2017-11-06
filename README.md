@@ -26,16 +26,19 @@ To install, follow the instructions below:
 4.   Copy the resources/definitions/Dremel3D20.def.json file into the <cura install>/resources/definitions folder
 ![Copy the contents of Dremel printer json file to the definitions directory of cura](/docs/dremelresource.PNG)
 
-5.  Copy the meshes/dremel_3D20_platform.stl to the <cura install>/meshes folder
+5.  Copy the resources/meshes/dremel_3D20_platform.stl to the <cura install>/resources/meshes folder
 ![Copy the contents of Dremel print bed file to the meshes directory of cura](/docs/meshesdir.png)
     
-6.  You should be all set
+6.  Copy the resources/materials/dremel_pla.xml.fdm_material to the <cura install>/resources/materials folder
+![Copy the contents of Dremel PLA material to the materials directory of cura](/docs/materials.png)    
+    
+7.  Congratulations - the plugin is now installed!
 
 # Usage
 Once the plugin has been installed you can use it by following the steps outlined below:
 1. open cura 
 2. select the Dremel 3D20 as your printer (cura->preferences->printers->add)
-3. select PLA as your filament type, and slice the print with the options you want. 
+3. select Dremel PLA as your filament type, and slice the print with the options you want. 
 4. Save to file, selecting .g3drem as the output file format. 
 
 ![Save as .g3drem file](/docs/saveas.PNG)
