@@ -45,25 +45,27 @@ class DremelGCodeWriter(MeshWriter):
         stream.write("g3drem 1.0      ".encode())
 		#write 3 magic numbers
         stream.write(struct.pack('<lll',58,14512,14512))
-		
-		#get the filament length and number of seconds
+        #get the filament length
         global_container_stack = Application.getInstance().getGlobalContainerStack()
         print_information = Application.getInstance().getPrintInformation()
         extruders = [global_container_stack]
         extruder = extruders[0]
         length = int(print_information.materialLengths[int(extruder.getMetaDataEntry("position", "0"))]*1000)
-        #write the 4 byte number of seconds and the 4 byte filament length
+
+        # get the estimated number of seconds that the print will take
         seconds = int(print_information.currentPrintTime.getDisplayString(DurationFormat.Format.Seconds))
-        stream.write(struct.pack('<ll',seconds,length))		#write 3 magic numbers
-		#write some more magic numbers
+        #write the 4 byte number of seconds and the 4 byte filament length
+        stream.write(struct.pack('<ll',seconds,length))
+        #write some more magic numbers
         stream.write(struct.pack('<lllllh',0,1,196633,100,220,-255))
 
-        #now write the bitmap
+        #now write the bitmap - currently this is just the cura icon
         bmpfilepath = os.path.normpath(os.getcwd()+"/plugins/DremelOutputDevice/cura80x60.bmp")
         with open(bmpfilepath,"rb") as bmp:
             bmpContents = bmp.read()
         stream.write(bmpContents)
-		
+
+        # now write the gcode
         scene = Application.getInstance().getController().getScene()
         gcode_list = getattr(scene, "gcode_list")
         if gcode_list:
