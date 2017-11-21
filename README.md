@@ -51,7 +51,7 @@ Once the plugin has been installed you can use it by following the steps outline
 
 4. Set the slicing options that you want. 
 
-5. The plugin now grabs a screenshot of the main cura window as it's saving out the .g3drem file.  The plugin saves it as the preview image that is displayed on the Ideabuilder screen. This preview is **much** better if you zoom in on the part that you're printing until the part fills the entire window, i.e. 
+5. Zoom in on the part until it fills the screen.  As it saves out the .g3drem file, the plugin will grab a screenshot of the main cura window for use as the preview image that is displayed on the Ideabuilder screen. This preview is **much** better if you zoom in on the part that you're printing until the part fills the entire window, i.e. 
 ![Zoom in on the part](/docs/Zoom_For_Screenshot.PNG)
 
 which produces:
