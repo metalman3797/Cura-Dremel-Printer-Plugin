@@ -51,7 +51,7 @@ Once the plugin has been installed you can use it by following the steps outline
 
 4. Set the slicing options that you want. 
 
-5. Zoom in on the part until it fills the screen.  As it saves out the .g3drem file, the plugin will grab a screenshot of the main cura window for use as the preview image that is displayed on the Ideabuilder screen. This preview is **much** better if you zoom in on the part that you're printing until the part fills the entire window, i.e. 
+5. Zoom in on the part until it fills the screen.  As the plugin saves out the .g3drem file it will grab a screenshot of the main cura window for use as the preview image that is displayed on the Ideabuilder screen. This preview is **much** better if you zoom in on the part that you're printing until the part fills the entire window, i.e. 
 ![Zoom in on the part](/docs/Zoom_For_Screenshot.PNG)
 
 which produces:
@@ -80,7 +80,7 @@ Please note the following:
 # Wishlist
 The following items would be great to add to this plugin - as I get time I'll work on them, but I'd welcome any collaboration
 * ~~Replace the generic bitmap with a bitmap of the actual part being printed~~
-    * Improve the picture of the part being printed as displayed on the IdeaBuilder screen to not include the extra GUI
+    * Improve the picture of the part being printed as displayed on the IdeaBuilder screen to not include the extra GUI, and to auto-zoom on the part being printed
 * Better understanding of the remaining unknown items in the Dremel .g3drem file format
 * Optimized Dremel3D20 json file with support for Dremel brand PLA
 * Optimization of Dremel brand PLA settings
