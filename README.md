@@ -51,19 +51,26 @@ Once the plugin has been installed you can use it by following the steps outline
 
 4. Set the slicing options that you want. 
 
-5. Save to file, selecting .g3drem as the output file format. 
+5. The plugin now grabs a screenshot of the main cura window as it's saving out the .g3drem file.  The plugin saves it as the preview image that is displayed on the Ideabuilder screen. This preview is **much** better if you zoom in on the part that you're printing until the part fills the entire window, i.e. 
+![Zoom in on the part](/docs/Zoom_For_Screenshot.PNG)
+
+which produces:
+![Ideabuilder Screen](docs/Ideabuilder_screen.jpg)
+
+6. Click "File->Save As", or "save to file", selecting .g3drem as the output file format. 
 
 ![Save as .g3drem file](/docs/saveas.PNG)
 
-6. Save this file to a SD card
-7. Insert the SD card into your IdeaBuilder 3D20
-8. Turn on the printer
-9. Select the appropriate file to print.  Currently the cura icon ![cura icon](plugins/DremelGCodeWriter/cura80x60.bmp) will be shown on the Dremel IdeaBuilder screen as the preview.
-10. Click print & Enjoy!
+7. Save this file to a SD card
+8. Insert the SD card into your IdeaBuilder 3D20
+9. Turn on the printer
+10. Select the appropriate file to print.  ~~Currently the cura icon ![cura icon](plugins/DremelGCodeWriter/cura80x60.bmp) will be shown on the Dremel IdeaBuilder screen as the preview.~~  **New - Nov 20, 2017:** The plugin now grabs a screenshot of the main cura window as it saves out the file (see step 5)
+11. Click print 
+12. Enjoy - if you have any feature suggestions or encounter issues, feel free to raise them in the issues section above!
 
 # Note
 Please note the following:
-* This plugin has only been tested on Cura 3.0.4 on Windows 10.
+* This plugin has only been tested on Cura 3.0.4 on Windows 10, but there's no reason why it shouldn't work on other platforms.  If you are using another platform and encounter issues with the plugin, feel free to raise an issue with the "Issues" option above (in github)
 * The Dremel 3D20 printer file json has not been optimized at all - if you have time and want to improve this file please do so and contribute the changes back.
   * While this plugin works in the basic print case, you may encounter problems with the print head crashing into your parts if you attempt to print multiple parts on the same print bed one-after-another instead of printing them all-at-once.
 * The .g3drem file format is not fully understood yet - I've done a bit of reverse engineering on the file format, as described here: http://forums.reprap.org/read.php?263,785652 and have used the information I discovered to create this plugin, however there are still magic numbers in the dremel header that may or may not have an effect on the print.
@@ -73,4 +80,5 @@ The following items would be great to add to this plugin - as I get time I'll wo
 * Better understanding of the remaining unknown items in the Dremel .g3drem file format
 * Optimized Dremel3D20 json file with support for Dremel brand PLA
 * Optimization of Dremel brand PLA settings
-* Replace the generic bitmap with a bitmap of the actual part being printed
+* ~~Replace the generic bitmap with a bitmap of the actual part being printed~~
+    * Improve picture of part being printed that is displayed on IdeaBuilder screen
