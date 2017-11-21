@@ -6,6 +6,9 @@ from UM.Logger import Logger
 from UM.Application import Application
 from UM.Settings.InstanceContainer import InstanceContainer
 from UM.Qt.Duration import DurationFormat
+from UM.Math.Vector import Vector
+from UM.Math.Matrix import Matrix
+
 from cura.Settings.ExtruderManager import ExtruderManager
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtGui import QPixmap, QScreen
@@ -17,6 +20,7 @@ import json
 import copy
 import struct
 import os
+import math
 
 ##  Writes a .g3drem file.
 
@@ -63,6 +67,7 @@ class DremelGCodeWriter(MeshWriter):
         #write some more magic numbers
         stream.write(struct.pack('<lllllh',0,1,196633,100,220,-255))
 
+        self._moveCamera()
         QApplication.instance().beep()
         screen = QApplication.primaryScreen()
         if screen is not None:
@@ -73,7 +78,7 @@ class DremelGCodeWriter(MeshWriter):
             pxmpImg.save(bmpData, "BMP")
             stream.write(ba)
         else:
-            #now write the generic cura icon as a bmp 
+            #now write the generic cura icon as a bmp
             bmpData = [0x42,0x4D,0x78,0x38,0x00,0x00,0x00,0x00,0x00,0x00,0x36,0x00,0x00,0x00,0x28,0x00,
                     0x00,0x00,0x50,0x00,0x00,0x00,0x3C,0x00,0x00,0x00,0x01,0x00,0x18,0x00,0x00,0x00,
                     0x00,0x00,0x42,0x38,0x00,0x00,0xC3,0x0E,0x00,0x00,0xC3,0x0E,0x00,0x00,0x00,0x00,
@@ -1076,3 +1081,40 @@ class DremelGCodeWriter(MeshWriter):
         for pos in range(0, len(escaped_string), 80 - prefix_length):
             result += prefix + escaped_string[pos : pos + 80 - prefix_length] + "\n"
         return result
+
+    def _moveCamera(self,x=0, y=0):
+        origin = Vector(0, 0, 0)
+        scene = Application.getInstance().getController().getScene()
+        camera = Application.getInstance().getController().getScene().getActiveCamera()
+        if not camera or not camera.isEnabled():
+            return
+
+        Application.getInstance().getController().getScene().acquireLock()
+
+        dx = math.radians(x * 180.0)
+        dy = math.radians(y * 180.0)
+
+        diff = camera.getPosition() - origin
+        my = Matrix()
+        my.setByRotationAxis(dx, Vector.Unit_Y)
+
+        mx = Matrix(my.getData())
+        mx.rotateByAxis(dy, Vector.Unit_Y)#.cross(diff).normalized())
+
+        n = diff.multiply(mx)
+
+        try:
+            angle = math.acos(Vector.Unit_Y.dot(n.normalized()))
+        except ValueError:
+            return
+
+        if angle < 0.1 or angle > math.pi - 0.1:
+            n = diff.multiply(my)
+
+        n += origin
+
+        camera.setPosition(n)
+        camera.lookAt(origin)
+
+        Application.getInstance().getController().getScene().releaseLock()
+        return
