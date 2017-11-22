@@ -1,5 +1,16 @@
+####################################################################
+# Dremel Gcode Writer
+# A plugin to enable Cura to write .g3drem files for
+# the Dremel IdeaBuilder 3D20
+#
+# hacked together by Tim Sch...
+# source code and installation instructions can be found here:
+# https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin
+#
 # Based on the GcodeWriter plugin written by Ultimaker
-# the original source can be found here: https://github.com/Ultimaker/Cura/tree/master/plugins/GCodeWriter
+# the original source can be found here:
+# https://github.com/Ultimaker/Cura/tree/master/plugins/GCodeWriter
+####################################################################
 
 from UM.Mesh.MeshWriter import MeshWriter
 from UM.Logger import Logger
@@ -8,12 +19,12 @@ from UM.Settings.InstanceContainer import InstanceContainer
 from UM.Qt.Duration import DurationFormat
 from UM.Math.Vector import Vector
 from UM.Math.Matrix import Matrix
+from UM.Qt.Bindings.Theme import Theme
 
 from cura.Settings.ExtruderManager import ExtruderManager
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtGui import QPixmap, QScreen
-from PyQt5.QtCore import QByteArray, QBuffer, QIODevice
-
+from PyQt5.QtCore import QByteArray, QBuffer, QIODevice, QRect, Qt
 
 import re #For escaping characters in the settings.
 import json
@@ -68,14 +79,25 @@ class DremelGCodeWriter(MeshWriter):
         stream.write(struct.pack('<lllllh',0,1,196633,100,220,-255))
 
         #self._moveCamera()
+
+        # get the primary screen
         screen = QApplication.primaryScreen()
         if screen is not None:
+            # get the main window ID
             wid = Application.getInstance().getMainWindow().winId()
-            pxmpImg = screen.grabWindow(wid).scaled(80, 60)
+            sidebarwidth = Application.getInstance().getTheme().getSize("sidebar").width()
+
+            # grab a screenshot of the main window
+            screenImg = screen.grabWindow(wid)
+            rectWidth = screenImg.width() - sidebarwidth
+            rect = QRect(0, 0, rectWidth, screenImg.height())
+            pixMpImg = screenImg.copy(rect).scaled(80, 60, Qt.KeepAspectRatioByExpanding)
+
+            # now write the byte array to
             ba = QByteArray()
             bmpData = QBuffer(ba)
             bmpData.open(QIODevice.WriteOnly)
-            pxmpImg.save(bmpData, "BMP")
+            pixMpImg.save(bmpData, "BMP")
             stream.write(ba)
         else:
             #now write the generic cura icon as a bmp

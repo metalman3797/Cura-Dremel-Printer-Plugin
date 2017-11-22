@@ -80,7 +80,7 @@ Please note the following:
 # Wishlist
 The following items would be great to add to this plugin - as I get time I'll work on them, but I'd welcome any collaboration
 * ~~Replace the generic bitmap with a bitmap of the actual part being printed~~
-    * Improve the picture of the part being printed as displayed on the IdeaBuilder screen to not include the extra GUI, and to auto-zoom on the part being printed
+    * Improve the picture of the part being printed as displayed on the IdeaBuilder screen ~~to not include the extra GUI~~, and to auto-zoom on the part being printed
 * Better understanding of the remaining unknown items in the Dremel .g3drem file format
 * Optimized Dremel3D20 json file with support for Dremel brand PLA
 * Optimization of Dremel brand PLA settings
