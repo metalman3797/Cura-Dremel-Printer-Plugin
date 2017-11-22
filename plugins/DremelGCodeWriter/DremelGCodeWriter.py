@@ -67,11 +67,11 @@ class DremelGCodeWriter(MeshWriter):
         #write some more magic numbers
         stream.write(struct.pack('<lllllh',0,1,196633,100,220,-255))
 
-        self._moveCamera()
-        QApplication.instance().beep()
+        #self._moveCamera()
         screen = QApplication.primaryScreen()
         if screen is not None:
-            pxmpImg = screen.grabWindow(0).scaled(80, 60)
+            wid = Application.getInstance().getMainWindow().winId()
+            pxmpImg = screen.grabWindow(wid).scaled(80, 60)
             ba = QByteArray()
             bmpData = QBuffer(ba)
             bmpData.open(QIODevice.WriteOnly)
