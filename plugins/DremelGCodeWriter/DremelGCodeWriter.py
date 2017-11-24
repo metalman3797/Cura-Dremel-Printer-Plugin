@@ -60,9 +60,9 @@ class DremelGCodeWriter(MeshWriter):
             Logger.log("e", "GCode Writer does not support non-binary mode.")
             return False
 
-        #write the g3drem header
+        # write the g3drem header
         stream.write("g3drem 1.0      ".encode())
-		#write 3 magic numbers
+        # write 3 magic numbers
         stream.write(struct.pack('<lll',58,14512,14512))
         #get the filament length
         global_container_stack = Application.getInstance().getGlobalContainerStack()
@@ -73,9 +73,9 @@ class DremelGCodeWriter(MeshWriter):
 
         # get the estimated number of seconds that the print will take
         seconds = int(print_information.currentPrintTime.getDisplayString(DurationFormat.Format.Seconds))
-        #write the 4 byte number of seconds and the 4 byte filament length
+        # write the 4 byte number of seconds and the 4 byte filament length
         stream.write(struct.pack('<ll',seconds,length))
-        #write some more magic numbers
+        # write some more magic numbers
         stream.write(struct.pack('<lllllh',0,1,196633,100,220,-255))
 
         #self._moveCamera()
@@ -100,7 +100,7 @@ class DremelGCodeWriter(MeshWriter):
             pixMpImg.save(bmpData, "BMP")
             stream.write(ba)
         else:
-            #now write the generic cura icon as a bmp
+            # now write the generic cura icon as a bmp
             bmpData = [0x42,0x4D,0x78,0x38,0x00,0x00,0x00,0x00,0x00,0x00,0x36,0x00,0x00,0x00,0x28,0x00,
                     0x00,0x00,0x50,0x00,0x00,0x00,0x3C,0x00,0x00,0x00,0x01,0x00,0x18,0x00,0x00,0x00,
                     0x00,0x00,0x42,0x38,0x00,0x00,0xC3,0x0E,0x00,0x00,0xC3,0x0E,0x00,0x00,0x00,0x00,
