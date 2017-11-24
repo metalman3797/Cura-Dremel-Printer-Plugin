@@ -64,7 +64,7 @@ Produces:
 9. Turn on the printer
 10. Select the appropriate file to print.  
     ~~Currently the cura icon~~ ![cura icon](plugins/DremelGCodeWriter/cura80x60.bmp) ~~will be shown on the Dremel IdeaBuilder screen as the preview.~~  
-    **New - Nov 20, 2017:** The plugin now grabs a screenshot of the main cura window as it saves out the file (see step 5)
+    **New - Version 0.2.1:** The plugin now grabs a screenshot of the main cura window as it saves out the file (see step 5)
 11. Click print 
 12. Enjoy - if you have any feature suggestions or encounter issues, feel free to raise them in the issues section above!
 
