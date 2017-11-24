@@ -21,17 +21,16 @@ To install, follow the instructions below:
  
 2.  Navigate to the folder where you downloaded or extracted the plugin
 
-3.  Copy the plugins/DremelGCodeWriter folder into your %CURA_DIR%/plugins folder.
-
+3.  Copy the plugins/DremelGCodeWriter folder into your %CURA_DIR%/plugins folder.  On MacOS this is located at "Ultimaker Cura.app/Contents/Resources/plugins/plugins/"  The easiest way on the mac to get to this folder is to right click on the Ultimaker Cura.app application and select show package contents.
 ![Copy the contents of DremelOutputDevice to the plugin directory of cura](/docs/plugindir.PNG)
 
-4.   Copy the resources/definitions/Dremel3D20.def.json file into the %CURA_DIR%/resources/definitions folder
+4.   Copy the resources/definitions/Dremel3D20.def.json file into the %CURA_DIR%/resources/definitions folder.  On MacOS this is located at "Ultimaker Cura.app/Contents/Resources/resources/definitions/"
 ![Copy the contents of Dremel printer json file to the definitions directory of cura](/docs/dremelresource.PNG)
 
-5.  Copy the resources/meshes/dremel_3D20_platform.stl to the %CURA_DIR%/resources/meshes folder
+5.  Copy the resources/meshes/dremel_3D20_platform.stl to the %CURA_DIR%/resources/meshes folder.  On MacOS this is located at "Ultimaker Cura.app/Contents/Resources/resources/meshes/"
 ![Copy the contents of Dremel print bed file to the meshes directory of cura](/docs/meshesdir.png)
     
-6.  Copy the resources/materials/dremel_pla.xml.fdm_material to the %CURA_DIR%/resources/materials folder
+6.  Copy the resources/materials/dremel_pla.xml.fdm_material to the %CURA_DIR%/resources/materials folder.   On MacOS this is located at "Ultimaker Cura.app/Contents/Resources/resources/materials/"
 ![Copy the contents of Dremel PLA material to the materials directory of cura](/docs/material.png)    
     
 7.  Congratulations - the plugin is now installed!
@@ -70,7 +69,7 @@ Produces:
 
 # Note
 Please note the following:
-* This plugin has only been tested on Cura 3.0.4 on Windows 10, but there's no reason why it shouldn't work on other platforms.  If you are using another platform and encounter issues with the plugin, feel free to raise an issue with the "Issues" option above (in github)
+* This plugin has only been tested on Cura 3.0.4 on Windows 10, and MacOS Sierra (MacOS 10.12) but there's no reason why it shouldn't work on linux as well.  If you are using another platform and encounter issues with the plugin, feel free to raise an issue with the "Issues" option above (in github)
 * The Dremel 3D20 printer file json has not been optimized at all - if you have time and want to improve this file please do so and contribute the changes back.
   * While this plugin works in the basic print case, you may encounter problems with the print head crashing into your parts if you attempt to print multiple parts on the same print bed one-after-another instead of printing them all-at-once.
 * The .g3drem file format is not fully understood yet - I've done a bit of reverse engineering on the file format, as described here: http://forums.reprap.org/read.php?263,785652 and have used the information I discovered to create this plugin, however there are still magic numbers in the dremel header that may or may not have an effect on the print.
