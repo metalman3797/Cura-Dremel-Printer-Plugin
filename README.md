@@ -21,16 +21,16 @@ To install, follow the instructions below:
  
 2.  Navigate to the folder where you downloaded or extracted the plugin
 
-3.  Copy the plugins/DremelGCodeWriter folder into your %CURA_DIR%/plugins folder.  On MacOS this is located at "Ultimaker Cura.app/Contents/Resources/plugins/plugins/"  The easiest way on the mac to get to this folder is to right click on the Ultimaker Cura.app application and select show package contents.
+3.  Copy the plugins/DremelGCodeWriter folder into your `%CURA_DIR%/plugins` folder.  On MacOS this is located at `Ultimaker Cura.app/Contents/Resources/plugins/plugins/`  The easiest way on the mac to get to this folder is to right click on the Ultimaker Cura.app application and select show package contents.
 ![Copy the contents of DremelOutputDevice to the plugin directory of cura](/docs/plugindir.PNG)
 
-4.   Copy the resources/definitions/Dremel3D20.def.json file into the %CURA_DIR%/resources/definitions folder.  On MacOS this is located at "Ultimaker Cura.app/Contents/Resources/resources/definitions/"
+4.   Copy the resources/definitions/Dremel3D20.def.json file into the `%CURA_DIR%/resources/definitions` folder.  On MacOS this is located at `Ultimaker Cura.app/Contents/Resources/resources/definitions/`
 ![Copy the contents of Dremel printer json file to the definitions directory of cura](/docs/dremelresource.PNG)
 
-5.  Copy the resources/meshes/dremel_3D20_platform.stl to the %CURA_DIR%/resources/meshes folder.  On MacOS this is located at "Ultimaker Cura.app/Contents/Resources/resources/meshes/"
+5.  Copy the resources/meshes/dremel_3D20_platform.stl to the `%CURA_DIR%/resources/meshes` folder.  On MacOS this is located at `Ultimaker Cura.app/Contents/Resources/resources/meshes/`
 ![Copy the contents of Dremel print bed file to the meshes directory of cura](/docs/meshesdir.png)
     
-6.  Copy the resources/materials/dremel_pla.xml.fdm_material to the %CURA_DIR%/resources/materials folder.   On MacOS this is located at "Ultimaker Cura.app/Contents/Resources/resources/materials/"
+6.  Copy the resources/materials/dremel_pla.xml.fdm_material to the `%CURA_DIR%/resources/materials` folder.   On MacOS this is located at `Ultimaker Cura.app/Contents/Resources/resources/materials/`
 ![Copy the contents of Dremel PLA material to the materials directory of cura](/docs/material.png)    
     
 7.  Congratulations - the plugin is now installed!
