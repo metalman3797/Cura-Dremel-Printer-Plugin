@@ -82,6 +82,7 @@ class DremelGCodeWriter(MeshWriter):
 
         # get the primary screen
         screen = QApplication.primaryScreen()
+        bmpError = False
         if screen is not None:
             # get the main window ID
             wid = Application.getInstance().getMainWindow().winId()
@@ -91,15 +92,19 @@ class DremelGCodeWriter(MeshWriter):
             screenImg = screen.grabWindow(wid)
             rectWidth = screenImg.width() - sidebarwidth
             rect = QRect(0, 0, rectWidth, screenImg.height())
-            pixMpImg = screenImg.copy(rect).scaled(80, 60, Qt.KeepAspectRatioByExpanding)
-
+            pixMpImg = screenImg.copy(rect).scaled(80, 60, Qt.KeepAspectRatioByExpanding).copy(QRect(0,0,80,60))
+            if pixMpImg.width() is not 80 or pixMpImg.height() is not 60:
+                bmpError = true
             # now write the byte array to
             ba = QByteArray()
             bmpData = QBuffer(ba)
             bmpData.open(QIODevice.WriteOnly)
             pixMpImg.save(bmpData, "BMP")
-            stream.write(ba)
+            if not bmpError:
+                stream.write(ba)
         else:
+            bmpError = true
+        if bmpError:
             # now write the generic cura icon as a bmp
             bmpData = [0x42,0x4D,0x78,0x38,0x00,0x00,0x00,0x00,0x00,0x00,0x36,0x00,0x00,0x00,0x28,0x00,
                     0x00,0x00,0x50,0x00,0x00,0x00,0x3C,0x00,0x00,0x00,0x01,0x00,0x18,0x00,0x00,0x00,
