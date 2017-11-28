@@ -87,11 +87,16 @@ class DremelGCodeWriter(MeshWriter):
             # get the main window ID
             wid = Application.getInstance().getMainWindow().winId()
             sidebarwidth = Application.getInstance().getTheme().getSize("sidebar").width()
-
+            buttonwidth = Application.getInstance().getTheme().getSize("button_icon").width()
+            marginwidth = Application.getInstance().getTheme().getSize("default_margin").width()
+            topbarheight = Application.getInstance().getTheme().getSize("sidebar_header").height()
+            marginheight = Application.getInstance().getTheme().getSize("default_margin").height()
+            buttonright = buttonwidth + marginwidth
+            topbarbottom = topbarheight + marginheight
             # grab a screenshot of the main window
             screenImg = screen.grabWindow(wid)
             rectWidth = screenImg.width() - sidebarwidth
-            rect = QRect(0, 0, rectWidth, screenImg.height())
+            rect = QRect(buttonright, topbarbottom, rectWidth, screenImg.height())
             pixMpImg = screenImg.copy(rect).scaled(80, 60, Qt.KeepAspectRatioByExpanding).copy(QRect(0,0,80,60))
             if pixMpImg.width() is not 80 or pixMpImg.height() is not 60:
                 bmpError = true
