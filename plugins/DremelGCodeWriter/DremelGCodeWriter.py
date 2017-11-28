@@ -88,9 +88,9 @@ class DremelGCodeWriter(MeshWriter):
             wid = Application.getInstance().getMainWindow().winId()
             sidebarwidth = Application.getInstance().getTheme().getSize("sidebar").width()
             buttonwidth = Application.getInstance().getTheme().getSize("button_icon").width()
-            marginwidth = Application.getInstance().getTheme().getSize("default_margin").width()
+            marginwidth = Application.getInstance().getTheme().getSize("sidebar_margin").width()
             topbarheight = Application.getInstance().getTheme().getSize("sidebar_header").height()
-            marginheight = Application.getInstance().getTheme().getSize("default_margin").height()
+            marginheight = Application.getInstance().getTheme().getSize("sidebar_header_mode_toggle").height()
             buttonright = buttonwidth + marginwidth
             topbarbottom = topbarheight + marginheight
             # grab a screenshot of the main window
