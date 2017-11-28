@@ -86,6 +86,7 @@ class DremelGCodeWriter(MeshWriter):
         if screen is not None:
             # get the main window ID
             wid = Application.getInstance().getMainWindow().winId()
+            # get the height of the topbar and width of the left and right sidebar
             sidebarwidth = Application.getInstance().getTheme().getSize("sidebar").width()
             buttonwidth = Application.getInstance().getTheme().getSize("button_icon").width()
             marginwidth = Application.getInstance().getTheme().getSize("sidebar_margin").width()

@@ -7,18 +7,18 @@ Dremel Ideabuilder 3D20 plugin for [Cura version 3.x](https://ultimaker.com/en/p
 To install, follow the instructions below:
 
 1.  Download the plugin files by peforming one of the two actions:
-    
+
     EITHER
     1. clone the repository onto your machine using the following command
     ```
     git clone https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin.git
     ```
-    
+
     OR
-    
+
     2.  Click the download zip button on ![this page](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin) and extract the zip file to your computer
     ![Download Zip](/docs/downloadzip.png)
- 
+
 2.  Navigate to the folder where you downloaded or extracted the plugin
 
 3.  Copy the plugins/DremelGCodeWriter folder into your `%CURA_DIR%/plugins` folder.  On MacOS this is located at `Ultimaker Cura.app/Contents/Resources/plugins/plugins/`  The easiest way on the mac to get to this folder is to right click on the Ultimaker Cura.app application and select the "show package contents" option.
@@ -29,24 +29,24 @@ To install, follow the instructions below:
 
 5.  Copy the resources/meshes/dremel_3D20_platform.stl to the `%CURA_DIR%/resources/meshes` folder.  On MacOS this is located at `Ultimaker Cura.app/Contents/Resources/resources/meshes/`  The easiest way on the mac to get to this folder is to right click on the Ultimaker Cura.app application and select the "show package contents" option
 ![Copy the contents of Dremel print bed file to the meshes directory of cura](/docs/meshesdir.png)
-    
+
 6.  Copy the resources/materials/dremel_pla.xml.fdm_material to the `%CURA_DIR%/resources/materials` folder.   On MacOS this is located at `Ultimaker Cura.app/Contents/Resources/resources/materials/`  The easiest way on the mac to get to this folder is to right click on the Ultimaker Cura.app application and select the "show package contents" option
 ![Copy the contents of Dremel PLA material to the materials directory of cura](/docs/material.png)    
-    
+
 7.  Congratulations - the plugin is now installed!
 
 # Usage
 Once the plugin has been installed you can use it by following the steps outlined below:
-1. open cura 
+1. open cura
 2. select the Dremel 3D20 as your printer (cura->preferences->printers->add)
-![Select the Dremel 3D20](/docs/addprinter.png) 
+![Select the Dremel 3D20](/docs/addprinter.png)
 
-3. select Dremel PLA or any other PLA filament as your filament type 
+3. select Dremel PLA or any other PLA filament as your filament type
 ![Select the dremel pla](/docs/selectpla.png)
 
-4. Set the slicing options that you want. 
+4. Set the slicing options that you want.
 
-5. (Optional, but recommended) Zoom in on the part until it fills the screen.  As the plugin saves out the .g3drem file it will grab a screenshot of the main cura window for use as the preview image that is displayed on the Ideabuilder screen. This preview is **much** better if you zoom in on the part that you're printing until the part fills the entire window.  
+5. (Optional, but recommended) Zoom in on the part until it fills the screen.  As the plugin saves out the .g3drem file it will grab a screenshot of the main cura window for use as the preview image that is displayed on the Ideabuilder screen. The area inside the red box shown in the image below (but not in the actual cura window when you use the plugin) is what will be used in the screenshot.  The preview on the Dremel is **much** better if you zoom in on the part that you're printing until the part fills the screenshot area.  
 
 For instance:
 ![Zoom in on the part](/docs/Zoom_For_Screenshot.PNG)
@@ -54,7 +54,7 @@ For instance:
 Produces:
 ![Ideabuilder Screen](docs/Ideabuilder_screen.jpg)
 
-6. Click "File->Save As", or "save to file", selecting .g3drem as the output file format. 
+6. Click "File->Save As", or "save to file", selecting .g3drem as the output file format.
 
 ![Save as .g3drem file](/docs/saveas.PNG)
 
@@ -64,7 +64,7 @@ Produces:
 10. Select the appropriate file to print.  
     ~~Currently the cura icon~~ ![cura icon](plugins/DremelGCodeWriter/cura80x60.bmp) ~~will be shown on the Dremel IdeaBuilder screen as the preview.~~  
     **New - [Version 0.2](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/v0.2):** The plugin now grabs a screenshot of the main cura window as it saves out the file (see step 5)
-11. Click print 
+11. Click print
 12. Enjoy - if you have any feature suggestions or encounter issues, feel free to raise them in the issues section above!
 
 # Note
@@ -77,10 +77,11 @@ Please note the following:
 # Wishlist
 The following items would be great to add to this plugin - as I get time I'll work on them, but I'd welcome any collaboration
 * ~~Replace the generic bitmap with a bitmap of the actual part being printed~~
-    * Improve the picture of the part being printed as displayed on the IdeaBuilder screen 
-        * ~~to not include the extra GUI on the right~~, 
+    * Improve the picture of the part being printed as displayed on the IdeaBuilder screen
+        * to auto-zoom and focus the screenshot on the part being printed, although I quite like giving the user the option of how to position the view, so this may not get implemented
+        * ~~to not include the extra GUI on the right~~,
         * ~~to not include the extra GUI on the top and left~~
-        * to auto-zoom and focus the screenshot on the part being printed
+
 * Better understanding of the remaining unknown items in the Dremel .g3drem file format
-* Optimized Dremel3D20 json file with support for Dremel brand PLA
+* ~~Optimized Dremel3D20 json file with support for Dremel brand PLA~~
 * Optimization of Dremel brand PLA settings
