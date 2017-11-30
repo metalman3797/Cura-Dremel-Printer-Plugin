@@ -6,47 +6,45 @@ Dremel Ideabuilder 3D20 plugin for [Cura version 3.x](https://ultimaker.com/en/p
 # Installation
 To install, follow the instructions below:
 
-1.  Download the plugin files by peforming one of the two actions:
+**1.**  Download the plugin files by peforming one of the two actions:
 
-    EITHER
-    1. clone the repository onto your machine using the following command
+   EITHER
+    **1a.** clone the repository onto your machine using the following command
     ```
     git clone https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin.git
     ```
-
     OR
-
-    2.  Click the download zip button on ![this page](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin) and extract the zip file to your computer
+    **1b.**  Click the download zip button on ![this page](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin) and extract the zip file to your computer
     ![Download Zip](/docs/downloadzip.png)
 
-2.  Navigate to the folder where you downloaded or extracted the plugin
+**2.**  Navigate to the folder where you downloaded or extracted the plugin
 
-3.  Copy the plugins/DremelGCodeWriter folder into your `%CURA_DIR%/plugins` folder.  On MacOS this is located at `Ultimaker Cura.app/Contents/Resources/plugins/plugins/`  The easiest way on the mac to get to this folder is to right click on the Ultimaker Cura.app application and select the "show package contents" option.
+**3.**  Copy the plugins/DremelGCodeWriter folder into your `%CURA_DIR%/plugins` folder.  On MacOS this is located at `Ultimaker Cura.app/Contents/Resources/plugins/plugins/`  The easiest way on the mac to get to this folder is to right click on the Ultimaker Cura.app application and select the "show package contents" option.
 ![Copy the contents of DremelOutputDevice to the plugin directory of cura](/docs/plugindir.PNG)
 
-4.   Copy the resources/definitions/Dremel3D20.def.json file into the `%CURA_DIR%/resources/definitions` folder.  On MacOS this is located at `Ultimaker Cura.app/Contents/Resources/resources/definitions/`  The easiest way on the mac to get to this folder is to right click on the Ultimaker Cura.app application and select the "show package contents" option
+**4.**   Copy the resources/definitions/Dremel3D20.def.json file into the `%CURA_DIR%/resources/definitions` folder.  On MacOS this is located at `Ultimaker Cura.app/Contents/Resources/resources/definitions/`  The easiest way on the mac to get to this folder is to right click on the Ultimaker Cura.app application and select the "show package contents" option
 ![Copy the contents of Dremel printer json file to the definitions directory of cura](/docs/dremelresource.PNG)
 
-5.  Copy the resources/meshes/dremel_3D20_platform.stl to the `%CURA_DIR%/resources/meshes` folder.  On MacOS this is located at `Ultimaker Cura.app/Contents/Resources/resources/meshes/`  The easiest way on the mac to get to this folder is to right click on the Ultimaker Cura.app application and select the "show package contents" option
+**5.**  Copy the resources/meshes/dremel_3D20_platform.stl to the `%CURA_DIR%/resources/meshes` folder.  On MacOS this is located at `Ultimaker Cura.app/Contents/Resources/resources/meshes/`  The easiest way on the mac to get to this folder is to right click on the Ultimaker Cura.app application and select the "show package contents" option
 ![Copy the contents of Dremel print bed file to the meshes directory of cura](/docs/meshesdir.png)
 
-6.  Copy the resources/materials/dremel_pla.xml.fdm_material to the `%CURA_DIR%/resources/materials` folder.   On MacOS this is located at `Ultimaker Cura.app/Contents/Resources/resources/materials/`  The easiest way on the mac to get to this folder is to right click on the Ultimaker Cura.app application and select the "show package contents" option
+**6.**  Copy the resources/materials/dremel_pla.xml.fdm_material to the `%CURA_DIR%/resources/materials` folder.   On MacOS this is located at `Ultimaker Cura.app/Contents/Resources/resources/materials/`  The easiest way on the mac to get to this folder is to right click on the Ultimaker Cura.app application and select the "show package contents" option
 ![Copy the contents of Dremel PLA material to the materials directory of cura](/docs/material.png)    
 
-7.  Congratulations - the plugin is now installed!
+**7.**  Congratulations - the plugin is now installed!
 ---
 # Usage
 Once the plugin has been installed you can use it by following the steps outlined below:
-1. open cura
-2. select the Dremel 3D20 as your printer (cura->preferences->printers->add)
+**1.** open cura
+**2.** select the Dremel 3D20 as your printer (cura->preferences->printers->add)
 ![Select the Dremel 3D20](/docs/addprinter.png)
 
-3. select Dremel PLA or any other PLA filament as your filament type
+**3.** select Dremel PLA or any other PLA filament as your filament type
 ![Select the dremel pla](/docs/selectpla.png)
 
-4. Set the slicing options that you want.
+**4.** Set the slicing options that you want.
 
-5. (Optional, but recommended) Zoom in on the part until it fills the screen.  As the plugin saves out the .g3drem file it will grab a screenshot of the main cura window for use as the preview image that is displayed on the Ideabuilder screen. The area inside the red box shown in the image below (but not in the actual cura window when you use the plugin) is what will be used in the screenshot.  The preview on the Dremel is **much** better if you zoom in on the part that you're printing until the part fills the screenshot area.  
+**5.** (Optional, but recommended) Zoom in on the part until it fills the screen.  As the plugin saves out the .g3drem file it will grab a screenshot of the main cura window for use as the preview image that is displayed on the Ideabuilder screen. The area inside the red box shown in the image below (but not in the actual cura window when you use the plugin) is what will be used in the screenshot.  The preview on the Dremel is **much** better if you zoom in on the part that you're printing until the part fills the screenshot area.  
 
 For instance:
 ![Zoom in on the part](/docs/Zoom_For_Screenshot.PNG)
@@ -54,18 +52,18 @@ For instance:
 Produces:
 ![Ideabuilder Screen](docs/Ideabuilder_screen.jpg)
 
-6. Click "File->Save As", or "save to file", selecting .g3drem as the output file format.
+**6.** Click "File->Save As", or "save to file", selecting .g3drem as the output file format.
 
 ![Save as .g3drem file](/docs/saveas.PNG)
 
-7. Save this file to a SD card
-8. Insert the SD card into your IdeaBuilder 3D20
-9. Turn on the printer
-10. Select the appropriate file to print.  
+**7.** Save this file to a SD card
+**8.** Insert the SD card into your IdeaBuilder 3D20
+**9.** Turn on the printer
+**10.** Select the appropriate file to print.  
     ~~Currently the cura icon~~ ![cura icon](plugins/DremelGCodeWriter/cura80x60.bmp) ~~will be shown on the Dremel IdeaBuilder screen as the preview.~~  
     **New - [Version 0.2](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/v0.2):** The plugin now grabs a screenshot of the main cura window as it saves out the file (see step 5)
-11. Click print
-12. Enjoy - if you have any feature suggestions or encounter issues, feel free to raise them in the issues section above!
+**11.** Click print
+**12.** Enjoy - if you have any feature suggestions or encounter issues, feel free to raise them in the issues section above!
 ---
 # Note
 Please note the following:
@@ -89,7 +87,7 @@ The following items would be great to add to this plugin - as I get time I'll wo
 # <a name="Technical_Details"></a>Technical Details of the .g3drem header file Format
 The g3drem file format consists of a few sections.  The header is a mix of binary data and ASCII data, but the ASCII section is written in binary format for ease.
 
-An Example of the binary header looks like this:
+**An Example of the binary header looks like this:**
 
 `67 33 64 72 65 6d 20 31 2e 30 20 20 20 20 20 20`  
 `3a 00 00 00 b0 38 00 00 b0 38 00 00 7e 01 00 00`  
@@ -97,17 +95,17 @@ An Example of the binary header looks like this:
 `64 00 00 00 dc 00 00 00 01 ff [80x60 Bmp image]`  
 `[standard 3d printer gcode]`  
 
-The sections of the header are:
-1. ASCII text 'g3drem 1.0      ' = 67 33 64 72 65 6d 20 31 2e 30 20 20 20 20 20 20
-2. Some magic numbers that seem to be the same for every file = 3a 00 00 00 b0 38 00 00 b0 38 00 00
-3. 4 byte little-endian integer representing the number of minutes the print will take = 7e 01 00 00
-4. 4 byte little-endian integer representing the estimated number of millimeters of filament that the print will use = be 01 00 00
-5. Some more magic numbers that seem to be the same for every file 00 00 00 00 01 00 00 00 19 00 03 00
+**The sections of the header are:**
+**1.** ASCII text 'g3drem 1.0      ' = 67 33 64 72 65 6d 20 31 2e 30 20 20 20 20 20 20
+**2.** Some magic numbers that seem to be the same for every file = 3a 00 00 00 b0 38 00 00 b0 38 00 00
+**3.** 4 byte little-endian integer representing the number of minutes the print will take = 7e 01 00 00
+**4.** 4 byte little-endian integer representing the estimated number of millimeters of filament that the print will use = be 01 00 00
+**5.** Some more magic numbers that seem to be the same for every file 00 00 00 00 01 00 00 00 19 00 03 00
 64 00 00 00 dc 00 00 00 01 ff
-6. An 80x60 bitmap containing the image that the Dremel 3D20 will use to display on the screen
-7. Standard 3d printer gcode
+**6.** An 80x60 bitmap containing the image that the Dremel 3D20 will use to display on the screen
+**7.** Standard 3d printer gcode
 
-Interesting observations about the file format:
+**Interesting observations about the file format:**
 1.  The maximum number of minutes that the dremel can read is 0xFFFFFF00, which comes out to 4660 hours and 20 minutes (this would show up in the file as FF FF FF 00)
 2.  The maximum fiament length that the file can handle is hex 0xFFFFFFFF, or 4,294,967,295 millimeters. The dremel software reports (after some rounding): 4,294,967.5 meters
 3.  The image size seems to be hardcoded inside the dremel firmware (at least for firmware 1.3.20160621).  Storing an image that is larger than 80x60 is allowable in the file, and the Dremel 3D software will read this file with a larger image with no problem.  The Dremel 3D sofware will read and show the correct part to build, but loading this file with the larger image into the actual Ideabuilder will result in the ideabuilder showing the image, and allowing the user to select it, but will result in the Ideabuilder rebooting when the user tries to print the file.
