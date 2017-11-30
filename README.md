@@ -88,8 +88,8 @@ The following items would be great to add to this plugin - as I get time I'll wo
 * ~~Optimized Dremel3D20 json file with support for Dremel brand PLA~~
 * Optimization of Dremel brand PLA settings
 ---
-# <a name="Technical_Details"></a>Technical Details of the .g3drem header file Format
-The g3drem file format consists of a few sections.  The header is a mix of binary data and ASCII data, but the ASCII section is written in binary format for ease.
+# <a name="Technical_Details"></a>Technical Details of the .g3drem File Format
+The g3drem file format consists of a few sections.  The header is a mix of binary data and ASCII data, which is followed by an 80x60 bitmap image written to the file, which is then followed by standard 3d printer gcode saved in ASCII format.
 
 **An Example of the binary header looks like this:**
 
@@ -100,16 +100,16 @@ The g3drem file format consists of a few sections.  The header is a mix of binar
 `[standard 3d printer gcode]`  
 
 **The sections of the header are:**
-1. ASCII text 'g3drem 1.0      ' = 67 33 64 72 65 6d 20 31 2e 30 20 20 20 20 20 20
-2. Some magic numbers that seem to be the same for every file = 3a 00 00 00 b0 38 00 00 b0 38 00 00
-3. 4 byte little-endian integer representing the number of minutes the print will take = 7e 01 00 00
-4. 4 byte little-endian integer representing the estimated number of millimeters of filament that the print will use = be 01 00 00
-5. Some more magic numbers that seem to be the same for every file 00 00 00 00 01 00 00 00 19 00 03 00
+1. ASCII text 'g3drem 1.0      ' = `67 33 64 72 65 6d 20 31 2e 30 20 20 20 20 20 20`
+2. Some magic numbers that seem to be the same for every file = `3a 00 00 00 b0 38 00 00 b0 38 00 00`
+3. 4 byte little-endian integer representing the number of minutes the print will take = `7e 01 00 00`
+4. 4 byte little-endian integer representing the estimated number of millimeters of filament that the print will use = `be 01 00 00`
+5. Some more magic numbers that seem to be the same for every file = `00 00 00 00 01 00 00 00 19 00 03 00`
 64 00 00 00 dc 00 00 00 01 ff
 6. An 80x60 bitmap containing the image that the Dremel 3D20 will use to display on the screen
 7. Standard 3d printer gcode
 
 **Interesting observations about the file format:**
-1.  The maximum number of minutes that the dremel can read is 0xFFFFFF00, which comes out to 4660 hours and 20 minutes (this would show up in the file as FF FF FF 00)
-2.  The maximum fiament length that the file can handle is hex 0xFFFFFFFF, or 4,294,967,295 millimeters. The dremel software reports (after some rounding): 4,294,967.5 meters
+1.  The maximum number of minutes that the dremel can read is 0xFFFFFF00, which comes out to 4660 hours and 20 minutes
+2.  The maximum fiament length that the file can handle is hex 0xFFFFFFFF, or 4,294,967,295 millimeters. The [Dremel 3D software](https://dremel3d.at/pages/software) reports this value as (after some rounding): 4,294,967.5 meters
 3.  The image size seems to be hardcoded inside the dremel firmware (at least for firmware 1.3.20160621).  Storing an image that is larger than 80x60 is allowable in the file, and the Windows-based ["Dremel 3D" software](https://dremel3d.at/pages/software) will read this file with a larger image with no problem.  The Dremel 3D sofware will read and show the correct part to build, but loading this file with the larger image into the actual Ideabuilder will result in the ideabuilder successfully showing the image, and allowing the user to select it, but will result in the IdeaBuilder rebooting when the user tries to print the file.
