@@ -90,11 +90,12 @@ The following items would be great to add to this plugin - as I get time I'll wo
 The g3drem file format consists of a few sections.  The header is a mix of binary data and ASCII data, but the ASCII section is written in binary format for ease.
 
 An Example of the binary header looks like this:
+
 `67 33 64 72 65 6d 20 31 2e 30 20 20 20 20 20 20`  
 `3a 00 00 00 b0 38 00 00 b0 38 00 00 7e 01 00 00`  
-`be 01 00 00 00 00 00 00 01 00 00 00 19 00 03 00`
-`64 00 00 00 dc 00 00 00 01 ff [80x60 Bmp image]`
-``[standard 3d printer gcode]`
+`be 01 00 00 00 00 00 00 01 00 00 00 19 00 03 00`  
+`64 00 00 00 dc 00 00 00 01 ff [80x60 Bmp image]`  
+``[standard 3d printer gcode]`  
 
 The sections of the header are:
 1. ASCII text 'g3drem 1.0      ' = 67 33 64 72 65 6d 20 31 2e 30 20 20 20 20 20 20
