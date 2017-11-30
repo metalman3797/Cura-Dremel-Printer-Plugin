@@ -6,7 +6,7 @@ Dremel Ideabuilder 3D20 plugin for [Cura version 3.x](https://ultimaker.com/en/p
 # Installation
 To install, follow the instructions below:
 
-0.  [Download and install Cura](https://ultimaker.com/en/products/ultimaker-cura-software) on your machine
+0.  [Download and install Cura](https://ultimaker.com/en/products/ultimaker-cura-software) on your machine.  This plugin has been tested on Windows 10 Professional 64 bit edition, and MacOS 10.12 (Sierra), but this plugin should work equally well on linux or any other operating system that Cura supports.
 
 1.  Download the plugin files by peforming one of the two actions:
 
