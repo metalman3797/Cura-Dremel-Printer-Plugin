@@ -10,13 +10,15 @@ To install, follow the instructions below:
 
 1.  Download the plugin files by peforming one of the two actions:
 
-   EITHER
-    1a. clone the repository onto your machine using the following command
+    EITHER
+    1. clone the repository onto your machine using the following command
     ```
     git clone https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin.git
     ```
+
     OR
-    1b.  Click the download zip button on ![this page](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin) and extract the zip file to your computer
+
+    2.  Click the download zip button on ![this page](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin) and extract the zip file to your computer
     ![Download Zip](/docs/downloadzip.png)
 
 2.  Navigate to the folder where you downloaded or extracted the plugin
