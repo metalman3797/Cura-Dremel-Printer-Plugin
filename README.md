@@ -39,16 +39,16 @@ To install, follow the instructions below:
 ---
 # Usage
 Once the plugin has been installed you can use it by following the steps outlined below:
-**1.** open cura
-**2.** select the Dremel 3D20 as your printer (cura->preferences->printers->add)
+1. open cura
+2. select the Dremel 3D20 as your printer (cura->preferences->printers->add)
 ![Select the Dremel 3D20](/docs/addprinter.png)
 
-**3.** select Dremel PLA or any other PLA filament as your filament type
+3. select Dremel PLA or any other PLA filament as your filament type
 ![Select the dremel pla](/docs/selectpla.png)
 
-**4.** Set the slicing options that you want.
+4. Set the slicing options that you want.
 
-**5.** (Optional, but recommended) Zoom in on the part until it fills the screen.  As the plugin saves out the .g3drem file it will grab a screenshot of the main cura window for use as the preview image that is displayed on the Ideabuilder screen. The area inside the red box shown in the image below (but not in the actual cura window when you use the plugin) is what will be used in the screenshot.  The preview on the Dremel is **much** better if you zoom in on the part that you're printing until the part fills the screenshot area.  
+5. (Optional, but recommended) Zoom in on the part until it fills the screen.  As the plugin saves out the .g3drem file it will grab a screenshot of the main cura window for use as the preview image that is displayed on the Ideabuilder screen. The area inside the red box shown in the image below (but not in the actual cura window when you use the plugin) is what will be used in the screenshot.  The preview on the Dremel is **much** better if you zoom in on the part that you're printing until the part fills the screenshot area.  
 
 For instance:
 ![Zoom in on the part](/docs/Zoom_For_Screenshot.PNG)
@@ -56,18 +56,18 @@ For instance:
 Produces:
 ![Ideabuilder Screen](docs/Ideabuilder_screen.jpg)
 
-**6.** Click "File->Save As", or "save to file", selecting .g3drem as the output file format.
+6. Click "File->Save As", or "save to file", selecting .g3drem as the output file format.
 
 ![Save as .g3drem file](/docs/saveas.PNG)
 
-**7.** Save this file to a SD card
-**8.** Insert the SD card into your IdeaBuilder 3D20
-**9.** Turn on the printer
-**10.** Select the appropriate file to print.  
+7. Save this file to a SD card
+8. Insert the SD card into your IdeaBuilder 3D20
+9. Turn on the printer
+10. Select the appropriate file to print.  
     ~~Currently the cura icon~~ ![cura icon](plugins/DremelGCodeWriter/cura80x60.bmp) ~~will be shown on the Dremel IdeaBuilder screen as the preview.~~  
     **New - [Version 0.2](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/v0.2):** The plugin now grabs a screenshot of the main cura window as it saves out the file (see step 5)
-**11.** Click print
-**12.** Enjoy - if you have any feature suggestions or encounter issues, feel free to raise them in the issues section above!
+11. Click print
+12. Enjoy - if you have any feature suggestions or encounter issues, feel free to raise them in the issues section above!
 ---
 # Note
 Please note the following:
