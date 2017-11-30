@@ -85,7 +85,7 @@ The following items would be great to add to this plugin - as I get time I'll wo
 * Better understanding of the remaining unknown items in the Dremel .g3drem file format
 * ~~Optimized Dremel3D20 json file with support for Dremel brand PLA~~
 * Optimization of Dremel brand PLA settings
-
+---
 # <a name="Technical_Details"></a>Technical Details of the .g3drem header file Format
 The g3drem file format consists of a few sections.  The header is a mix of binary data and ASCII data, but the ASCII section is written in binary format for ease.
 
