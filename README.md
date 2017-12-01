@@ -92,6 +92,8 @@ The following items would be great to add to this plugin - as I get time I'll wo
 The g3drem file format consists of a few sections.  The header is a mix of binary data and ASCII data, which is followed by an 80x60 bitmap image written to the file, which is then followed by standard 3d printer gcode saved in ASCII format.
 
 **An Example of the binary header looks like this:**
+![File Header](/docs/FileHeader.jpg)
+
 
 | Binary Data                                     | Description                                  |
 |-------------------------------------------------|----------------------------------------------|
