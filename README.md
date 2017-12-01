@@ -48,7 +48,7 @@ Once the plugin has been installed you can use it by following the steps outline
 
 4. Set the slicing options that you want.
 
-5. <a name="Section5"></a>(Optional, but recommended) Zoom in on the part until it fills the screen.  As the plugin saves out the .g3drem file it will grab a screenshot of the main cura window for use as the preview image that is displayed on the Ideabuilder screen. The area inside the red box shown in the image below (but not in the actual cura window when you use the plugin) is what will be used in the screenshot.  The preview on the Dremel is **much** better if you zoom in on the part that you're printing until the part fills the screenshot area.  
+5. <a name="Step5"></a>(Optional, but recommended) Zoom in on the part until it fills the screen.  As the plugin saves out the .g3drem file it will grab a screenshot of the main cura window for use as the preview image that is displayed on the Ideabuilder screen. The area inside the red box shown in the image below (but not in the actual cura window when you use the plugin) is what will be used in the screenshot.  The preview on the Dremel is **much** better if you zoom in on the part that you're printing until the part fills the screenshot area.  
 
 For instance:
 ![Zoom in on the part](/docs/Zoom_For_Screenshot.PNG)
@@ -65,7 +65,7 @@ Produces:
 9. Turn on the printer
 10. Select the appropriate file to print.  
     ~~Currently the cura icon~~ ![cura icon](plugins/DremelGCodeWriter/cura80x60.bmp) ~~will be shown on the Dremel IdeaBuilder screen as the preview.~~  
-    **New - [Version 0.2](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/v0.2):** The plugin now grabs a screenshot of the main cura window as it saves out the file (see [Step 5 above](#Section5))
+    **New - [Version 0.2](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/v0.2):** The plugin now grabs a screenshot of the main cura window as it saves out the file (see [Step 5 above](#Step5))
 11. Click print
 12. Enjoy - if you have any feature suggestions or encounter issues, feel free to raise them in the issues section above!
 ---
@@ -116,7 +116,7 @@ A description of the current understanding of this file format is below:
 8. `64 00 00 00` = Two two-byte, or one four-byte number that is different in some files that I've downloaded, but seem to remain the same on all files that I've generated with both the Dremel 3D and Simplify 3D software that I have, and doesn't have an obvious effect on the print. **Note**, the last two bytes seem to be zeros in all files I've encountered.
 9. `DC 00 00 00` = Two two-byte, or one four-byte number that is different in some files that I've downloaded, but seem to remain the same on all files that I've generated with both the Dremel 3D and Simplify 3D software that I have, and doesn't have an obvious effect on the print. **Note**, the last two bytes seem to be zeros in all files I've encountered.
 10. `01 ff` = Another magic numbers that don't seem to change across files, and seems to indicate the end of the header
-11. An 80x60 bitmap containing the image that the Dremel 3D20 will use to display on the screen (See [Section 5 above](#Section5))
+11. An 80x60 bitmap containing the image that the Dremel 3D20 will use to display on the screen (See the usage instructions [step 5](#Step5))
 12. Standard 3d printer gcode (Marlin flavor seems to be working, but if you encounter issues please feel free to raise them)
 
 **Interesting observations about the file format:**
