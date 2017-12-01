@@ -48,7 +48,7 @@ Once the plugin has been installed you can use it by following the steps outline
 
 4. Set the slicing options that you want.
 
-5. (Optional, but recommended) Zoom in on the part until it fills the screen.  As the plugin saves out the .g3drem file it will grab a screenshot of the main cura window for use as the preview image that is displayed on the Ideabuilder screen. The area inside the red box shown in the image below (but not in the actual cura window when you use the plugin) is what will be used in the screenshot.  The preview on the Dremel is **much** better if you zoom in on the part that you're printing until the part fills the screenshot area.  
+5. <a name="Section5"></a>(Optional, but recommended) Zoom in on the part until it fills the screen.  As the plugin saves out the .g3drem file it will grab a screenshot of the main cura window for use as the preview image that is displayed on the Ideabuilder screen. The area inside the red box shown in the image below (but not in the actual cura window when you use the plugin) is what will be used in the screenshot.  The preview on the Dremel is **much** better if you zoom in on the part that you're printing until the part fills the screenshot area.  
 
 For instance:
 ![Zoom in on the part](/docs/Zoom_For_Screenshot.PNG)
@@ -65,7 +65,7 @@ Produces:
 9. Turn on the printer
 10. Select the appropriate file to print.  
     ~~Currently the cura icon~~ ![cura icon](plugins/DremelGCodeWriter/cura80x60.bmp) ~~will be shown on the Dremel IdeaBuilder screen as the preview.~~  
-    **New - [Version 0.2](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/v0.2):** The plugin now grabs a screenshot of the main cura window as it saves out the file (see step 5)
+    **New - [Version 0.2](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/v0.2):** The plugin now grabs a screenshot of the main cura window as it saves out the file (see [Step 5 above](#Section5))
 11. Click print
 12. Enjoy - if you have any feature suggestions or encounter issues, feel free to raise them in the issues section above!
 ---
@@ -106,18 +106,18 @@ A description of the current understanding of this file format is below:
 `[standard 3d printer gcode]`                     | Gcode in ASCII         (See 12 below      )  |
 
 **The sections of the file are:**
-1. ASCII text 'g3drem 1.0      ' = `67 33 64 72 65 6d 20 31 2e 30 20 20 20 20 20 20`
-2. Some magic numbers that seem to be the same for every file = `3a 00 00 00 b0 38 00 00 b0 38 00 00`
-3. 4 byte little-endian integer representing the number of minutes the print will take = `38 04 00 00`
-4. 4 byte little-endian integer representing the estimated number of millimeters of filament that the print will use = `8f 04 00 00`
-5. Two four-byte magic numbers that seem to be the same for every file = `00 00 00 00 01 00 00 00`
-6. A two-byte number that is different in some files that I've downloaded, but seem to remain the same on all files that I've generated with both the Dremel 3D and Simplify 3D software that I have, and doesn't have an obvious effect on the print: `19 00`
-7. A two-byte magic number that always seems to be the same `03 00`
-8. Two two-byte, or one four-byte number that is different in some files that I've downloaded, but seem to remain the same on all files that I've generated with both the Dremel 3D and Simplify 3D software that I have, and doesn't have an obvious effect on the print: `64 00 00 00`  Note, the last two bytes seem to be zeros in all files I've encountered.
-9. Two two-byte, or one four-byte number that is different in some files that I've downloaded, but seem to remain the same on all files that I've generated with both the Dremel 3D and Simplify 3D software that I have, and doesn't have an obvious effect on the print: `DC 00 00 00`
-10. Some more  magic numbers that don't seem to change across files `01 ff`
-11. An 80x60 bitmap containing the image that the Dremel 3D20 will use to display on the screen
-12. Standard 3d printer gcode (Marlin flavor seems to be working, but if you encounter issues please feel free to raise them above)
+1. `67 33 64 72 65 6d 20 31 2e 30 20 20 20 20 20 20` = ASCII text 'g3drem 1.0      '
+2. `3a 00 00 00 b0 38 00 00 b0 38 00 00` = Some magic numbers that seem to be the same for every file 
+3. `38 04 00 00` = gour-byte little-endian integer representing the number of minutes the print will take
+4. `8f 04 00 00` = four-byte little-endian integer representing the estimated number of millimeters of filament that the print will use
+5. `00 00 00 00 01 00 00 00` = Two four-byte magic numbers that seem to be the same for every file
+6. `19 00` = A two-byte number that is different in some files that I've downloaded, but seem to remain the same on all files that I've generated with both the Dremel 3D and Simplify 3D software that I have, and doesn't have an obvious effect on the print.
+7. `03 00` = A two-byte magic number that always seems to be the same
+8. `64 00 00 00` = Two two-byte, or one four-byte number that is different in some files that I've downloaded, but seem to remain the same on all files that I've generated with both the Dremel 3D and Simplify 3D software that I have, and doesn't have an obvious effect on the print. **Note**, the last two bytes seem to be zeros in all files I've encountered.
+9. `DC 00 00 00` = Two two-byte, or one four-byte number that is different in some files that I've downloaded, but seem to remain the same on all files that I've generated with both the Dremel 3D and Simplify 3D software that I have, and doesn't have an obvious effect on the print. **Note**, the last two bytes seem to be zeros in all files I've encountered.
+10. `01 ff` = Another magic numbers that don't seem to change across files, and seems to indicate the end of the header
+11. An 80x60 bitmap containing the image that the Dremel 3D20 will use to display on the screen (See [Section 5 above](#Section5))
+12. Standard 3d printer gcode (Marlin flavor seems to be working, but if you encounter issues please feel free to raise them)
 
 **Interesting observations about the file format:**
 1.  The maximum number of minutes that the dremel can read is 0xFFFFFF00, which comes out to 4660 hours and 20 minutes
