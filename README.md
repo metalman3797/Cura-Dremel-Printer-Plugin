@@ -89,30 +89,35 @@ The following items would be great to add to this plugin - as I get time I'll wo
 * Optimization of Dremel brand PLA settings
 ---
 # <a name="Technical_Details"></a>Technical Details of the .g3drem File Format
-The g3drem file format consists of a few sections.  The header is a mix of binary data and ASCII data, which is followed by an 80x60 bitmap image written to the file, which is then followed by standard 3d printer gcode saved in ASCII format.
+The g3drem file format consists of a few sections.  The header is a mix of binary data and ASCII data, which is followed by an 80x60 pixel bitmap image written to the file, which is then followed by standard 3d printer gcode saved in ASCII format.
 
 **An Example of the binary header looks like this:**
-![File Header](/docs/FileHeader.jpg)
 
+![File Header](/docs/FileHeader.JPG)
+
+A description of the current understanding of this file format is below:
 
 | Binary Data                                     | Description                                  |
 |-------------------------------------------------|----------------------------------------------|
 `67 33 64 72 65 6d 20 31 2e 30 20 20 20 20 20 20` | Ascii for 'g3drem 1.0      ' (see 1 below )  |
-`3a 00 00 00 b0 38 00 00 b0 38 00 00 7e 01 00 00` | Magic #s and Minutes   (See 2 and 3 below )  |
-`be 01 00 00 00 00 00 00 01 00 00 00 19 00 03 00` | Filament and Magic #s  (See 4, 5, and 6   )  |
-`64 00 00 00 dc 00 00 00 01 ff [80x60 Bmp image]` | Magic #s and BMP image (6 Contued, 7 and 8)  |
-`[standard 3d printer gcode]`                     | Gcode in ASCII         (See 9 below       )  |
+`3a 00 00 00 b0 38 00 00 b0 38 00 00 38 04 00 00` | Magic #s and Minutes   (See 2 and 3 below )  |
+`8f 04 00 00 00 00 00 00 01 00 00 00 19 00 03 00` | Filament and Magic #s  (See 4, 5, 6 and 7 )  |
+`64 00 00 00 DC 00 00 00 01 ff [80x60 Bmp image]` | Magic #s and BMP image (See 8, 9, 10, 11  )  |
+`[standard 3d printer gcode]`                     | Gcode in ASCII         (See 12 below      )  |
 
 **The sections of the file are:**
 1. ASCII text 'g3drem 1.0      ' = `67 33 64 72 65 6d 20 31 2e 30 20 20 20 20 20 20`
 2. Some magic numbers that seem to be the same for every file = `3a 00 00 00 b0 38 00 00 b0 38 00 00`
-3. 4 byte little-endian integer representing the number of minutes the print will take = `7e 01 00 00`
-4. 4 byte little-endian integer representing the estimated number of millimeters of filament that the print will use = `be 01 00 00`
-5. Some more magic numbers that seem to be the same for every file = `00 00 00 00 01 00 00 00 `
-6. Some numbers that are different in some files that I've downloaded, but seem to remain the same on all files that I've generated with both the Dremel 3D and Simplify 3D software that I have, and don't have an obvious effect on the print: `19 00 03 00 64 00 00 00 dc 00`
-7. Some more  magic numbers that don't seem to change across files `00 00 01 ff`
-8. An 80x60 bitmap containing the image that the Dremel 3D20 will use to display on the screen
-9. Standard 3d printer gcode
+3. 4 byte little-endian integer representing the number of minutes the print will take = `38 04 00 00`
+4. 4 byte little-endian integer representing the estimated number of millimeters of filament that the print will use = `8f 04 00 00`
+5. Two four-byte magic numbers that seem to be the same for every file = `00 00 00 00 01 00 00 00`
+6. A two-byte number that is different in some files that I've downloaded, but seem to remain the same on all files that I've generated with both the Dremel 3D and Simplify 3D software that I have, and doesn't have an obvious effect on the print: `19 00`
+7. A two-byte magic number that always seems to be the same `03 00`
+8. Two two-byte, or one four-byte number that is different in some files that I've downloaded, but seem to remain the same on all files that I've generated with both the Dremel 3D and Simplify 3D software that I have, and doesn't have an obvious effect on the print: `64 00 00 00`  Note, the last two bytes seem to be zeros in all files I've encountered.
+9. Two two-byte, or one four-byte number that is different in some files that I've downloaded, but seem to remain the same on all files that I've generated with both the Dremel 3D and Simplify 3D software that I have, and doesn't have an obvious effect on the print: `DC 00 00 00`
+10. Some more  magic numbers that don't seem to change across files `01 ff`
+11. An 80x60 bitmap containing the image that the Dremel 3D20 will use to display on the screen
+12. Standard 3d printer gcode (Marlin flavor seems to be working, but if you encounter issues please feel free to raise them above)
 
 **Interesting observations about the file format:**
 1.  The maximum number of minutes that the dremel can read is 0xFFFFFF00, which comes out to 4660 hours and 20 minutes
