@@ -89,11 +89,13 @@ The following items would be great to add to this plugin - as I get time I'll wo
 * Optimization of Dremel brand PLA settings
 ---
 # <a name="Technical_Details"></a>Technical Details of the .g3drem File Format
-The g3drem file format consists of a few sections.  The header is a mix of binary data and ASCII data, which is followed by an 80x60 bitmap image written to the file, which is then followed by standard 3d printer gcode saved in ASCII format.
+The g3drem file format consists of a few sections.  The header is a mix of binary data and ASCII data, which is followed by an 80x60 pixel bitmap image written to the file, which is then followed by standard 3d printer gcode saved in ASCII format.
 
 **An Example of the binary header looks like this:**
-![File Header](/docs/FileHeader.jpg)
 
+![File Header](/docs/FileHeader.JPG)
+
+A description of the current understanding of this file format is below:
 
 | Binary Data                                     | Description                                  |
 |-------------------------------------------------|----------------------------------------------|
