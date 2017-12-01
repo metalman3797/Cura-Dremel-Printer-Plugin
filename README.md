@@ -100,15 +100,15 @@ A description of the current understanding of this file format is below:
 | Binary Data                                     | Description                                  |
 |-------------------------------------------------|----------------------------------------------|
 `67 33 64 72 65 6d 20 31 2e 30 20 20 20 20 20 20` | Ascii for 'g3drem 1.0      ' (see 1 below )  |
-`3a 00 00 00 b0 38 00 00 b0 38 00 00 38 04 00 00` | Magic #s and Minutes   (See 2 and 3 below )  |
-`8f 04 00 00 00 00 00 00 01 00 00 00 19 00 03 00` | Filament and Magic #s  (See 4, 5, 6 and 7 )  |
+`3a 00 00 00 b0 38 00 00 b0 38 00 00 38 04 00 00` | Magic #s and Time(sec) (See 2 and 3 below )  |
+`8f 04 00 00 00 00 00 00 01 00 00 00 19 00 03 00` | Filament(mm), Magic #s (See 4, 5, 6 and 7 )  |
 `64 00 00 00 DC 00 00 00 01 ff [80x60 Bmp image]` | Magic #s and BMP image (See 8, 9, 10, 11  )  |
 `[standard 3d printer gcode]`                     | Gcode in ASCII         (See 12 below      )  |
 
 **The sections of the file are:**
 1. `67 33 64 72 65 6d 20 31 2e 30 20 20 20 20 20 20` = ASCII text 'g3drem 1.0      '
 2. `3a 00 00 00 b0 38 00 00 b0 38 00 00` = Some magic numbers that seem to be the same for every file 
-3. `38 04 00 00` = four-byte little-endian integer representing the number of minutes the print will take
+3. `38 04 00 00` = four-byte little-endian integer representing the number of seconds that the print will take
 4. `8f 04 00 00` = four-byte little-endian integer representing the estimated number of millimeters of filament that the print will use
 5. `00 00 00 00 01 00 00 00` = Two four-byte magic numbers that seem to be the same for every file
 6. `19 00` = A two-byte number that is different in some files that I've downloaded, but seem to remain the same on all files that I've generated with both the Dremel 3D and Simplify 3D software that I have, and doesn't have an obvious effect on the print.
