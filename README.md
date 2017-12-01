@@ -50,13 +50,13 @@ Once the plugin has been installed you can use it by following the steps outline
 
 5. <a name="Step5"></a>(Optional, but recommended) Zoom in on the part until it fills the screen.  As the plugin saves out the .g3drem file it will grab a screenshot of the main cura window for use as the preview image that is displayed on the Ideabuilder screen. The area inside the red box shown in the image below will be used in the screenshot (the red box will not appear in the actual cura window when you use the plugin).  **Please Note:** The preview on the Dremel will be **much** better if you zoom in on the part that you're printing until the part fills the screenshot area.
 
-**Nifty Feature:** The screenshot will work with any of the visualizer plugins, so feel free to try the "xray view" or "layer view" options if you like those visualizations better. 
-
 For instance:
 ![Zoom in on the part](/docs/Zoom_For_Screenshot.PNG)
 
-Produces:
+Will show this on the IdeaBuilder 3D20:
 ![Ideabuilder Screen](docs/Ideabuilder_screen.jpg)
+
+**Nifty Feature:** The screenshot will work with the visualizer plugins, so feel free to try the "xray view" or "layer view" options if you like those visualizations better. 
 
 6. Click "File->Save As", or "save to file", selecting .g3drem as the output file format.
 
