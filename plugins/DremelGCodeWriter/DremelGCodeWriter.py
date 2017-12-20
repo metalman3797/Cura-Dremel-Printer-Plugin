@@ -3,13 +3,17 @@
 # A plugin to enable Cura to write .g3drem files for
 # the Dremel IdeaBuilder 3D20
 #
-# hacked together by Tim Sch...
-# source code and installation instructions can be found here:
+# Hacked together by Tim Schoenmackers
+# Source code and installation instructions can be found here:
 # https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin
 #
 # Based on the GcodeWriter plugin written by Ultimaker
 # the original source can be found here:
 # https://github.com/Ultimaker/Cura/tree/master/plugins/GCodeWriter
+#
+# This plugin is released under the terms of the LGPLv3 or higher.
+# The full text of the LGPLv3 License can be found here:
+# https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/blob/master/LICENSE
 ####################################################################
 
 from UM.Mesh.MeshWriter import MeshWriter
