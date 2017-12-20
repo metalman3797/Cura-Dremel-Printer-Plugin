@@ -18,7 +18,7 @@ To install, follow the instructions below:
 
     OR
 
-    2.  Click the download zip button on ![this page](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin) and extract the zip file to your computer
+    2.  Click the download zip button on [this page](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin) and extract the zip file to your computer
     ![Download Zip](/docs/downloadzip.png)
 
 2.  Navigate to the folder where you downloaded or extracted the plugin
