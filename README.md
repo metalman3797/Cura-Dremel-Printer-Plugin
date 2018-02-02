@@ -21,29 +21,44 @@ To install, follow the instructions below:
     2.  Click the download zip button on [this page](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin) and extract the zip file to your computer
     ![Download Zip](/docs/downloadzip.png)
 
+    OR
+
+    3.  Navigate to the ["Releases"](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.2.4) page to download the latest released version
+
 2.  Navigate to the folder where you downloaded or extracted the plugin
 
-3.  Copy the plugins/DremelGCodeWriter folder into your `%CURA_DIR%/plugins` folder.  On MacOS this is located at `Ultimaker Cura.app/Contents/Resources/plugins/plugins/`  The easiest way on the mac to get to this folder is to right click on the Ultimaker Cura.app application and select the "show package contents" option.
+3.  Install the main plugin that enables Cura to export .g3drem files by
+
+    EITHER
+    1. Insall the DremelGCodeWriter.umplugin located at Cura-Dremel-3D20-Plugin\plugins\DremelGCodeWriter.umplugin using Cura's plugin install interface (Cura Menu->Plugins->Install Plugin)
+    *Note:*  this method installs the plugin to %OS_USER_DIR%\AppData\Roaming\cura\%CURA VERSION%\plugins
+
+    OR
+
+    2. Copy the plugins/DremelGCodeWriter folder into your `%CURA_DIR%/plugins` folder.  On MacOS this is located at `Ultimaker Cura.app/Contents/Resources/plugins/plugins/`  The easiest way on the mac to get to this folder is to right click on the Ultimaker Cura.app application and select the "show package contents" option.
 ![Copy the contents of DremelOutputDevice to the plugin directory of cura](/docs/plugindir.PNG)
 
-4.   Copy the resources/definitions/Dremel3D20.def.json file into the `%CURA_DIR%/resources/definitions` folder.  On MacOS this is located at `Ultimaker Cura.app/Contents/Resources/resources/definitions/`  The easiest way on the mac to get to this folder is to right click on the Ultimaker Cura.app application and select the "show package contents" option
+For a minimal installation this is all you need.  Feel free to skip the following steps if you don't care about specific settings for the Dremel3D20 and only want to export .g3drem files from cura (Note: a minimal installation won't necessarily set up the print bed size, machine speeds, etc... correctly and the user is responsible for ensuring that the print settings are correct and that the print will fit on the bed)
+
+For a complete installation:
+4.   Copy the resources/definitions/Dremel3D20.def.json file into the `%CURA_DIR%/resources/definitions` folder.  This file contains the printer bed size, along with other Ideabuilder 3D20 specific settings. On MacOS this folder is located at `Ultimaker Cura.app/Contents/Resources/resources/definitions/`  The easiest way on the mac to get to this folder is to right click on the Ultimaker Cura.app application and select the "show package contents" option
 ![Copy the contents of Dremel printer json file to the definitions directory of cura](/docs/dremelresource.PNG)
 
-5.  Copy the resources/meshes/dremel_3D20_platform.stl to the `%CURA_DIR%/resources/meshes` folder.  On MacOS this is located at `Ultimaker Cura.app/Contents/Resources/resources/meshes/`  The easiest way on the mac to get to this folder is to right click on the Ultimaker Cura.app application and select the "show package contents" option
+5.  Copy the resources/meshes/dremel_3D20_platform.stl to the `%CURA_DIR%/resources/meshes` folder.  This file contains the 3D model of the Dremel Ideabuilder print bed.  On MacOS this is folder located at `Ultimaker Cura.app/Contents/Resources/resources/meshes/`  The easiest way on the mac to get to this folder is to right click on the Ultimaker Cura.app application and select the "show package contents" option
 ![Copy the contents of Dremel print bed file to the meshes directory of cura](/docs/meshesdir.png)
 
-6.  Copy the resources/materials/dremel_pla.xml.fdm_material to the `%CURA_DIR%/resources/materials` folder.   On MacOS this is located at `Ultimaker Cura.app/Contents/Resources/resources/materials/`  The easiest way on the mac to get to this folder is to right click on the Ultimaker Cura.app application and select the "show package contents" option
+6.  Copy the resources/materials/dremel_pla.xml.fdm_material to the `%CURA_DIR%/resources/materials` folder.   This file contains the Dremel brand PLA material settings.  On MacOS this folder is located at `Ultimaker Cura.app/Contents/Resources/resources/materials/`  The easiest way on the mac to get to this folder is to right click on the Ultimaker Cura.app application and select the "show package contents" option
 ![Copy the contents of Dremel PLA material to the materials directory of cura](/docs/material.png)    
 
 7.  Congratulations - the plugin is now installed!
 ---
 # Usage
 Once the plugin has been installed you can use it by following the steps outlined below:
-1. open cura
-2. select the Dremel 3D20 as your printer (cura->preferences->printers->add)
+1. open Cura
+2. (Skip if Step 4 above was not performed) select the Dremel 3D20 as your printer (cura->preferences->printers->add)
 ![Select the Dremel 3D20](/docs/addprinter.png)
 
-3. select Dremel PLA or any other PLA filament as your filament type
+3. Select Dremel PLA (if step 6 above was performed) or any other PLA filament (if step 6 was not performed, or if other PLA settings are preferred) as your filament type
 ![Select the dremel pla](/docs/selectpla.png)
 
 4. Set the slicing options that you want.
@@ -56,7 +71,7 @@ For instance:
 Will show this on the IdeaBuilder 3D20:
 ![Ideabuilder Screen](docs/Ideabuilder_screen.jpg)
 
-**Nifty Feature:** The screenshot will work with the visualizer plugins, so feel free to try the "xray view" or "layer view" options if you like those visualizations better. 
+**Nifty Feature:** The screenshot will work with the visualizer plugins, so feel free to try the "xray view" or "layer view" options if you like those visualizations better.
 
 6. Click "File->Save As", or "save to file", selecting .g3drem as the output file format.
 
@@ -67,7 +82,7 @@ Will show this on the IdeaBuilder 3D20:
 9. Turn on the printer
 10. Select the appropriate file to print.  
     ~~Currently the cura icon~~ ![cura icon](plugins/DremelGCodeWriter/cura80x60.bmp) ~~will be shown on the Dremel IdeaBuilder screen as the preview.~~  
-    **New - [Version 0.2](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/v0.2):** The plugin now grabs a screenshot of the main cura window as it saves out the file (see [Step 5 above](#Step5))
+    **New - [Version 0.2 and above](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.2.4):** The plugin now grabs a screenshot of the main cura window as it saves out the file (see [Step 5 above](#Step5))
 11. Click print
 12. Enjoy - if you have any feature suggestions or encounter issues, feel free to raise them in the issues section above!
 ---
@@ -108,7 +123,7 @@ A description of the current understanding of this file format is below:
 
 **The sections of the file are:**
 1. `67 33 64 72 65 6d 20 31 2e 30 20 20 20 20 20 20` = ASCII text 'g3drem 1.0      '
-2. `3a 00 00 00 b0 38 00 00 b0 38 00 00` = Some magic numbers that seem to be the same for every file 
+2. `3a 00 00 00 b0 38 00 00 b0 38 00 00` = Some magic numbers that seem to be the same for every file
 3. `38 04 00 00` = four-byte little-endian integer representing the number of seconds that the print will take
 4. `8f 04 00 00` = four-byte little-endian integer representing the estimated number of millimeters of filament that the print will use
 5. `00 00 00 00 01 00 00 00` = Two four-byte magic numbers that seem to be the same for every file

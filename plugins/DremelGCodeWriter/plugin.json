@@ -1,7 +1,7 @@
 {
     "name": "Dremel GCode Writer",
-    "author": "Tim S",
-    "version": "1.0.0",
+    "author": "Tim Schoenmackers",
+    "version": "0.2.4",
     "description": "Writes dremel gcode to a file.",
     "api": 4,
     "i18n-catalog": "cura"
