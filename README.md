@@ -31,8 +31,8 @@ To install, follow the instructions below:
 
     EITHER
     1. Insall the DremelGCodeWriter.umplugin located at `Cura-Dremel-3D20-Plugin\plugins\DremelGCodeWriter.umplugin` using Cura's plugin install interface (Cura Menu->Plugins->Install Plugin)
-    
-    *Note:*  this method installs the plugin to `%OS_USER_DIR%\AppData\Roaming\cura\%CURA VERSION%\plugins`
+
+    *Note:*  this method installs the plugin to `%OS_USER_DIR%\AppData\Roaming\cura\%CURA VERSION%\plugins`.  For Operating System specific directories please see [this page](https://github.com/Ultimaker/Cura/wiki/Cura-Preferences-and-Settings-Locations)
 
     OR
 
@@ -52,6 +52,11 @@ For a complete installation:
 ![Copy the contents of Dremel PLA material to the materials directory of cura](/docs/material.png)    
 
 7.  Congratulations - the plugin is now installed!
+---
+# Uninstallation
+
+To uninstall, simply close cura and delete the files that you copied earlier.  Note:  If you installed using the .umplugin file, then Cura copies the plugin files to the plugins directory here: `%OS_USER_DIR%\AppData\Roaming\cura\%CURA VERSION%\plugins` as
+specified on this page]https://github.com/Ultimaker/Cura/wiki/Cura-Preferences-and-Settings-Locations  Simply navigate to the plugins directory there, and delete the DremelGCodeWriter folder.
 ---
 # Usage
 Once the plugin has been installed you can use it by following the steps outlined below:
