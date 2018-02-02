@@ -23,7 +23,7 @@ To install, follow the instructions below:
 
     OR
 
-    3.  Navigate to the ["Releases"](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.2.4) page to download the latest released version
+    3.  Navigate to the ["Releases"](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/latest) page to download the latest released version
 
 2.  Navigate to the folder where you downloaded or extracted the plugin
 
@@ -90,7 +90,7 @@ Will show this on the IdeaBuilder 3D20:
 9. Turn on the printer
 10. Select the appropriate file to print.  
     ~~Currently the cura icon~~ ![cura icon](plugins/DremelGCodeWriter/cura80x60.bmp) ~~will be shown on the Dremel IdeaBuilder screen as the preview.~~  
-    **New - [Version 0.2 and above](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.2.4):** The plugin now grabs a screenshot of the main cura window as it saves out the file (see [Step 5 above](#Step5))
+    **New - [Version 0.2 and above](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/latest):** The plugin now grabs a screenshot of the main cura window as it saves out the file (see [Step 5 above](#Step5))
 11. Click print
 12. Enjoy - if you have any feature suggestions or encounter issues, feel free to raise them in the issues section above!
 ---
