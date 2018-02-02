@@ -30,8 +30,9 @@ To install, follow the instructions below:
 3.  Install the main plugin that enables Cura to export .g3drem files by
 
     EITHER
-    1. Insall the DremelGCodeWriter.umplugin located at Cura-Dremel-3D20-Plugin\plugins\DremelGCodeWriter.umplugin using Cura's plugin install interface (Cura Menu->Plugins->Install Plugin)
-    *Note:*  this method installs the plugin to %OS_USER_DIR%\AppData\Roaming\cura\%CURA VERSION%\plugins
+    1. Insall the DremelGCodeWriter.umplugin located at `Cura-Dremel-3D20-Plugin\plugins\DremelGCodeWriter.umplugin` using Cura's plugin install interface (Cura Menu->Plugins->Install Plugin)
+    
+    *Note:*  this method installs the plugin to `%OS_USER_DIR%\AppData\Roaming\cura\%CURA VERSION%\plugins`
 
     OR
 
