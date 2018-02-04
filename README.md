@@ -22,7 +22,7 @@ To install, follow the instructions below:
 
 2.  Navigate to the folder where you downloaded or extracted the plugin
 
-###Windows Installation instructions
+### Windows Installation instructions
 Edit the [install_on_windows.bat](install_on_windows.bat) batch file by changing two Lines
 
 change the line that reads:
@@ -37,7 +37,7 @@ to point to the directory where was installed
 
 then, right click on the install_on_windows.bat and select "Run As Administrator" (if Cura was installed to C:\Program Files\ this step is necessary because the "Program Files" director requires administrative access to create directories within it)  If Cura was installed to an alternate location the administrative access may not be necessary.  If the console window reads `***Plugin Successfully Installed!` then skip to step 7, otherwise follow the instructions below to manually install the plugin.
 
-###Other Operating Systems (Mac, Linux) or to install Manually on Windows
+### Other Operating Systems (Mac, Linux) or to install Manually on Windows
 
 3.  Install the main plugin that enables Cura to export .g3drem files by following the instructions below:
 
