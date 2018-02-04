@@ -22,7 +22,7 @@ To install, follow the instructions below:
 
 2.  Navigate to the folder where you downloaded or extracted the plugin
 
-### Windows Installation instructions
+### Windows Installation Instructions
 Edit the [install_on_windows.bat](install_on_windows.bat) batch file by changing two Lines
 
 change the line that reads:
@@ -37,7 +37,22 @@ to point to the directory where was installed
 
 then, right click on the install_on_windows.bat and select "Run As Administrator" (if Cura was installed to C:\Program Files\ this step is necessary because the "Program Files" director requires administrative access to create directories within it)  If Cura was installed to an alternate location the administrative access may not be necessary.  If the console window reads `***Plugin Successfully Installed!` then skip to step 7, otherwise follow the instructions below to manually install the plugin.
 
-### Other Operating Systems (Mac, Linux) or to install Manually on Windows
+### MacOS Installation Instructions:
+If you haven't done so after installing Cura, launch Cura and close it.  This ensures that MacOS's security features won't think that Cura is corrupted when the plugin is installed.
+
+Open a MacOS Terminal and run the following commands:
+`cd <Extracted Plugin Directory>`  where <Extracted Plugin Directory> is the directory where you extracted the Dremel Plugin.  The easiest way to do this is to type `cd` followed by a space into the terminal window then drag the Cura-Dremel-Plugin folder onto the terminal.  Press the enter key
+
+Type 'chmod 755 install_on_mac.sh' followed by the enter key into the terminal window.  This will give the appropriate permissions to allow you to run the installation description
+
+Type `./install_on_mac.sh` this will run the installation script and copy the files to the appropriate locations.
+
+If successful, you should see the test `***Plugin Successfully installed`
+
+![Install On Mac](/docs/install_on_mac.png)
+
+
+### Other Operating Systems (Linux) or to install Manually on Windows:
 
 3.  Install the main plugin that enables Cura to export .g3drem files by following the instructions below:
 
