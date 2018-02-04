@@ -18,20 +18,32 @@ To install, follow the instructions below:
 
     OR
 
-    2.  Click the download zip button on [this page](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin) and extract the zip file to your computer
-    ![Download Zip](/docs/downloadzip.png)
-
-    OR
-
-    3.  Navigate to the ["Releases"](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/latest) page to download the latest released version
+    2.  Navigate to the ["Releases"](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/latest) page to download the latest released version in zip format and extract the zip file to your computer
 
 2.  Navigate to the folder where you downloaded or extracted the plugin
 
-3.  Install the main plugin that enables Cura to export .g3drem files by
+###Windows Installation instructions
+Edit the [install_on_windows.bat](install_on_windows.bat) batch file by changing two Lines
+
+change the line that reads:
+`set DOWNLOADED_PLUGIN_DIR=C:\Users\timsc\Documents\Cura-Dremel-3D20-Plugin`
+to point to the directory where the Cura-Dremel-3D20-Plugin was unzipped
+
+and change the line that reads:
+`set CURA_EXE_DIR=C:\Program Files\Ultimaker Cura`
+to point to the directory where was installed
+
+![edit batch file](/docs/edit_batch_file.png)
+
+then, right click on the install_on_windows.bat and select "Run As Administrator" (if Cura was installed to C:\Program Files\ this step is necessary because the "Program Files" director requires administrative access to create directories within it)  If Cura was installed to an alternate location the administrative access may not be necessary.  If the console window reads `***Plugin Successfully Installed!` then skip to step 7, otherwise follow the instructions below to manually install the plugin.
+
+###Other Operating Systems (Mac, Linux) or to install Manually on Windows
+
+3.  Install the main plugin that enables Cura to export .g3drem files by following the instructions below:
 
     EITHER
-    1. Insall the DremelGCodeWriter.umplugin located at `Cura-Dremel-3D20-Plugin\plugins\DremelGCodeWriter.umplugin` using Cura's plugin install interface (Cura Menu->Plugins->Install Plugin)  **Note:**  this method installs the plugin to `%OS_USER_DIR%\AppData\Roaming\cura\%CURA VERSION%\plugins`.  For Operating System specific directories please see [this page](https://github.com/Ultimaker/Cura/wiki/Cura-Preferences-and-Settings-Locations)
- 
+    1. Install the DremelGCodeWriter.umplugin located at `Cura-Dremel-3D20-Plugin\plugins\DremelGCodeWriter.umplugin` using Cura's plugin install interface (Cura Menu->Plugins->Install Plugin)  **Note:**  this method installs the plugin to `%OS_USER_DIR%\AppData\Roaming\cura\%CURA VERSION%\plugins`.  For Operating System specific directories please see [this page](https://github.com/Ultimaker/Cura/wiki/Cura-Preferences-and-Settings-Locations)
+
     OR
 
     2. Copy the plugins/DremelGCodeWriter folder into your `%CURA_DIR%/plugins` folder.  On MacOS this is located at `Ultimaker Cura.app/Contents/Resources/plugins/plugins/`  The easiest way on the mac to get to this folder is to right click on the Ultimaker Cura.app application and select the "show package contents" option.
