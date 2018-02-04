@@ -47,7 +47,7 @@ Type 'chmod 755 install_on_mac.sh' followed by the enter key into the terminal w
 
 Type `./install_on_mac.sh` this will run the installation script and copy the files to the appropriate locations.
 
-If successful, you should see the test `***Plugin Successfully installed`  If any error messages appear, follow the manual installation instructions below
+If successful, you should see the test `***Plugin Successfully installed` then skip to step 7 below. If any error messages appear, follow the manual installation instructions below
 
 ![Install On Mac](/docs/install_on_mac.png)
 
