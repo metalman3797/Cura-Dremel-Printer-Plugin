@@ -208,10 +208,10 @@ class DremelGCodeWriter(MeshWriter):
         json_string = json.dumps(data)
 
         # Escape characters that have a special meaning in g-code comments.
-        pattern = re.compile("|".join(GCodeWriter.escape_characters.keys()))
+        pattern = re.compile("|".join(DremelGCodeWriter.escape_characters.keys()))
 
         # Perform the replacement with a regular expression.
-        escaped_string = pattern.sub(lambda m: GCodeWriter.escape_characters[re.escape(m.group(0))], json_string)
+        escaped_string = pattern.sub(lambda m: DremelGCodeWriter.escape_characters[re.escape(m.group(0))], json_string)
 
         # Introduce line breaks so that each comment is no longer than 80 characters. Prepend each line with the prefix.
         result = ""
