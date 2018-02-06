@@ -21,11 +21,8 @@ from UM.Logger import Logger
 from UM.Application import Application
 from UM.Settings.InstanceContainer import InstanceContainer
 from UM.Qt.Duration import DurationFormat
-from UM.Math.Vector import Vector
-from UM.Math.Matrix import Matrix
 from UM.Qt.Bindings.Theme import Theme
 
-from cura.Settings.ExtruderManager import ExtruderManager
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtGui import QPixmap, QScreen
 from PyQt5.QtCore import QByteArray, QBuffer, QIODevice, QRect, Qt
@@ -34,8 +31,6 @@ import re #For escaping characters in the settings.
 import json
 import copy
 import struct
-import os
-import math
 
 ##  Writes a .g3drem file.
 
@@ -57,8 +52,10 @@ class DremelGCodeWriter(MeshWriter):
     def __init__(self):
         super().__init__()
 
-    ##  Performs the writing of the dremel header and gcode
 
+    ##  Performs the writing of the dremel header and gcode - for a technical
+    ##  breakdown of the dremel g3drem file format see the following page:
+    ##  https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/blob/master/README.md#technical-details-of-the-g3drem-file-format
     def write(self, stream, nodes, mode = MeshWriter.OutputMode.BinaryMode):
         if mode != MeshWriter.OutputMode.BinaryMode:
             Logger.log("e", "GCode Writer does not support non-binary mode.")
@@ -81,8 +78,6 @@ class DremelGCodeWriter(MeshWriter):
         stream.write(struct.pack('<ll',seconds,length))
         # write some more magic numbers
         stream.write(struct.pack('<lllllh',0,1,196633,100,220,-255))
-
-        #self._moveCamera()
 
         # get the primary screen
         screen = QApplication.primaryScreen()
@@ -118,6 +113,8 @@ class DremelGCodeWriter(MeshWriter):
             # if an error ocurred when grabbing a screenshot write the generic cura icon instead
             bmpBytes = struct.pack("{}B".format(len(self.curaIconBmpData)), *self.curaIconBmpData)
             stream.write(bmpBytes)
+
+        # now that the header is written, write the ascii encoded gcode
         Logger.log("e", "Finished Writing Dremel Header.")
         active_build_plate = Application.getInstance().getBuildPlateModel().activeBuildPlate
         scene = Application.getInstance().getController().getScene()
@@ -221,42 +218,6 @@ class DremelGCodeWriter(MeshWriter):
             result += prefix + escaped_string[pos : pos + 80 - prefix_length] + "\n"
         return result
 
-    def _moveCamera(self,x=0, y=0):
-        origin = Vector(0, 0, 0)
-        scene = Application.getInstance().getController().getScene()
-        camera = Application.getInstance().getController().getScene().getActiveCamera()
-        if not camera or not camera.isEnabled():
-            return
-
-        Application.getInstance().getController().getScene().acquireLock()
-
-        dx = math.radians(x * 180.0)
-        dy = math.radians(y * 180.0)
-
-        diff = camera.getPosition() - origin
-        my = Matrix()
-        my.setByRotationAxis(dx, Vector.Unit_Y)
-
-        mx = Matrix(my.getData())
-        mx.rotateByAxis(dy, Vector.Unit_Y)#.cross(diff).normalized())
-
-        n = diff.multiply(mx)
-
-        try:
-            angle = math.acos(Vector.Unit_Y.dot(n.normalized()))
-        except ValueError:
-            return
-
-        if angle < 0.1 or angle > math.pi - 0.1:
-            n = diff.multiply(my)
-
-        n += origin
-
-        camera.setPosition(n)
-        camera.lookAt(origin)
-
-        Application.getInstance().getController().getScene().releaseLock()
-        return
     # cura icon in bmp format in binary
     curaIconBmpData = [0x42,0x4D,0x78,0x38,0x00,0x00,0x00,0x00,0x00,0x00,0x36,0x00,0x00,0x00,0x28,0x00,
             0x00,0x00,0x50,0x00,0x00,0x00,0x3C,0x00,0x00,0x00,0x01,0x00,0x18,0x00,0x00,0x00,
