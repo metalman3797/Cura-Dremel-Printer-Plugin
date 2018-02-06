@@ -3,7 +3,7 @@ Dremel Ideabuilder 3D20 plugin for [Cura version 3.2](https://ultimaker.com/en/p
 
 ![The Cura GUI](/docs/GUI.PNG)
 
-**Note**  This version of the Cura-Dremel-3D20-Plugin will not work with Cura versions 3.1 or earlier due to changes that Ultimaker implemented in the Cura architecture.  For a version that works with Cura versions 3.0 or 3.1, please check out version 0.2.5 of the plugin [here](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.2.5)
+**Note:**  This version of the Cura-Dremel-3D20-Plugin will not work with Cura versions 3.1 or earlier due to changes that Ultimaker implemented in the Cura architecture.  For a version that works with Cura versions 3.0 or 3.1, please check out version 0.2.5 of the plugin [here](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.2.5)
 
 ---
 # Installation
