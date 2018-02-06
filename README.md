@@ -34,7 +34,7 @@ to point to the directory where the Cura-Dremel-3D20-Plugin was unzipped
 
 and change the line that reads:
 `set CURA_EXE_DIR=C:\Program Files\Ultimaker Cura`
-to point to the directory where was installed
+to point to the directory where Cura was installed
 
 ![edit batch file](/docs/edit_batch_file.png)
 
