@@ -25,7 +25,7 @@ To install, follow the instructions below:
 
 2.  Navigate to the folder where you downloaded or extracted the plugin
 
-### Windows Installation Instructions
+### Easy Windows Installation Instructions
 Edit the [install_on_windows.bat](install_on_windows.bat) batch file by changing two Lines
 
 change the line that reads:
@@ -40,7 +40,7 @@ to point to the directory where was installed
 
 then, right click on the install_on_windows.bat and select "Run As Administrator" (if Cura was installed to C:\Program Files\ this step is necessary because the "Program Files" director requires administrative access to create directories within it)  If Cura was installed to an alternate location the administrative access may not be necessary.  If the console window reads `***Plugin Successfully Installed!` then skip to step 7, otherwise follow the instructions below to manually install the plugin.
 
-### MacOS Installation Instructions:
+### Easy MacOS Installation Instructions:
 If you haven't done so after installing Cura, launch Cura and close it.  This ensures that MacOS's security features won't think that Cura is corrupted when the plugin is installed.
 
 Open a MacOS Terminal and run the following commands:
@@ -55,12 +55,12 @@ If successful, you should see the test `***Plugin Successfully installed` then s
 ![Install On Mac](/docs/install_on_mac.png)
 
 
-### Other Operating Systems (Linux) or to install Manually on Windows or MacOs:
+### Other Operating Systems (i.e. Linux) or to install Manually on Windows or MacOs:
 
 3.  Install the main plugin that enables Cura to export .g3drem files by following the instructions below:
 
     EITHER
-    1. Install the DremelGCodeWriter.umplugin located at `Cura-Dremel-3D20-Plugin\plugins\DremelGCodeWriter.umplugin` using Cura's plugin install interface (Cura Menu->Plugins->Install Plugin)  **Note:**  this method installs the plugin to `%OS_USER_DIR%\AppData\Roaming\cura\%CURA VERSION%\plugins`.  For Operating System specific directories please see [this page](https://github.com/Ultimaker/Cura/wiki/Cura-Preferences-and-Settings-Locations)
+    1. Install the DremelGCodeWriter.umplugin located at `Cura-Dremel-3D20-Plugin\plugins\DremelGCodeWriter.umplugin` using Cura's plugin install interface (Cura Menu->Plugins->Install Plugin)  **Note:**  On Windows this method installs the plugin to `%OS_USER_DIR%\AppData\Roaming\cura\%CURA VERSION%\plugins`.  For Operating System specific directories of where Cura installs plugins please see [this page](https://github.com/Ultimaker/Cura/wiki/Cura-Preferences-and-Settings-Locations)
 
     OR
 
@@ -68,7 +68,7 @@ If successful, you should see the test `***Plugin Successfully installed` then s
 
     ![Copy the contents of DremelOutputDevice to the plugin directory of cura](/docs/plugindir.PNG)
 
-  For a minimal installation this is all you need.  Feel free to skip the following steps if you don't care about specific settings for the Dremel3D20 and only want to export .g3drem files from cura (Note: a minimal installation won't necessarily set up the print bed size, machine speeds, etc... correctly and the user is responsible for ensuring that the print settings are correct and that the print will fit on the bed)
+  For a minimal installation this is all you need.  Feel free to skip the following steps if you don't care about specific settings for the Dremel3D20 and only want to export .g3drem files from cura (Note: a minimal installation won't necessarily set up the print bed size, machine speeds, etc... correctly and the user is responsible for ensuring that the print settings are correct and that the print will fit on the bed)  The minimal installation *should* work, but has not been tested, and no guarantees are made.
 
   **For a complete installation complete steps 4-6:**
 
@@ -141,6 +141,7 @@ The following items would be great to add to this plugin - as I get time I'll wo
 * Better understanding of the remaining unknown items in the Dremel .g3drem file format
 * ~~Support for Dremel brand PLA in Dremel3D20.def.json file~~
 * Optimization of Dremel brand PLA settings
+* Creation of plugin container with Dremel printer json, material json, and printer bed mesh to ease installation
 ---
 # <a name="Technical_Details"></a>Technical Details of the .g3drem File Format
 The g3drem file format consists of a few sections.  The header is a mix of binary data and ASCII data, which is followed by an 80x60 pixel bitmap image written to the file, which is then followed by standard 3d printer gcode saved in ASCII format.
