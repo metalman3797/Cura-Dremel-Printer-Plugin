@@ -61,18 +61,13 @@ If successful, you should see the test `***Plugin Successfully installed` then s
 
     EITHER
     
-    1. Install the DremelGCodeWriter.umplugin located at `Cura-Dremel-3D20-Plugin\plugins\DremelGCodeWriter.umplugin` using Cura's plugin install interface (Cura Menu->Plugins->Install Plugin)  **Note:**  On Windows this method installs the plugin to `%OS_USER_DIR%\AppData\Roaming\cura\%CURA VERSION%\plugins`.  For Operating System specific directories of where Cura installs plugins please see [this page](https://github.com/Ultimaker/Cura/wiki/Cura-Preferences-and-Settings-Locations)
-
+    3a. Install the DremelGCodeWriter.umplugin located at `Cura-Dremel-3D20-Plugin\plugins\DremelGCodeWriter.umplugin` using Cura's plugin install interface (Cura Menu->Plugins->Install Plugin)  **Note:**  On Windows this method installs the plugin to `%OS_USER_DIR%\AppData\Roaming\cura\%CURA VERSION%\plugins`.  For Operating System specific directories of where Cura installs plugins please see [this page](https://github.com/Ultimaker/Cura/wiki/Cura-Preferences-and-Settings-Locations)
 
     OR
 
-    2. Copy the plugins/DremelGCodeWriter folder into your `%CURA_DIR%/plugins` folder.  On MacOS this is located at `Ultimaker Cura.app/Contents/Resources/plugins/plugins/`  The easiest way on the mac to get to this folder is to right click on the Ultimaker Cura.app application and select the "show package contents" option.
+    3b. Copy the plugins/DremelGCodeWriter folder into your `%CURA_DIR%/plugins` folder.  On MacOS this is located at `Ultimaker Cura.app/Contents/Resources/plugins/plugins/`  The easiest way on the mac to get to this folder is to right click on the Ultimaker Cura.app application and select the "show package contents" option.
 
     ![Copy the contents of DremelOutputDevice to the plugin directory of cura](/docs/plugindir.PNG)
-
-  For a minimal installation this is all you need.  Feel free to skip the following steps if you don't care about specific settings for the Dremel3D20 and only want to export .g3drem files from cura (Note: a minimal installation won't necessarily set up the print bed size, machine speeds, etc... correctly and the user is responsible for ensuring that the print settings are correct and that the print will fit on the bed)  The minimal installation *should* work, but has not been tested, and no guarantees are made.
-
-  **For a complete installation complete steps 4-6:**
 
 4.   Copy the resources/definitions/Dremel3D20.def.json file into the `%CURA_DIR%/resources/definitions` folder.  This file contains the printer bed size, along with other Ideabuilder 3D20 specific settings. On MacOS this folder is located at `Ultimaker Cura.app/Contents/Resources/resources/definitions/`  The easiest way on the mac to get to this folder is to right click on the Ultimaker Cura.app application and select the "show package contents" option
 ![Copy the contents of Dremel printer json file to the definitions directory of cura](/docs/dremelresource.PNG)
@@ -86,10 +81,10 @@ If successful, you should see the test `***Plugin Successfully installed` then s
 7.  Congratulations - the plugin is now installed!
 ---
 # Uninstallation
-To uninstall, simply close Cura and delete the files that you copied earlier.  
+To uninstall, simply close Cura and delete the files listed in the "manual installation" step above.  
 
 **Note:**  If you installed using the .umplugin file, then Cura copies the plugin files to the plugins directory here: `%OS_USER_DIR%\AppData\Roaming\cura\%CURA VERSION%\plugins` as
-specified on [this page](https://github.com/Ultimaker/Cura/wiki/Cura-Preferences-and-Settings-Locations)  Simply navigate to the plugins directory there, and delete the DremelGCodeWriter folder.
+specified on [this page](https://github.com/Ultimaker/Cura/wiki/Cura-Preferences-and-Settings-Locations)  Simply navigate to the plugins directory there, and delete the DremelGCodeWriter folder.  
 
 ---
 # Usage
