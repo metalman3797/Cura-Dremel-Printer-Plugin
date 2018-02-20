@@ -31,6 +31,8 @@ import re #For escaping characters in the settings.
 import json
 import copy
 import struct
+import time
+
 
 ##  Writes a .g3drem file.
 
@@ -58,9 +60,11 @@ class DremelGCodeWriter(MeshWriter):
     ##  https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/blob/master/README.md#technical-details-of-the-g3drem-file-format
     def write(self, stream, nodes, mode = MeshWriter.OutputMode.BinaryMode):
         if mode != MeshWriter.OutputMode.BinaryMode:
-            Logger.log("e", "GCode Writer does not support non-binary mode.")
+            Logger.log("e", "Dremel GCode Writer does not support non-binary mode.")
             return False
-
+        if stream is None:
+            Logger.log("e", "Dremel GCode Writer - Error writing - no output stream.")
+            return False
         # write the g3drem header
         stream.write("g3drem 1.0      ".encode())
         # write 3 magic numbers
@@ -82,9 +86,13 @@ class DremelGCodeWriter(MeshWriter):
         # get the primary screen
         screen = QApplication.primaryScreen()
         bmpError = False
+
         if screen is not None:
-            # get the main window ID
-            wid = Application.getInstance().getMainWindow().winId()
+            # wait for half a second because linux takes a bit of time before
+            # it closes the file selection window, and we don't want that in ocurred
+            # screenshot
+            time.sleep(0.5)
+
             # get the height of the topbar and width of the left and right sidebar
             sidebarwidth = Application.getInstance().getTheme().getSize("sidebar").width()
             buttonwidth = Application.getInstance().getTheme().getSize("button_icon").width()
@@ -93,22 +101,37 @@ class DremelGCodeWriter(MeshWriter):
             marginheight = Application.getInstance().getTheme().getSize("sidebar_header_mode_toggle").height()
             buttonright = buttonwidth + marginwidth
             topbarbottom = topbarheight + marginheight
-            # grab a screenshot of the main window
-            screenImg = screen.grabWindow(wid)
-            rectWidth = screenImg.width() - sidebarwidth
-            rect = QRect(buttonright, topbarbottom, rectWidth, screenImg.height())
-            pixMpImg = screenImg.copy(rect).scaled(80, 60, Qt.KeepAspectRatioByExpanding).copy(QRect(0,0,80,60))
-            if pixMpImg.width() is not 80 or pixMpImg.height() is not 60:
-                bmpError = true
-            # now write the byte array to
-            ba = QByteArray()
-            bmpData = QBuffer(ba)
-            bmpData.open(QIODevice.WriteOnly)
-            pixMpImg.save(bmpData, "BMP")
-            if not bmpError:
-                stream.write(ba)
+
+            # get the main window ID
+            winId = Application.getInstance().getMainWindow().winId()
+            if winId is not None:
+                # grab a screenshot of the main window
+                screenImg = screen.grabWindow(winId)
+                rectWidth = screenImg.width() - sidebarwidth
+                rect = QRect(buttonright, topbarbottom, rectWidth, screenImg.height())
+                pixMpImg = screenImg.copy(rect).scaled(80, 60, Qt.KeepAspectRatioByExpanding).copy(QRect(0,0,80,60))
+                if pixMpImg.width() is not 80 or pixMpImg.height() is not 60:
+                    bmpError = True
+                # now write the bitmap
+                ba = QByteArray()
+                bmpData = QBuffer(ba)
+                if not bmpData.open(QIODevice.WriteOnly):
+                    Logger.log("e", "Dremel GCode Writer - Could not open qbuffer - using generic cura icon instead")
+                    bmpError = True
+                # copy the raw image data to bitmap image format in memory
+                if not pixMpImg.save(bmpData, "BMP"):
+                    Logger.log("e", "Dremel GCode Writer - Could not save pixmap - using generic cura icon instead")
+                    bmpError = True
+                # finally write the bitmap to the g3drem file
+                if not bmpError:
+                    stream.write(ba)
+            else:
+                Logger.log("e", "Dremel GCode Writer - Could not get window id - using generic cura icon instead")
+                bmpError = True
         else:
-            bmpError = true
+            Logger.log("e", "Dremel GCode Writer - Could not get screen - using generic cura icon instead")
+            bmpError = True
+
         if bmpError:
             # if an error ocurred when grabbing a screenshot write the generic cura icon instead
             bmpBytes = struct.pack("{}B".format(len(self.curaIconBmpData)), *self.curaIconBmpData)
@@ -131,8 +154,6 @@ class DremelGCodeWriter(MeshWriter):
             return True
 
         return False
-
-
 
 
     ##  Create a new container with container 2 as base and container 1 written over it.
