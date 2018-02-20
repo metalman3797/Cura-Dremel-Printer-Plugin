@@ -24,7 +24,7 @@ from UM.Qt.Duration import DurationFormat
 from UM.Qt.Bindings.Theme import Theme
 
 from PyQt5.QtWidgets import QApplication
-from PyQt5.QtGui import QPixmap, QScreen
+from PyQt5.QtGui import QPixmap, QScreen, QColor, qRgb
 from PyQt5.QtCore import QByteArray, QBuffer, QIODevice, QRect, Qt
 
 import re #For escaping characters in the settings.
@@ -105,14 +105,35 @@ class DremelGCodeWriter(MeshWriter):
             # get the main window ID
             winId = Application.getInstance().getMainWindow().winId()
             if winId is not None:
-                # grab a screenshot of the main window
-                screenImg = screen.grabWindow(winId)
-                rectWidth = screenImg.width() - sidebarwidth
-                rect = QRect(buttonright, topbarbottom, rectWidth, screenImg.height())
-                pixMpImg = screenImg.copy(rect).scaled(80, 60, Qt.KeepAspectRatioByExpanding).copy(QRect(0,0,80,60))
-                if pixMpImg.width() is not 80 or pixMpImg.height() is not 60:
+                # calculate the appropriate rectangle to grab
+                rectWidth = Application.getInstance().getMainWindow().width() - sidebarwidth
+                rectHeight = Application.getInstance().getMainWindow().height() - topbarbottom
+                if buttonright < 0 or topbarbottom < 0 or rectWidth < 0 or rectWidth > Application.getInstance().getMainWindow().width() or rectHeight < 0 or rectHeight > Application.getInstance().getMainWindow().height():
+                    Logger.log("e", "Dremel GCode Writer - error in calculated rectangles for screenshot - using generic cura icon instead")
                     bmpError = True
-                # now write the bitmap
+                # grab a screenshot of the main window
+                screenImg = screen.grabWindow(winId, buttonright, topbarbottom, rectWidth, rectHeight)
+                #####################################################
+                # remove this section when done debugging linux issue
+                # test the raw screenshot to see if it is all zeros
+                scrI = screenImg.toImage()
+                if screenImg.pixel(20,10) == qRgb(0,0,0) and screenImg.pixel(40,10) == qRgb(0,0,0) and screenImg.pixel(60,10) == qRgb(0,0,0) and screenImg.pixel(40,30) == qRgb(0,0,0) and screenImg.pixel(20,50) == qRgb(0,0,0) and screenImg.pixel(40,50) == qRgb(0,0,0) and screenImg.pixel(60,50) == qRgb(0,0,0):
+                    Logger.log("e", "Dremel GCode Writer - Black screenshot detected - using generic cura icon instead")
+                    bmpError = True
+                # end of remove this section
+                #####################################################
+                pixMpImg = screenImg.scaled(80, 60, Qt.KeepAspectRatioByExpanding).copy(QRect(0,0,80,60))
+                # validate the size of the image since the Dremel firmware uses hardcoded offsets
+                if pixMpImg.width() is not 80 or pixMpImg.height() is not 60:
+                    Logger.log("e", "Dremel GCode Writer - error in size of screenshot - using generic cura icon instead")
+                    bmpError = True
+                # spot check the pixels of the image to see if they're all zeros
+                pmI = pixMpImg.toImage()
+                if pmI.pixel(20,10) == qRgb(0,0,0) and pmI.pixel(40,10) == qRgb(0,0,0) and pmI.pixel(60,10) == qRgb(0,0,0) and pmI.pixel(40,30) == qRgb(0,0,0) and pmI.pixel(20,50) == qRgb(0,0,0) and pmI.pixel(40,50) == qRgb(0,0,0) and pmI.pixel(60,50) == qRgb(0,0,0):
+                    Logger.log("e", "Dremel GCode Writer - Black screenshot detected after scaling - using generic cura icon instead")
+                    bmpError = True
+
+                # now prepare to write the bitmap
                 ba = QByteArray()
                 bmpData = QBuffer(ba)
                 if not bmpData.open(QIODevice.WriteOnly):
