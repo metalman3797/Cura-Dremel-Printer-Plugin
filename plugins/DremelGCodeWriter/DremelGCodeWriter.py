@@ -117,7 +117,7 @@ class DremelGCodeWriter(MeshWriter):
                 # remove this section when done debugging linux issue
                 # test the raw screenshot to see if it is all zeros
                 scrI = screenImg.toImage()
-                if screenImg.pixel(20,10) == qRgb(0,0,0) and screenImg.pixel(40,10) == qRgb(0,0,0) and screenImg.pixel(60,10) == qRgb(0,0,0) and screenImg.pixel(40,30) == qRgb(0,0,0) and screenImg.pixel(20,50) == qRgb(0,0,0) and screenImg.pixel(40,50) == qRgb(0,0,0) and screenImg.pixel(60,50) == qRgb(0,0,0):
+                if scrI.pixel(20,10) == qRgb(0,0,0) and scrI.pixel(40,10) == qRgb(0,0,0) and scrI.pixel(60,10) == qRgb(0,0,0) and scrI.pixel(40,30) == qRgb(0,0,0) and scrI.pixel(20,50) == qRgb(0,0,0) and scrI.pixel(40,50) == qRgb(0,0,0) and scrI.pixel(60,50) == qRgb(0,0,0):
                     Logger.log("e", "Dremel GCode Writer - Black screenshot detected - using generic cura icon instead")
                     bmpError = True
                 # end of remove this section
