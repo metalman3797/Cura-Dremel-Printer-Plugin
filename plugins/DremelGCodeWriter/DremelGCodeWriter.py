@@ -32,6 +32,8 @@ import json
 import copy
 import struct
 import time
+import os
+import os.path
 
 
 ##  Writes a .g3drem file.
@@ -54,6 +56,29 @@ class DremelGCodeWriter(MeshWriter):
     def __init__(self):
         super().__init__()
 
+    def find_images_with_name(self, gcodefilename):
+        savepath, filename = os.path.split(os.path.realpath(gcodefilename))
+        gcode_path_and_name, file_extension = os.path.splitext(os.path.realpath(gcodefilename))
+        Logger.log("e", "Dremel GCode Writer looking for image with name " + gcode_path_and_name +".[bmp,jpg,png]")
+
+        if os.path.isfile(gcode_path_and_name+".png"):
+            Logger.log("e", "Dremel GCode Writer found png file")
+            return os.path.join(gcode_path_and_name+".png")
+        elif os.path.isfile(gcode_path_and_name+".jpg"):
+            Logger.log("e", "Dremel GCode Writer found jpg file")
+            return os.path.join(gcode_path_and_name+".jpg")
+        elif os.path.isfile(gcode_path_and_name+".jpeg"):
+            Logger.log("e", "Dremel GCode Writer found jpeg file")
+            return os.path.join(gcode_path_and_name+".jpeg")
+        elif os.path.isfile(gcode_path_and_name+".gif"):
+            Logger.log("e", "Dremel GCode Writer found gif file")
+            return os.path.join(gcode_path_and_name+".gif")
+        elif os.path.isfile(gcode_path_and_name+".bmp"):
+            Logger.log("e", "Dremel GCode Writer found bmp file")
+            return os.path.join(gcode_path_and_name+".bmp")
+        else:
+            Logger.log("e", "Dremel GCode Writer did not find any appropriate image files")
+            return None
 
     ##  Performs the writing of the dremel header and gcode - for a technical
     ##  breakdown of the dremel g3drem file format see the following page:
@@ -83,11 +108,38 @@ class DremelGCodeWriter(MeshWriter):
         # write some more magic numbers
         stream.write(struct.pack('<lllllh',0,1,196633,100,220,-255))
 
+
         # get the primary screen
         screen = QApplication.primaryScreen()
         bmpError = False
+        image_with_same_name = self.find_images_with_name(stream.name)
 
-        if screen is not None:
+        # find image with same name as saved filename
+        if image_with_same_name is not None:
+            imfile = QPixmap(image_with_same_name);
+            if imfile.isNull():
+                Logger.log("e", "Dremel GCode Writer could not open." + image_with_same_name +" - using generic cura icon instead")
+                bmpError = True
+            else:
+                pixMpImg = imfile.scaled(80, 60, Qt.KeepAspectRatioByExpanding).copy(QRect(0,0,80,60))
+                if pixMpImg.width() is not 80 or pixMpImg.height() is not 60:
+                    Logger.log("e", "Dremel GCode Writer - error in size of screenshot - using generic cura icon instead")
+                    bmpError = True
+                else:
+                    # now prepare to write the bitmap
+                    ba = QByteArray()
+                    bmpData = QBuffer(ba)
+                    if not bmpData.open(QIODevice.WriteOnly):
+                        Logger.log("e", "Dremel GCode Writer - Could not open qbuffer - using generic cura icon instead")
+                        bmpError = True
+                    # copy the raw image data to bitmap image format in memory
+                    if not pixMpImg.save(bmpData, "BMP"):
+                        Logger.log("e", "Dremel GCode Writer - Could not save pixmap - using generic cura icon instead")
+                        bmpError = True
+                    # finally write the bitmap to the g3drem file
+                    if not bmpError:
+                        stream.write(ba)
+        elif screen is not None:
             # wait for half a second because linux takes a bit of time before
             # it closes the file selection window, and we don't want that in ocurred
             # screenshot
