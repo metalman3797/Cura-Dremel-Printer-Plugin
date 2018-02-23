@@ -54,13 +54,37 @@ If successful, you should see the test `***Plugin Successfully installed` then s
 
 ![Install On Mac](/docs/install_on_mac.png)
 
+### Easy Linux Installation Instructions (with thanks to [SwapFaceL](https://github.com/SwapFaceL) for their help):
+If you haven't done so after installing Cura, open a terminal window and type the following in:
+Then type `chmod a+x Cura-<cura version>.AppImage`
+replacing the <cura version> with the appropriate version of cura that was downloaded.
+Then launch Cura and close it.  This ensures that the files within ~/.local/share/cura/<%CURA VERSION%>/ are created.
 
-### Other Operating Systems (i.e. Linux) or to install Manually on Windows or MacOs:
+Open a terminal window and type the following in:
+`cd <Extracted Plugin Directory>`  where <Extracted Plugin Directory> is the directory where you extracted the Dremel Plugin.  The easiest way to do this is to type `cd` followed by a space into the terminal window then drag the Cura-Dremel-Plugin folder onto the terminal.  Press the enter key.
+
+Type `chmod 755 install_on_linux.sh` followed by the enter key into the terminal window.  This will give the appropriate permissions to allow you to run the installation description.
+
+Edit the install_on_linux.sh script, changing the following two lines to point to the appropriate locations
+```
+# modify this folder to point to the location where the dremel plugin was downloaded
+downloaded_plugin="~/Desktop/Cura-Dremel-3D20-Plugin"
+
+# This should only need the version number changed
+cura_local="~/.local/share/cura/3.2/"
+```
+
+Then run the script by typing the following command into the command prompt:
+`./install_on_linux.sh`
+
+If any error messages appear, follow the manual installation instructions below
+
+###  Manual Installation:
 
 3.  Install the main plugin that enables Cura to export .g3drem files by following the instructions below:
 
     EITHER
-    
+
     3a. Install the DremelGCodeWriter.umplugin located at `Cura-Dremel-3D20-Plugin\plugins\DremelGCodeWriter.umplugin` using Cura's plugin install interface (Cura Menu->Plugins->Install Plugin)  **Note:**  On Windows this method installs the plugin to `%OS_USER_DIR%\AppData\Roaming\cura\%CURA VERSION%\plugins`.  For Operating System specific directories of where Cura installs plugins please see [this page](https://github.com/Ultimaker/Cura/wiki/Cura-Preferences-and-Settings-Locations)
 
     OR
