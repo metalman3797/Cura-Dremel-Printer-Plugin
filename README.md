@@ -67,7 +67,7 @@ Type `chmod 755 install_on_linux.sh` followed by the enter key into the terminal
 
 Edit the install_on_linux.sh script, changing the following two lines to point to the appropriate locations
 ```
-# modify this folder to point to the location where the dremel plugin was downloaded
+# modify this folder to point to the location where the Dremel plugin was downloaded
 downloaded_plugin="~/Desktop/Cura-Dremel-3D20-Plugin"
 
 # This should only need the version number changed
@@ -118,7 +118,7 @@ Once the plugin has been installed you can use it by following the steps outline
 ![Select the Dremel 3D20](/docs/addprinter.png)
 
 3. Select Dremel PLA (if step 6 above was performed) or any other PLA filament (if step 6 was not performed, or if other PLA settings are preferred) as your filament type
-![Select the dremel pla](/docs/selectpla.png)
+![Select the Dremel pla](/docs/selectpla.png)
 
 4. Set the slicing options that you want.
 
@@ -140,17 +140,20 @@ Will show this on the IdeaBuilder 3D20:
 8. Insert the SD card into your IdeaBuilder 3D20
 9. Turn on the printer
 10. Select the appropriate file to print.  
-    ~~Currently the cura icon~~ ![cura icon](plugins/DremelGCodeWriter/cura80x60.bmp) ~~will be shown on the Dremel IdeaBuilder screen as the preview.~~  
-    **New - [Version 0.2 and above](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/latest):** The plugin now grabs a screenshot of the main cura window as it saves out the file (see [Step 5 above](#Step5))
+    **New - [Version 0.3 and above](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/latest):** The plugin now can implements the following logic  
+        1. The plugin searches the directory where the user saves the .g3drem file for an image file with the same name.  For example if the user saves llama.g3drem to the dekstop and the desktop folder has a llama.jpg image file within it then the llama.jpg file will be used as the preview image on the Dremel:
+        ![llama preview](/docs/llama.png)
+        2.  If no image file with the same name is found in the same directory, then the plugin attempts to take a screenshot of the main Cura window as it saves out the file (see [Step 5 above](#Step5))
+        3.  If the screenshot fails then a generic Cura icon ![cura icon](plugins/DremelGCodeWriter/cura80x60.bmp) will be shown on the Dremel IdeaBuilder screen as the preview.
 11. Click print
 12. Enjoy - if you have any feature suggestions or encounter issues, feel free to raise them in the issues section above!
 ---
 # Note
 Please note the following:
-* This plugin has only been tested on Cura 3.0.4 on Windows 10, and MacOS Sierra (MacOS 10.12) but there's no reason why it shouldn't work on linux as well.  If you are using another platform and encounter issues with the plugin, feel free to raise an issue with the "Issues" option above (in github)
-* The Dremel 3D20 printer file json has not been optimized at all - if you have time and want to improve this file please do so and contribute the changes back.
+* This plugin has been tested on Cura 3.2 on Windows 10 x64 and, MacOS Sierra (MacOS 10.12), MacOS El Capitan (10.11), and Ubuntu 17.10 and 16.04.  If you are using another platform and encounter issues with the plugin, feel free to raise an issue with the "Issues" option above (in github)
+* The Dremel 3D20 printer file json has not been optimized at all - if you have time and want to improve the profiles collaboration would be more than welcome
   * While this plugin works in the basic print case, you may encounter problems with the print head crashing into your parts if you attempt to print multiple parts on the same print bed one-after-another instead of printing them all-at-once.
-* The .g3drem file format is not fully understood yet - I've done a bit of reverse engineering on the file format, as described here: http://forums.reprap.org/read.php?263,785652 and have used the information I discovered to create this plugin, however there are still magic numbers in the dremel header that may or may not have an effect on the print.  See more information in the [Technical Details below](#Technical_Details).
+* The .g3drem file format is not fully understood yet - I've done a bit of reverse engineering on the file format, as described here: http://forums.reprap.org/read.php?263,785652 and have used the information I discovered to create this plugin, however there are still magic numbers in the Dremel header that may or may not have an effect on the print.  See more information in the [Technical Details below](#Technical_Details).
 ---
 # Wishlist
 The following items would be great to add to this plugin - as I get time I'll work on them, but I'd welcome any collaboration
@@ -196,6 +199,12 @@ A description of the current understanding of this file format is below:
 12. Standard 3d printer gcode (Marlin flavor seems to be working, but if you encounter issues please feel free to raise them)
 
 **Interesting observations about the file format:**
-1.  The maximum number of minutes that the dremel can read is 0xFFFFFF00, which comes out to 4660 hours and 20 minutes
+1.  The maximum number of minutes that the Dremel can read is 0xFFFFFF00, which comes out to 4660 hours and 20 minutes
 2.  The maximum fiament length that the file can handle is hex 0xFFFFFFFF, or 4,294,967,295 millimeters. The [Dremel 3D software](https://dremel3d.at/pages/software) reports this value as (after some rounding): 4,294,967.5 meters
-3.  The image size seems to be hardcoded inside the dremel firmware (at least for firmware 1.3.20160621).  Storing an image that is larger than 80x60 is allowable in the file, and the Windows-based ["Dremel 3D" software](https://dremel3d.at/pages/software) will read this file with a larger image with no problem.  The Dremel 3D sofware will read and show the correct part to build, but loading this file with the larger image into the actual Ideabuilder will result in the ideabuilder successfully showing the image, and allowing the user to select it, but will result in the IdeaBuilder rebooting when the user tries to print the file.
+3.  The image size seems to be hardcoded inside the Dremel firmware (at least for firmware 1.3.20160621).  Storing an image that is larger than 80x60 is allowable in the file, and the Windows-based ["Dremel 3D" software](https://dremel3d.at/pages/software) will read this file with a larger image with no problem.  The Dremel 3D sofware will read and show the correct part to build, but loading this file with the larger image into the actual Ideabuilder will result in the ideabuilder successfully showing the image, and allowing the user to select it, but will result in the IdeaBuilder rebooting when the user tries to print the file.
+---
+# Contributors:
+Many thanks belong to the following users, who have spent their time and energy to report issues and help make the plugin better:
+[WeavingColors](https://github.com/WeavingColors)
+[SwapFaceL](https://github.com/SwapFaceL)
+[metalman3797](https://github.com/metalman3797)
