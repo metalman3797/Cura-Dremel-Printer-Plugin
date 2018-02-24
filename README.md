@@ -209,6 +209,6 @@ A description of the current understanding of this file format is below:
 ---
 # Contributors:
 Many thanks belong to the following users, who have spent their time and energy to report issues and help make the plugin better:
-[WeavingColors](https://github.com/WeavingColors)
-[SwapFaceL](https://github.com/SwapFaceL)
-[metalman3797](https://github.com/metalman3797)
+* [WeavingColors](https://github.com/WeavingColors)
+* [SwapFaceL](https://github.com/SwapFaceL)
+* [metalman3797](https://github.com/metalman3797)
