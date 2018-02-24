@@ -1,19 +1,15 @@
 #!/bin/bash
 
-clear
-
-# Change the directories of the two items below 
-
-
+# The user should change the directories of the two items below
 # modify this folder to point to the location where the dremel plugin was downloaded
 downloaded_plugin="~/Desktop/Cura-Dremel-3D20-Plugin"
 
 # This should only need the version number changed
 cura_local="~/.local/share/cura/3.2/"
 
-
-# Don't modify anything below this line
-
+#########################################################
+####    Don't modify anything below this line
+#########################################################
 downloaded_plugin_dir=${downloaded_plugin/\~/$HOME}
 cura_local_dir=${cura_local/\~/$HOME}
 
@@ -27,7 +23,6 @@ if [ ! -d $cura_local_dir ]
 then 
   echo "Could not find ~/.local/share/cura/<version> folder...please launch Cura first and then set script directory correctly"
 fi
-
 
 if [ ! -d $cura_local_dir/plugins/DremelGCodeWriter ]
 then
@@ -46,3 +41,9 @@ cp $downloaded_plugin_dir/plugins/DremelGCodeWriter/plugin.json $cura_local_dir/
 cp $downloaded_plugin_dir/resources/definitions/Dremel3D20.def.json $cura_local_dir/definitions/
 cp $downloaded_plugin_dir/resources/materials/dremel_pla.xml.fdm_material $cura_local_dir/materials/
 
+if [ -f $cura_local_dir/plugins/DremelGCodeWriter/DremelGCodeWriter/DremelGCodeWriter.py ] 
+then 
+  echo "***Plugin successfully installed"
+else
+  echo "***Errors encountered installing plugin"
+fi
