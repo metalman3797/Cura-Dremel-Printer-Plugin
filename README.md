@@ -140,11 +140,11 @@ Will show this on the IdeaBuilder 3D20:
 8. Insert the SD card into your IdeaBuilder 3D20
 9. Turn on the printer
 10. Select the appropriate file to print.  
-    **New - [Version 0.3 and above](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/latest):** The plugin now can implements the following logic  
+    **New - [Version 0.3 and above](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/latest):** The plugin now can implements the following logic to select a preview image on the Dremel screen:
         1. The plugin searches the directory where the user saves the .g3drem file for an image file with the same name.  For example if the user saves llama.g3drem to the dekstop and the desktop folder has a llama.jpg image file within it then the llama.jpg file will be used as the preview image on the Dremel:
         ![llama preview](/docs/llama.png)
         2.  If no image file with the same name is found in the same directory, then the plugin attempts to take a screenshot of the main Cura window as it saves out the file (see [Step 5 above](#Step5))
-        3.  If the screenshot fails then a generic Cura icon ![cura icon](plugins/DremelGCodeWriter/cura80x60.bmp) will be shown on the Dremel IdeaBuilder screen as the preview.
+        3.  If the screenshot fails then a generic Cura icon ![cura icon](https://github.com/Ultimaker/Cura/blob/master/icons/cura-64.png) will be shown on the Dremel IdeaBuilder screen as the preview.
 11. Click print
 12. Enjoy - if you have any feature suggestions or encounter issues, feel free to raise them in the issues section above!
 ---
