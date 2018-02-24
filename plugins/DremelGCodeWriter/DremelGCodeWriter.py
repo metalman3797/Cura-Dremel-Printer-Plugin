@@ -32,8 +32,8 @@ import json
 import copy
 import struct
 import time
-import os
-import os.path
+import os # for listdir
+import os.path # for isfile and join and path
 
 
 ##  Writes a .g3drem file.
@@ -56,29 +56,31 @@ class DremelGCodeWriter(MeshWriter):
     def __init__(self):
         super().__init__()
 
-    def find_images_with_name(self, gcodefilename):
-        savepath, filename = os.path.split(os.path.realpath(gcodefilename))
-        gcode_path_and_name, file_extension = os.path.splitext(os.path.realpath(gcodefilename))
-        Logger.log("e", "Dremel GCode Writer looking for image with name " + gcode_path_and_name +".[bmp,jpg,png]")
 
-        if os.path.isfile(gcode_path_and_name+".png"):
-            Logger.log("e", "Dremel GCode Writer found png file")
-            return os.path.join(gcode_path_and_name+".png")
-        elif os.path.isfile(gcode_path_and_name+".jpg"):
-            Logger.log("e", "Dremel GCode Writer found jpg file")
-            return os.path.join(gcode_path_and_name+".jpg")
-        elif os.path.isfile(gcode_path_and_name+".jpeg"):
-            Logger.log("e", "Dremel GCode Writer found jpeg file")
-            return os.path.join(gcode_path_and_name+".jpeg")
-        elif os.path.isfile(gcode_path_and_name+".gif"):
-            Logger.log("e", "Dremel GCode Writer found gif file")
-            return os.path.join(gcode_path_and_name+".gif")
-        elif os.path.isfile(gcode_path_and_name+".bmp"):
-            Logger.log("e", "Dremel GCode Writer found bmp file")
-            return os.path.join(gcode_path_and_name+".bmp")
-        else:
-            Logger.log("e", "Dremel GCode Writer did not find any appropriate image files")
-            return None
+    #  find_images_with_name tries to find an image file with the same name in the same direcory where the
+    #  user is writing out the g3drem file.  If it finds an image then it reuturns the filename so that the
+    #  image can be used for a preview
+    def find_images_with_name(self, gcodefilename):
+        # get the path where the user requested the .g3drem file save to go
+        savepth, savefname = os.path.split(os.path.realpath(gcodefilename))
+        # get the path+filename-extension i.e. "/usr/home/llama.g3drem" would split to "/usr/home/llama"  and ".g3drem"
+        gcode_path_and_name, file_extension = os.path.splitext(os.path.realpath(gcodefilename))
+        Logger.log("i", "Dremel GCode Writer looking for image with name " + gcode_path_and_name +".[jpg,png,gif,bmp]")
+        # get a list of all files in the save directory so that we can traverse over them
+        allfiles = [os.path.join(savepth, f) for f in os.listdir(savepth) if os.path.isfile(os.path.join(savepth, f))]
+        # search over all the files to see if we find a valid image
+        for currfile in allfiles:
+            # split the current file name in the same way ("/usr/home/llama.g3drem" would split to "/usr/home/llama"  and ".g3drem")
+            currfile_path_and_name, currfile_extension = os.path.splitext(os.path.realpath(currfile))
+            # compare the path+filename section (i.e. compare /usr/home/llama to /usr/home/camel) if they match then check to see
+            # if the extension is a valid image format. and if so, return it.
+            if gcode_path_and_name.lower() == currfile_path_and_name.lower():
+                if currfile_extension.lower() in [".png",".jpg",".jpeg",".gif",".bmp"]:
+                    Logger.log("i", "Dremel GCode Writer - using image: " + currfile.lower() )
+                    return currfile
+        # if no image with a matching name was found, return
+        Logger.log("d", "Dremel GCode Writer did not find any appropriate image files")
+        return None
 
     ##  Performs the writing of the dremel header and gcode - for a technical
     ##  breakdown of the dremel g3drem file format see the following page:
@@ -118,23 +120,23 @@ class DremelGCodeWriter(MeshWriter):
         if image_with_same_name is not None:
             imfile = QPixmap(image_with_same_name);
             if imfile.isNull():
-                Logger.log("e", "Dremel GCode Writer could not open." + image_with_same_name +" - using generic cura icon instead")
+                Logger.log("d", "Dremel GCode Writer could not open." + image_with_same_name +" - using generic cura icon instead")
                 bmpError = True
             else:
                 pixMpImg = imfile.scaled(80, 60, Qt.KeepAspectRatioByExpanding).copy(QRect(0,0,80,60))
                 if pixMpImg.width() is not 80 or pixMpImg.height() is not 60:
-                    Logger.log("e", "Dremel GCode Writer - error in size of screenshot - using generic cura icon instead")
+                    Logger.log("d", "Dremel GCode Writer - error in size of screenshot - using generic cura icon instead")
                     bmpError = True
                 else:
                     # now prepare to write the bitmap
                     ba = QByteArray()
                     bmpData = QBuffer(ba)
                     if not bmpData.open(QIODevice.WriteOnly):
-                        Logger.log("e", "Dremel GCode Writer - Could not open qbuffer - using generic cura icon instead")
+                        Logger.log("d", "Dremel GCode Writer - Could not open qbuffer - using generic cura icon instead")
                         bmpError = True
                     # copy the raw image data to bitmap image format in memory
                     if not pixMpImg.save(bmpData, "BMP"):
-                        Logger.log("e", "Dremel GCode Writer - Could not save pixmap - using generic cura icon instead")
+                        Logger.log("d", "Dremel GCode Writer - Could not save pixmap - using generic cura icon instead")
                         bmpError = True
                     # finally write the bitmap to the g3drem file
                     if not bmpError:
@@ -161,7 +163,7 @@ class DremelGCodeWriter(MeshWriter):
                 rectWidth = Application.getInstance().getMainWindow().width() - sidebarwidth
                 rectHeight = Application.getInstance().getMainWindow().height() - topbarbottom
                 if buttonright < 0 or topbarbottom < 0 or rectWidth < 0 or rectWidth > Application.getInstance().getMainWindow().width() or rectHeight < 0 or rectHeight > Application.getInstance().getMainWindow().height():
-                    Logger.log("e", "Dremel GCode Writer - error in calculated rectangles for screenshot - using generic cura icon instead")
+                    Logger.log("d", "Dremel GCode Writer - error in calculated rectangles for screenshot - using generic cura icon instead")
                     bmpError = True
                 # grab a screenshot of the main window
                 screenImg = screen.grabWindow(winId, buttonright, topbarbottom, rectWidth, rectHeight)
@@ -170,39 +172,39 @@ class DremelGCodeWriter(MeshWriter):
                 # test the raw screenshot to see if it is all zeros
                 scrI = screenImg.toImage()
                 if scrI.pixel(20,10) == qRgb(0,0,0) and scrI.pixel(40,10) == qRgb(0,0,0) and scrI.pixel(60,10) == qRgb(0,0,0) and scrI.pixel(40,30) == qRgb(0,0,0) and scrI.pixel(20,50) == qRgb(0,0,0) and scrI.pixel(40,50) == qRgb(0,0,0) and scrI.pixel(60,50) == qRgb(0,0,0):
-                    Logger.log("e", "Dremel GCode Writer - Black screenshot detected - using generic cura icon instead")
+                    Logger.log("d", "Dremel GCode Writer - Black screenshot detected - using generic cura icon instead")
                     bmpError = True
                 # end of remove this section
                 #####################################################
                 pixMpImg = screenImg.scaled(80, 60, Qt.KeepAspectRatioByExpanding).copy(QRect(0,0,80,60))
                 # validate the size of the image since the Dremel firmware uses hardcoded offsets
                 if pixMpImg.width() is not 80 or pixMpImg.height() is not 60:
-                    Logger.log("e", "Dremel GCode Writer - error in size of screenshot - using generic cura icon instead")
+                    Logger.log("d", "Dremel GCode Writer - error in size of screenshot - using generic cura icon instead")
                     bmpError = True
                 # spot check the pixels of the image to see if they're all zeros
                 pmI = pixMpImg.toImage()
                 if pmI.pixel(20,10) == qRgb(0,0,0) and pmI.pixel(40,10) == qRgb(0,0,0) and pmI.pixel(60,10) == qRgb(0,0,0) and pmI.pixel(40,30) == qRgb(0,0,0) and pmI.pixel(20,50) == qRgb(0,0,0) and pmI.pixel(40,50) == qRgb(0,0,0) and pmI.pixel(60,50) == qRgb(0,0,0):
-                    Logger.log("e", "Dremel GCode Writer - Black screenshot detected after scaling - using generic cura icon instead")
+                    Logger.log("d", "Dremel GCode Writer - Black screenshot detected after scaling - using generic cura icon instead")
                     bmpError = True
 
                 # now prepare to write the bitmap
                 ba = QByteArray()
                 bmpData = QBuffer(ba)
                 if not bmpData.open(QIODevice.WriteOnly):
-                    Logger.log("e", "Dremel GCode Writer - Could not open qbuffer - using generic cura icon instead")
+                    Logger.log("d", "Dremel GCode Writer - Could not open qbuffer - using generic cura icon instead")
                     bmpError = True
                 # copy the raw image data to bitmap image format in memory
                 if not pixMpImg.save(bmpData, "BMP"):
-                    Logger.log("e", "Dremel GCode Writer - Could not save pixmap - using generic cura icon instead")
+                    Logger.log("d", "Dremel GCode Writer - Could not save pixmap - using generic cura icon instead")
                     bmpError = True
                 # finally write the bitmap to the g3drem file
                 if not bmpError:
                     stream.write(ba)
             else:
-                Logger.log("e", "Dremel GCode Writer - Could not get window id - using generic cura icon instead")
+                Logger.log("d", "Dremel GCode Writer - Could not get window id - using generic cura icon instead")
                 bmpError = True
         else:
-            Logger.log("e", "Dremel GCode Writer - Could not get screen - using generic cura icon instead")
+            Logger.log("d", "Dremel GCode Writer - Could not get screen - using generic cura icon instead")
             bmpError = True
 
         if bmpError:
@@ -211,7 +213,7 @@ class DremelGCodeWriter(MeshWriter):
             stream.write(bmpBytes)
 
         # now that the header is written, write the ascii encoded gcode
-        Logger.log("e", "Finished Writing Dremel Header.")
+        Logger.log("i", "Finished Writing Dremel Header.")
         active_build_plate = Application.getInstance().getBuildPlateModel().activeBuildPlate
         scene = Application.getInstance().getController().getScene()
         gcode_dict = getattr(scene, "gcode_dict")
