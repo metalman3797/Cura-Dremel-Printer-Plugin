@@ -16,7 +16,7 @@
     <color_code>#0033a0</color_code>
   </metadata>
   <properties>
-    <density>1.24</density>
+    <density>1.07</density>
     <diameter>1.75</diameter>
   </properties>
   <settings>
@@ -25,8 +25,8 @@
     <setting key="standby temperature">175</setting>
     <setting key="print temperature">220</setting>
 	<machine>
-            <machine_identifier manufacturer="DREMEL" product="Dremel3D20"/>  			
+            <machine_identifier manufacturer="DREMEL" product="Dremel3D20"/>
     </machine>
   </settings>
-  
+
 </fdmmaterial>
