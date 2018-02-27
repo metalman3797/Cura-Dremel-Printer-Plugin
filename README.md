@@ -109,6 +109,7 @@ To uninstall, simply close Cura and delete the files listed in the "manual insta
 
 **Note:**  If you installed using the .umplugin file, then Cura copies the plugin files to the plugins directory here: `%OS_USER_DIR%\AppData\Roaming\cura\%CURA VERSION%\plugins` as
 specified on [this page](https://github.com/Ultimaker/Cura/wiki/Cura-Preferences-and-Settings-Locations)  Simply navigate to the plugins directory there, and delete the DremelGCodeWriter folder.  
+
 ---
 # Usage
 Once the plugin has been installed you can use it by following the steps outlined below:
