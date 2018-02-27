@@ -1,16 +1,27 @@
 @echo off
 setlocal enabledelayedexpansion
 
+
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :: User should change the path below to point to the Cura-Dremel-3D20-Plugin
 :: directory that they downloaded
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
 set DOWNLOADED_PLUGIN_DIR=C:\Users\timsc\Documents\Cura-Dremel-3D20-Plugin
 
+
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :: User should change the path below to point to the path containing Cura.exe
-set CURA_EXE_DIR=C:\Program Files\Ultimaker Cura
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+set CURA_EXE_DIR=C:\Program Files\Ultimaker Cura 3.2
 
 
+
+
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :: Don't modify anything below this line
-
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 if exist "%CURA_EXE_DIR%\Cura.exe" (
     ECHO "Cura Directory Set correctly...installing plugin" 
     if not exist "%CURA_EXE_DIR%\Plugins\DremelGCodeWriter\" (

@@ -8,7 +8,7 @@
         "author": "Dremel",
         "manufacturer": "Dremel",
 		"category": "Dremel",
-        "file_formats": "text/x-gcode",
+        "file_formats": "text/x-g3drem",
 		"icon": "icon_ultimaker2",
         "supports_usb_connection": false,
 		"platform": "dremel_3D20_platform.stl",
@@ -67,5 +67,3 @@
         }
     }
 }
-
-
