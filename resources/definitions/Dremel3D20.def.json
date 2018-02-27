@@ -7,17 +7,18 @@
         "visible": true,
         "author": "Dremel",
         "manufacturer": "Dremel",
-		"category": "Dremel",
+        "category": "Dremel",
         "file_formats": "text/x-g3drem",
-		"icon": "icon_ultimaker2",
+        "icon": "icon_ultimaker2",
         "supports_usb_connection": false,
-		"platform": "dremel_3D20_platform.stl",
+        "platform": "dremel_3D20_platform.stl",
         "machine_extruder_trains":
         {
             "0": "fdmextruder"
         },
         "has_materials": true,
-        "preferred_material": "dremel_pla"
+        "preferred_material": "dremel_pla",
+        "has_machine_quality": false
     },
 
     "overrides": {
@@ -35,6 +36,7 @@
         "machine_extruder_count": { "default_value": 1 },
         "machine_heated_bed": { "default_value": false },
         "acceleration_enabled": { "default_value": true },
+        "print_sequence": { "enabled": false, "default_value": "all_at_once" },
         "machine_center_is_zero": { "default_value": true },
         "machine_height": { "default_value": 140 },
         "machine_gcode_flavor": { "default_value": "Marlin" },
@@ -56,12 +58,9 @@
         "gantry_height": {
             "default_value": 30
         },
-
         "machine_start_gcode": {
          "default_value":  "G90\nG28\nM132 X Y Z A\nG1 Z100 F3300\nG1 X-110.5 Y-74 F6000\nM6 T0\nM907 X100 Y100 Z60 A100\nG1 Z0.6 F3300\nG4 P2000\nM108 T0\n"
-		 },
-
-
+		    },
         "machine_end_gcode": {
         "default_value":   "M104 S0 T0\nG1 Z140 F3300\nG28 X0 Y0\nM132 X Y Z A\nG91\nM18\n"
         }

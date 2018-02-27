@@ -22,13 +22,18 @@ set CURA_EXE_DIR=C:\Program Files\Ultimaker Cura 3.2
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :: Don't modify anything below this line
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+if not exist "%DOWNLOADED_PLUGIN_DIR%\plugins\DremelGCodeWriter" (
+    ECHO "Plugin Directory not set correctly.  Please edit this script to set the DOWNLOADED_PLUGIN_DIR"
+    GOTO End
+)
+
 if exist "%CURA_EXE_DIR%\Cura.exe" (
-    ECHO "Cura Directory Set correctly...installing plugin" 
+    ECHO "Cura Directory Set correctly...installing plugin"
     if not exist "%CURA_EXE_DIR%\Plugins\DremelGCodeWriter\" (
 	    mkdir "%CURA_EXE_DIR%\Plugins\DremelGCodeWriter\"
     )
-    xcopy /s /y "%DOWNLOADED_PLUGIN_DIR%\plugins\DremelGCodeWriter" "%CURA_EXE_DIR%\Plugins\DremelGCodeWriter" 
-    xcopy /s /y "%DOWNLOADED_PLUGIN_DIR%\resources\definitions" "%CURA_EXE_DIR%\resources\definitions" 
+    xcopy /s /y "%DOWNLOADED_PLUGIN_DIR%\plugins\DremelGCodeWriter" "%CURA_EXE_DIR%\Plugins\DremelGCodeWriter"
+    xcopy /s /y "%DOWNLOADED_PLUGIN_DIR%\resources\definitions" "%CURA_EXE_DIR%\resources\definitions"
     xcopy /s /y "%DOWNLOADED_PLUGIN_DIR%\resources\materials" "%CURA_EXE_DIR%\resources\materials"
     xcopy /s /y "%DOWNLOADED_PLUGIN_DIR%\resources\meshes" "%CURA_EXE_DIR%\resources\meshes"
     if !ERRORLEVEL! GEQ 1 (
@@ -36,9 +41,10 @@ if exist "%CURA_EXE_DIR%\Cura.exe" (
 	GOTO End
     ) else (
 	ECHO ***Plugin Successfully Installed!
+	GOTO End
     )
 ) else (
-    ECHO "Cura Directory not set correctly."
+    ECHO "Cura Directory not set correctly.  Please edit the script to set the CURA_EXE_DIR"
     GOTO End
 )
 

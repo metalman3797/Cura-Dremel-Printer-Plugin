@@ -143,7 +143,7 @@ class DremelGCodeWriter(MeshWriter):
                         stream.write(ba)
         elif screen is not None:
             # wait for half a second because linux takes a bit of time before
-            # it closes the file selection window, and we don't want that in ocurred
+            # it closes the file selection window, and we don't want that in the
             # screenshot
             time.sleep(0.5)
 
