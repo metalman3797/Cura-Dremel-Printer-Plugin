@@ -109,7 +109,6 @@ To uninstall, simply close Cura and delete the files listed in the "manual insta
 
 **Note:**  If you installed using the .umplugin file, then Cura copies the plugin files to the plugins directory here: `%OS_USER_DIR%\AppData\Roaming\cura\%CURA VERSION%\plugins` as
 specified on [this page](https://github.com/Ultimaker/Cura/wiki/Cura-Preferences-and-Settings-Locations)  Simply navigate to the plugins directory there, and delete the DremelGCodeWriter folder.  
-
 ---
 # Usage
 Once the plugin has been installed you can use it by following the steps outlined below:
@@ -159,16 +158,17 @@ The plugin has implemented the following logic for selecting a preview image tha
 # Note
 Please note the following:
 * This plugin has been tested using Cura 3.2.1 on Windows 10 x64, MacOS Sierra (MacOS 10.12), MacOS El Capitan (10.11), and Ubuntu versions 17.10 and 16.04.  If you are using another platform and encounter issues with the plugin, feel free to raise an issue with the ["Issues" section](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/issues) above.
-* The Dremel 3D20 printer file json has not been optimized at all - if you have time and want to improve the profiles collaboration would be more than welcome
-  * While this plugin works in the basic print case, you may encounter problems with the print head crashing into your parts if you attempt to print multiple parts on the same print bed one-after-another instead of printing them all-at-once.
+* With many thanks to [metalman3797](https://github.com/metalman3797) the Dremel 3D20 printer json definition has had an optimization pass - it should work even better now than it did before!
+  * While this plugin works in the basic print case, you may still encounter problems with the print head crashing into your parts if you attempt to print multiple parts on the same print bed one-after-another instead of printing them all-at-once.
 * The .g3drem file format is not fully understood yet - I've done a bit of reverse engineering on the file format, as described here: http://forums.reprap.org/read.php?263,785652 and have used the information I discovered to create this plugin, however there are still magic numbers in the Dremel header that may or may not have an effect on the print.  See more information in the [Technical Details below](#Technical_Details).
 ---
 # Wishlist
 The following items would be great to add to this plugin - any and all collaboration is welcome - feel free to raise an issue if there's a feature you'd like
-* Optimized [Dremel3D20.def.json](resources/definitions/Dremel3D20.def.json) file to enable printing multiple parts in sequential fashion
+* Optimized print profiles for IdeaBuilder 3D20 (current non-custom profiles are pretty generic and may not work as well on the Dremel as they could)
+* ~~Optimized [Dremel3D20.def.json](resources/definitions/Dremel3D20.def.json) file~~ **New - [Version 0.3 and above](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/latest):** Thanks to  [metalman3797](https://github.com/metalman3797) the Dremel json file has been further improved
+* ~~Optimization of Dremel brand PLA settings~~  **New - [Version 0.3 and above](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/latest):** Thanks to  [metalman3797](https://github.com/metalman3797) the Dremel brand PLA material has been optimized.
 * Better understanding of the remaining unknown items in the Dremel .g3drem file format
-* Optimization of Dremel brand PLA settings
-* Creation of plugin container with Dremel printer json, material json, and printer bed mesh to ease installation
+* Creation of plugin container with Dremel printer json, material json, and printer bed mesh to ease user installation
 ---
 # <a name="Technical_Details"></a>Technical Details of the .g3drem File Format
 The g3drem file format consists of a few sections.  The header is a mix of binary data and ASCII data, which is followed by an 80x60 pixel bitmap image written to the file, which is then followed by standard 3d printer gcode saved in ASCII format.
