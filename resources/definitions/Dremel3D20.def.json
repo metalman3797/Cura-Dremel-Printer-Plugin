@@ -34,13 +34,14 @@
         "speed_infill": { "default_value": 48 },
         "machine_extruder_count": { "default_value": 1 },
         "machine_heated_bed": { "default_value": false },
+        "acceleration_enabled": { "default_value": true },
         "machine_center_is_zero": { "default_value": true },
         "machine_height": { "default_value": 140 },
         "machine_gcode_flavor": { "default_value": "Marlin" },
         "machine_depth": { "default_value": 150 },
         "machine_width": { "default_value": 230 },
         "material_diameter": { "default_value": 1.75 },
-        "retraction_speed": {"default_value":120},
+        "retraction_speed": {"default_value":25},
         "cool_fan_speed_min": {"default_value": 0},
         "cool_fan_speed_max": {"default_value": 100},
         "adhesion_type": { "default_value": "none" },
@@ -57,7 +58,7 @@
         },
 
         "machine_start_gcode": {
-         "default_value":  "G90\nG28\nM132 X Y Z A\nG1 Z100 F3300\nG1 X-110.5 Y-74 F6000\nM6 T0\nM907 X100 Y100 Z40 A80\nG1 Z0.6 F3300\nG4 P2000\nM108 T0\n"
+         "default_value":  "G90\nG28\nM132 X Y Z A\nG1 Z100 F3300\nG1 X-110.5 Y-74 F6000\nM6 T0\nM907 X100 Y100 Z60 A100\nG1 Z0.6 F3300\nG4 P2000\nM108 T0\n"
 		 },
 
 
