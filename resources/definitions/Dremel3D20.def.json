@@ -17,8 +17,9 @@
             "0": "fdmextruder"
         },
         "has_materials": true,
+        "has_machine_quality": true,
         "preferred_material": "dremel_pla",
-        "has_machine_quality": false
+        "preferred_quality": "low"
     },
 
     "overrides": {
@@ -59,10 +60,10 @@
             "default_value": 30
         },
         "machine_start_gcode": {
-         "default_value":  "G90\nG28\nM132 X Y Z A\nG1 Z100 F3300\nG1 X-110.5 Y-74 F6000\nM6 T0\nM907 X100 Y100 Z60 A100\nG1 Z0.6 F3300\nG4 P2000\nM108 T0\n"
+            "default_value":  "G90\nG28\nM132 X Y Z A\nG1 Z100 F3300\nG1 X-110.5 Y-74 F6000\nM6 T0\nM907 X100 Y100 Z60 A100\nG1 Z0.6 F3300\nG4 P2000\nM108 T0\n"
 		    },
         "machine_end_gcode": {
-        "default_value":   "M104 S0 T0\nG1 Z140 F3300\nG28 X0 Y0\nM132 X Y Z A\nG91\nM18\n"
+            "default_value":   "M104 S0 T0\nG1 Z140 F3300\nG28 X0 Y0\nM132 X Y Z A\nG91\nM18\n"
         }
     }
 }

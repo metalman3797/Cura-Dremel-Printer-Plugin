@@ -8,6 +8,7 @@ if [ -d "${CuraDir}" ] ; then
 	cp -a "$PluginDir"/resources/definitions/. "$CuraDir"/Contents/Resources/resources/definitions/
 	cp -a "$PluginDir"/resources/materials/. "$CuraDir"/Contents/Resources/resources/materials/
 	cp -a "$PluginDir"/resources/meshes/. "$CuraDir"/Contents/Resources/resources/meshes/
+	cp -a "$PluginDir"/resources/quality/dremel_3d20 "$CuraDir"/Contents/Resources/resources/quality/
 	echo "***Plugin Successfully Installed"
 else
 	echo "Cura Not Found"
