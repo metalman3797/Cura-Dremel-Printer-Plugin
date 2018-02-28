@@ -102,7 +102,9 @@ If any error messages appear, follow the manual installation instructions below
 6.  Copy the resources/materials/dremel_pla.xml.fdm_material to the `%CURA_DIR%/resources/materials` folder.   This file contains the Dremel brand PLA material settings.  On MacOS this folder is located at `Ultimaker Cura.app/Contents/Resources/resources/materials/`  The easiest way on the mac to get to this folder is to right click on the Ultimaker Cura.app application and select the "show package contents" option
 ![Copy the contents of Dremel PLA material to the materials directory of cura](/docs/material.png)    
 
-7.  Congratulations - the plugin is now installed!
+7.  Copy the resources/quality/dremel_3d20 folder to the `%CURA_DIR%/resources/qualit` folder.   This folder contains three optimized print quailty settings (high,medium, and low) for the Dremel 3D20.  On MacOS this folder is located at `Ultimaker Cura.app/Contents/Resources/resources/materials/`  The easiest way on the mac to get to this folder is to right click on the Ultimaker Cura.app application and select the "show package contents" option
+
+8.  Congratulations - the plugin is now installed!
 ---
 # Uninstallation
 To uninstall, simply close Cura and delete the files listed in the "manual installation" step above.  
@@ -114,10 +116,10 @@ specified on [this page](https://github.com/Ultimaker/Cura/wiki/Cura-Preferences
 # Usage
 Once the plugin has been installed you can use it by following the steps outlined below:
 1. open Cura
-2. (Skip if Step 4 above was not performed) select the Dremel 3D20 as your printer (cura->preferences->printers->add)
+2. Select the Dremel 3D20 as your printer (cura->preferences->printers->add)
 ![Select the Dremel 3D20](/docs/addprinter.png)
 
-3. Select Dremel PLA (if step 6 above was performed) or any other PLA filament (if step 6 was not performed, or if other PLA settings are preferred) as your filament type
+3. Select Dremel PLA filament (even if you're using a different brand) as your filament type - this enables the print quality settings for the Dremel3D20.
 ![Select the Dremel pla](/docs/selectpla.png)
 
 4. Set the slicing options that you want.
