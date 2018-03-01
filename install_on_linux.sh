@@ -34,16 +34,18 @@ then
   mkdir $cura_local_dir/plugins/DremelGCodeWriter/DremelGCodeWriter
 fi
 
-cp $downloaded_plugin_dir/plugins/DremelGCodeWriter/DremelGCodeWriter.py $cura_local_dir/plugins/DremelGCodeWriter/DremelGCodeWriter/
-cp $downloaded_plugin_dir/plugins/DremelGCodeWriter/__init__.py $cura_local_dir/plugins/DremelGCodeWriter/DremelGCodeWriter/
-cp $downloaded_plugin_dir/plugins/DremelGCodeWriter/plugin.json $cura_local_dir/plugins/DremelGCodeWriter/DremelGCodeWriter/
-
-cp $downloaded_plugin_dir/resources/definitions/Dremel3D20.def.json $cura_local_dir/definitions/
-cp $downloaded_plugin_dir/resources/materials/dremel_pla.xml.fdm_material $cura_local_dir/materials/
+cp -r $downloaded_plugin_dir/plugins/DremelGCodeWriter $cura_local_dir/plugins/DremelGCodeWriter/
+cp -r $downloaded_plugin_dir/resources/definitions/. $cura_local_dir/definitions/
+cp -r $downloaded_plugin_dir/resources/materials/. $cura_local_dir/materials/
+cp -r $downloaded_plugin_dir/resources/quality/dremel_3d20 $cura_local_dir/quality
 
 if [ -f $cura_local_dir/plugins/DremelGCodeWriter/DremelGCodeWriter/DremelGCodeWriter.py ] 
 then 
-  echo "***Plugin successfully installed"
+  echo "****************************************"
+  echo "*****Plugin successfully installed******"
+  echo "****************************************"
 else
-  echo "***Errors encountered installing plugin"
+  echo "****************************************"
+  echo "**Errors encountered installing plugin**"
+  echo "****************************************"
 fi
