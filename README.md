@@ -167,11 +167,10 @@ Please note the following:
 ---
 # Wishlist
 The following items would be great to add to this plugin - any and all collaboration is welcome - feel free to raise an issue if there's a feature you'd like
-* Optimized print profiles for IdeaBuilder 3D20 (current non-custom profiles are pretty generic and may not work as well on the Dremel as they could)
+* ~~Optimized print profiles for IdeaBuilder 3D20 (current non-custom profiles are pretty generic and may not work as well on the Dremel as they could)~~ **New - [Version 0.3 and above](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/latest):** Thanks to  [metalman3797](https://github.com/metalman3797) the print profiles have been optimized
 * ~~Optimized [Dremel3D20.def.json](resources/definitions/Dremel3D20.def.json) file~~ **New - [Version 0.3 and above](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/latest):** Thanks to  [metalman3797](https://github.com/metalman3797) the Dremel json file has been further improved
 * ~~Optimization of Dremel brand PLA settings~~  **New - [Version 0.3 and above](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/latest):** Thanks to  [metalman3797](https://github.com/metalman3797) the Dremel brand PLA material has been optimized.
-* Better understanding of the remaining unknown items in the Dremel .g3drem file format
-* Creation of plugin container with Dremel printer json, material json, and printer bed mesh to ease user installation
+* **In Progress** Creation of plugin container with Dremel printer json, material json, and printer bed mesh to ease user installation
 ---
 # <a name="Technical_Details"></a>Technical Details of the .g3drem File Format
 The g3drem file format consists of a few sections.  The header is a mix of binary data and ASCII data, which is followed by an 80x60 pixel bitmap image written to the file, which is then followed by standard 3d printer gcode saved in ASCII format.
