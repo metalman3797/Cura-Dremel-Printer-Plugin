@@ -1,7 +1,7 @@
 {
     "name": "Dremel 3D20 Printer Plugin",
     "author": "Tim Schoenmackers",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "Installs the necessary files for the Dremel Ideabuilder 3D20.",
     "api": 4,
     "i18n-catalog": "cura"

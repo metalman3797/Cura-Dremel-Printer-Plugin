@@ -1,5 +1,4 @@
 {
-    "id": "Dremel3D20",
     "version": 2,
     "name": "Dremel 3D20",
     "inherits": "fdmprinter",
@@ -11,13 +10,9 @@
         "file_formats": "text/x-g3drem",
         "icon": "icon_ultimaker2",
         "supports_usb_connection": false,
-        "platform": "dremel_3D20_platform.stl",
-        "machine_extruder_trains":
-        {
-            "0": "fdmextruder"
-        },
         "has_materials": true,
         "has_machine_quality": true,
+        "platform": "dremel_3D20_platform.stl",
         "preferred_material": "dremel_pla",
         "preferred_quality": "low"
     },
