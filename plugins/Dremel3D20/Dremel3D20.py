@@ -40,7 +40,7 @@ class Dremel3D20(QObject, Extension):
 
         # Check the preferences to see if the user uninstalled the files -
         # if so don't automatically install them
-        if Preferences.getInstance().getValue("Dremel3D20/is_installed") is None:
+        if Preferences.getInstance().getValue("Dremel3D20/is_installed") is None and not self.isInstalled():
             Preferences.getInstance().addPreference("Dremel3D20/is_installed", "unknown")
             Preferences.getInstance().writeToFile(Resources.getStoragePath(Resources.Preferences, Application.getInstance().getApplicationName() + ".cfg"))
             # if the user never installed the files, then automatically install it
@@ -53,6 +53,18 @@ class Dremel3D20(QObject, Extension):
         else:
             Logger.log("i", "Dremel 3D20 Plugin adding menu item for installation")
             self.addMenuItem(catalog.i18nc("@item:inmenu", "Install Dremel3D20 Printer"), self.installPluginFiles)
+
+    def isInstalled(self):
+        dremel3D20DefFile = os.path.join(self.local_printer_def_path,"Dremel3D20.def.json")
+        dremelPLAfile = os.path.join(self.local_materials_path,"dremel_pla.xml.fdm_material")
+        dremelQualityDir = os.path.join(self.local_quality_path,"quality")
+        if not os.path.isfile(dremel3D20DefFile):
+            return False
+        if not os.path.isfile(dremelPLAfile):
+            return False
+        if os.path.isDir(dremelQualityDir):
+            return False
+        return True
 
     # Install the plugin files.
     def installPluginFiles(self):
@@ -71,7 +83,8 @@ class Dremel3D20(QObject, Extension):
                         folder = self.local_materials_path
                     elif info.filename.endswith(".cfg"):
                         folder = self.local_quality_path
-                    # I'm still trying to figure out a way to install the stl file
+
+                    # TODO: figure out a way to install the stl file
                     # currently Cura doesn't have a local "meshes" folder
                     #elif info.filename.endswith(".stl"):
                     #    folder = self.local_meshes_path
@@ -83,7 +96,7 @@ class Dremel3D20(QObject, Extension):
                         Logger.log("i", "Dremel 3D20 Plugin installing " + info.filename + " to " + extracted_path)
                         restartRequired = True
 
-            if restartRequired:
+            if restartRequired and self.isInstalled():
                 Preferences.getInstance().setValue("Dremel3D20/is_installed", "yes")
                 Preferences.getInstance().writeToFile(Resources.getStoragePath(Resources.Preferences, Application.getInstance().getApplicationName() + ".cfg"))
                 message = Message(catalog.i18nc("@info:status", "Dremel 3D20 files installed.  Please Restart cura to complete installation"))
