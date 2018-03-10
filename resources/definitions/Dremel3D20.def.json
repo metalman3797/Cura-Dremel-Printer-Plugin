@@ -1,12 +1,12 @@
 {
     "id": "Dremel3D20",
     "version": 2,
-    "name": "Dremel 3D20",
+    "name": "Dremel3D20",
     "inherits": "fdmprinter",
     "metadata": {
         "visible": true,
-        "author": "DREMEL",
-        "manufacturer": "DREMEL",
+        "author": "Dremel",
+        "manufacturer": "Dremel",
         "category": "Dremel",
         "file_formats": "application/x-g3drem",
         "icon": "icon_ultimaker2",

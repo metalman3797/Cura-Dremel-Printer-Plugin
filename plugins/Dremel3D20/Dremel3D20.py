@@ -71,7 +71,7 @@ class Dremel3D20(QObject, Extension):
         cura_dir=os.path.dirname(os.path.realpath(sys.argv[0]))
         dremelDefinitionFile=os.path.join(cura_dir,"resources","definitions","Dremel3D20.def.json")
         dremelMaterialFile=os.path.join(cura_dir,"resources","materials","dremel_pla.xml.fdm_material")
-        dremelQualityFolder=os.path.join(cura_dir,"resources","quality","dremel_3d20"")
+        dremelQualityFolder=os.path.join(cura_dir,"resources","quality","dremel_3d20")
         ret = []
         if os.path.isfile(dremelDefinitionFile):
             ret.append(dremelDefinitionFile)
