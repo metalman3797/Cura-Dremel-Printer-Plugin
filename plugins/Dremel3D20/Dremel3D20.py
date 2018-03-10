@@ -1,4 +1,5 @@
 import os
+import os.path
 import zipfile
 import shutil  # For deleting plugin directories;
 import stat    # For setting file permissions correctly;
@@ -57,12 +58,12 @@ class Dremel3D20(QObject, Extension):
     def isInstalled(self):
         dremel3D20DefFile = os.path.join(self.local_printer_def_path,"Dremel3D20.def.json")
         dremelPLAfile = os.path.join(self.local_materials_path,"dremel_pla.xml.fdm_material")
-        dremelQualityDir = os.path.join(self.local_quality_path,"quality")
+        dremelQualityFile = os.path.join(self.local_quality_path,"quality","Dremel_3D20_normal.inst.cfg")
         if not os.path.isfile(dremel3D20DefFile):
             return False
         if not os.path.isfile(dremelPLAfile):
             return False
-        if os.path.isDir(dremelQualityDir):
+        if not os.path.isFile(dremelQualityFile):
             return False
         return True
 
