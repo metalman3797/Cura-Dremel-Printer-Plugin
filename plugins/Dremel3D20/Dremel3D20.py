@@ -1,5 +1,6 @@
 import os
 import os.path
+import sys
 import zipfile
 import shutil  # For deleting plugin directories;
 import stat    # For setting file permissions correctly;
@@ -39,10 +40,21 @@ class Dremel3D20(QObject, Extension):
         self.local_materials_path = os.path.join(Resources.getStoragePath(Resources.Resources), "materials")
         self.local_quality_path = os.path.join(Resources.getStoragePath(Resources.Resources), "quality")
 
+        # Check to see if the user had installed the plugin from an old version
+        bExit = False
+        for fil in self.oldVersionInstalled():
+            Logger.log("i", "Dremel 3D20 Plugin found files from previous install: " + fil)
+            message = Message(catalog.i18nc("@info:status", "Old Dremel IdeaBuilder 3D20 files detected.  Please delete "+ fil))
+            message.show()
+            bExit = True
+
+        if bExit:
+            return False
+
         # Check the preferences to see if the user uninstalled the files -
         # if so don't automatically install them
-        if Preferences.getInstance().getValue("Dremel3D20/is_installed") is None and not self.isInstalled():
-            Preferences.getInstance().addPreference("Dremel3D20/is_installed", "unknown")
+        if Preferences.getInstance().getValue("Dremel3D20/install_status") is None and not self.isInstalled():
+            Preferences.getInstance().addPreference("Dremel3D20/install_status", "unknown")
             Preferences.getInstance().writeToFile(Resources.getStoragePath(Resources.Preferences, Application.getInstance().getApplicationName() + ".cfg"))
             # if the user never installed the files, then automatically install it
             self.installPluginFiles()
@@ -55,15 +67,30 @@ class Dremel3D20(QObject, Extension):
             Logger.log("i", "Dremel 3D20 Plugin adding menu item for installation")
             self.addMenuItem(catalog.i18nc("@item:inmenu", "Install Dremel3D20 Printer"), self.installPluginFiles)
 
+    def oldVersionInstalled(self):
+        cura_dir=os.path.dirname(os.path.realpath(sys.argv[0]))
+        dremelDefinitionFile=os.path.join(cura_dir,"resources","definitions","Dremel3D20.def.json")
+        dremelMaterialFile=os.path.join(cura_dir,"resources","materials","dremel_pla.xml.fdm_material")
+        dremelQualityFolder=os.path.join(cura_dir,"resources","quality","dremel_3d20"")
+        ret = []
+        if os.path.isfile(dremelDefinitionFile):
+            ret.append(dremelDefinitionFile)
+        if os.path.isfile(dremelMaterialFile):
+            ret.append(dremelMaterialFile)
+        if os.path.isdir(dremelQualityFolder):
+            ret.append(dremelQualityFolder)
+        return ret
+
+
     def isInstalled(self):
         dremel3D20DefFile = os.path.join(self.local_printer_def_path,"Dremel3D20.def.json")
         dremelPLAfile = os.path.join(self.local_materials_path,"dremel_pla.xml.fdm_material")
-        dremelQualityFile = os.path.join(self.local_quality_path,"quality","Dremel_3D20_normal.inst.cfg")
+        dremelQualityDir = os.path.join(self.local_quality_path,"dremel_3d20")
         if not os.path.isfile(dremel3D20DefFile):
             return False
         if not os.path.isfile(dremelPLAfile):
             return False
-        if not os.path.isFile(dremelQualityFile):
+        if not os.path.isdir(dremelQualityDir):
             return False
         return True
 
@@ -98,7 +125,7 @@ class Dremel3D20(QObject, Extension):
                         restartRequired = True
 
             if restartRequired and self.isInstalled():
-                Preferences.getInstance().setValue("Dremel3D20/is_installed", "yes")
+                Preferences.getInstance().setValue("Dremel3D20/install_status", "installed")
                 Preferences.getInstance().writeToFile(Resources.getStoragePath(Resources.Preferences, Application.getInstance().getApplicationName() + ".cfg"))
                 message = Message(catalog.i18nc("@info:status", "Dremel 3D20 files installed.  Please Restart cura to complete installation"))
                 message.show()
@@ -139,8 +166,8 @@ class Dremel3D20(QObject, Extension):
             Logger.logException("d", "An exception occurred in Dremel 3D20 Plugin while uninstalling files")
 
         try:
-            dremelQualityDir = os.path.join(self.local_quality_path,"quality")
-            if os.path.isDir(dremelQualityDir):
+            dremelQualityDir = os.path.join(self.local_quality_path,"dremel_3d20")
+            if os.path.isdir(dremelQualityDir):
                 Logger.log("i", "Dremel 3D20 Plugin removing dremel quality files from " + dremelQualityDir)
                 shutil.rmtree(dremelQualityDir)
                 restartRequired = True
@@ -148,7 +175,7 @@ class Dremel3D20(QObject, Extension):
             Logger.logException("d", "An exception occurred in Dremel 3D20 Plugin while uninstalling files")
 
         if restartRequired:
-            Preferences.getInstance().setValue("Dremel3D20/is_installed", "no")
+            Preferences.getInstance().setValue("Dremel3D20/install_status", "uninstalled")
             Preferences.getInstance().writeToFile(Resources.getStoragePath(Resources.Preferences, Application.getInstance().getApplicationName() + ".cfg"))
             message = Message(catalog.i18nc("@info:status", "Dremel 3D20 files uninstalled.  Please Restart cura to complete installation"))
             message.show()

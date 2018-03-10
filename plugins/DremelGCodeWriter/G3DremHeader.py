@@ -55,15 +55,18 @@ class G3DremHeader:
         if stream is None:
             return False
 
+        # write the "g3drem 1.0" text
         if stream.write(self.startText.encode()) != 16:
             return False
 
+        # write the four-byte unsigned integers
         if stream.write(struct.pack('<LLLLLL',self.thumbnailStartLoc,
                                 self.imageStartLoc, self.gcodeStartLoc,
                                 self.numSeconds, self.rightMaterialInMM,
                                 self.leftMaterialInMM)) != 24:
             return False
 
+        # write the two-byte unsigned shorts
         if stream.write(struct.pack('<HHHHHHHH',self.informationFlags,
                                 self.heightPerLayer,self.infillPercentage,
                                 self.numShells, self.printSpeed,
@@ -71,6 +74,7 @@ class G3DremHeader:
                                 self.leftExtruderTemp)) != 16:
             return False
 
+        # write the material type
         if stream.write(struct.pack('<BB', self.rightMaterialType,
                                  self.leftMaterialType)) != 2:
             return False
