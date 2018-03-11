@@ -11,6 +11,7 @@
     <description>Fast, safe and reliable printing material from Dremel. PLA is ideal for the fast and reliable printing of parts and prototypes with a great surface quality.</description>
     <GUID>a3eb7626-4495-47cc-b242-7eec5172bed5</GUID>
     <compatible>True</compatible>
+    <setting_version>2</setting_version>
     <version>2</version>
     <color_code>#0033a0</color_code>
   </metadata>

@@ -51,6 +51,13 @@ class Dremel3D20(QObject, Extension):
         if bExit:
             return False
 
+        # if something got messed up, set back to reasonable values
+        if not self.isInstalled() and Preferences.getInstance().getValue("Dremel3D20/install_status") is "installed":
+            Preferences.getInstance().setValue("Dremel3D20/install_status", "unknown")
+
+        if self.isInstalled() and Preferences.getInstance().getValue("Dremel3D20/install_status") is "uninstalled":
+            Preferences.getInstance().setValue("Dremel3D20/install_status", "installed")
+
         # Check the preferences to see if the user uninstalled the files -
         # if so don't automatically install them
         if Preferences.getInstance().getValue("Dremel3D20/install_status") is None and not self.isInstalled():
@@ -103,7 +110,7 @@ class Dremel3D20(QObject, Extension):
             zipdata = os.path.join(self.this_plugin_path,"Dremel3D20.zip")
             with zipfile.ZipFile(zipdata, "r") as zip_ref:
                 for info in zip_ref.infolist():
-                    Logger.log("i", "Dremel 3D20 Plugin looking at " + info.filename )
+                    Logger.log("i", "Dremel 3D20 Plugin: found in zipfile: " + info.filename )
                     folder = None
                     if info.filename.endswith(".json"):
                         folder = self.local_printer_def_path
@@ -111,11 +118,12 @@ class Dremel3D20(QObject, Extension):
                         folder = self.local_materials_path
                     elif info.filename.endswith(".cfg"):
                         folder = self.local_quality_path
-
                     # TODO: figure out a way to install the stl file
                     # currently Cura doesn't have a local "meshes" folder
-                    #elif info.filename.endswith(".stl"):
-                    #    folder = self.local_meshes_path
+                    # and on windows writing to Program Files requires admin
+                    # access
+                    elif info.filename.endswith(".stl"):
+                        folder = self.local_meshes_path
 
                     if folder is not None:
                         extracted_path = zip_ref.extract(info.filename, path = folder)
@@ -125,10 +133,13 @@ class Dremel3D20(QObject, Extension):
                         restartRequired = True
 
             if restartRequired and self.isInstalled():
+                # only show the message if the user called this after having already uninstalled
+                if Preferences.getInstance().getValue("Dremel3D20/install_status") is not "unknown":
+                    message = Message(catalog.i18nc("@info:status", "Dremel 3D20 files installed.  Please Restart cura to complete installation"))
+                    message.show()
+                # either way, the files are now installed, so set the prefrences value
                 Preferences.getInstance().setValue("Dremel3D20/install_status", "installed")
                 Preferences.getInstance().writeToFile(Resources.getStoragePath(Resources.Preferences, Application.getInstance().getApplicationName() + ".cfg"))
-                message = Message(catalog.i18nc("@info:status", "Dremel 3D20 files installed.  Please Restart cura to complete installation"))
-                message.show()
 
         except: # Installing a new plugin should never crash the application.
             Logger.logException("d", "An exception occurred in Dremel 3D20 Plugin while installing the files")
@@ -139,6 +150,7 @@ class Dremel3D20(QObject, Extension):
     def uninstallPluginFiles(self):
         Logger.log("i", "Dremel 3D20 Plugin uninstalling plugin files")
         restartRequired = False
+        # remove the printer definition file
         try:
             dremel3D20DefFile = os.path.join(self.local_printer_def_path,"Dremel3D20.def.json")
             if os.path.isfile(dremel3D20DefFile):
@@ -147,6 +159,8 @@ class Dremel3D20(QObject, Extension):
                 restartRequired = True
         except: # Installing a new plugin should never crash the application.
             Logger.logException("d", "An exception occurred in Dremel 3D20 Plugin while uninstalling files")
+
+        # remove the pla material file
         try:
             dremelPLAfile = os.path.join(self.local_materials_path,"dremel_pla.xml.fdm_material")
             if os.path.isfile(dremelPLAfile):
@@ -156,6 +170,7 @@ class Dremel3D20(QObject, Extension):
         except: # Installing a new plugin should never crash the application.
             Logger.logException("d", "An exception occurred in Dremel 3D20 Plugin while uninstalling files")
 
+        # remove the platform file (on windows this doesn't work because it needs admin rights)
         try:
             dremelSTLfile = os.path.join(self.local_meshes_path,"dremel_3D20_platform.stl")
             if os.path.isfile(dremelSTLfile):
@@ -165,6 +180,7 @@ class Dremel3D20(QObject, Extension):
         except: # Installing a new plugin should never crash the application.
             Logger.logException("d", "An exception occurred in Dremel 3D20 Plugin while uninstalling files")
 
+        # remove the folder containing the quality files
         try:
             dremelQualityDir = os.path.join(self.local_quality_path,"dremel_3d20")
             if os.path.isdir(dremelQualityDir):
@@ -174,6 +190,7 @@ class Dremel3D20(QObject, Extension):
         except: # Installing a new plugin should never crash the application.
             Logger.logException("d", "An exception occurred in Dremel 3D20 Plugin while uninstalling files")
 
+        # prompt the user to restart
         if restartRequired:
             Preferences.getInstance().setValue("Dremel3D20/install_status", "uninstalled")
             Preferences.getInstance().writeToFile(Resources.getStoragePath(Resources.Preferences, Application.getInstance().getApplicationName() + ".cfg"))
