@@ -17,6 +17,8 @@ from PyQt5.QtCore import pyqtSlot, QObject
 
 catalog = i18nCatalog("cura")
 
+version = "0.1.2"
+
 ##      This Extension runs in the background and sends several bits of information to the Ultimaker servers.
 #       The data is only sent when the user in question gave permission to do so. All data is anonymous and
 #       no model files are being sent (Just a SHA256 hash of the model).
@@ -51,28 +53,41 @@ class Dremel3D20(QObject, Extension):
         if bExit:
             return False
 
+        if Preferences.getInstance().getValue("Dremel3D20/install_status") is None:
+            Preferences.getInstance().addPreference("Dremel3D20/install_status", "unknown")
+
         # if something got messed up, set back to reasonable values
         if not self.isInstalled() and Preferences.getInstance().getValue("Dremel3D20/install_status") is "installed":
             Preferences.getInstance().setValue("Dremel3D20/install_status", "unknown")
 
+        # if it's installed, and it's listed as uninstalled, then change that to reflect the truth
         if self.isInstalled() and Preferences.getInstance().getValue("Dremel3D20/install_status") is "uninstalled":
             Preferences.getInstance().setValue("Dremel3D20/install_status", "installed")
 
+        # if the version isn't the same, then force installation
+        if self.isInstalled() and not self.versionsMatch():
+            Preferences.getInstance().setValue("Dremel3D20/install_status", "unknown")
+
         # Check the preferences to see if the user uninstalled the files -
         # if so don't automatically install them
-        if Preferences.getInstance().getValue("Dremel3D20/install_status") is None and not self.isInstalled():
-            Preferences.getInstance().addPreference("Dremel3D20/install_status", "unknown")
-            Preferences.getInstance().writeToFile(Resources.getStoragePath(Resources.Preferences, Application.getInstance().getApplicationName() + ".cfg"))
+        if Preferences.getInstance().getValue("Dremel3D20/install_status") is "unknown":
             # if the user never installed the files, then automatically install it
             self.installPluginFiles()
 
         # check to see that the install succeeded - if so change the menu item options
         if os.path.isfile(os.path.join(self.local_printer_def_path,"Dremel3D20.def.json")):
             Logger.log("i", "Dremel 3D20 Plugin adding menu item for uninstallation")
-            self.addMenuItem(catalog.i18nc("@item:inmenu", "Uninstall Dremel3D20 Printer"), self.uninstallPluginFiles)
+            self.addMenuItem(catalog.i18nc("@item:inmenu", "Uninstall Dremel3D20 Printer Files"), self.uninstallPluginFiles)
         else:
             Logger.log("i", "Dremel 3D20 Plugin adding menu item for installation")
             self.addMenuItem(catalog.i18nc("@item:inmenu", "Install Dremel3D20 Printer"), self.installPluginFiles)
+
+        self.addMenuItem(catalog.i18nc("@item:inmenu", "Dremel Printer Plugin Version "+version), self.getFileVersion)
+        # finally save the cura.cfg file
+        Preferences.getInstance().writeToFile(Resources.getStoragePath(Resources.Preferences, Application.getInstance().getApplicationName() + ".cfg"))
+
+    def getFileVersion(self):
+        return
 
     def oldVersionInstalled(self):
         cura_dir=os.path.dirname(os.path.realpath(sys.argv[0]))
@@ -88,17 +103,44 @@ class Dremel3D20(QObject, Extension):
             ret.append(dremelQualityFolder)
         return ret
 
+    # returns true if the versions match and false if they don't
+    def versionsMatch(self):
+        # get the currently installed plugin version number
+        if Preferences.getInstance().getValue("Dremel3D20/curr_version") is None:
+            Preferences.getInstance().addPreference("Dremel3D20/curr_version", "0.0.0")
 
+        installedVersion = Preferences.getInstance().getValue("Dremel3D20/curr_version")
+
+        # parse out the version number
+        parts1 = [int(x) for x in version.split('.')]
+        parts2 = [int(x) for x in installedVersion.split('.')]
+
+        # compare version numbers - if they don't match, return false
+        if len(parts1) ==3 and len(parts2) ==3:
+            for idx in range(0,3):
+                if parts1[idx]!=parts2[idx]:
+                    Logger.log("i", "Dremel 3D20 Plugin installed version: " +installedVersion+ " doesn't match this version: "+version)
+                    return False
+
+        # if the version numbers match, then return true
+        Logger.log("i", "Dremel 3D20 Plugin versions match: "+installedVersion+" matches "+version)
+        return True
+
+    # check to see if the plugin files are all installed
     def isInstalled(self):
         dremel3D20DefFile = os.path.join(self.local_printer_def_path,"Dremel3D20.def.json")
         dremelPLAfile = os.path.join(self.local_materials_path,"dremel_pla.xml.fdm_material")
         dremelQualityDir = os.path.join(self.local_quality_path,"dremel_3d20")
+
+        # if some files are missing then return that this plugin as not installed
         if not os.path.isfile(dremel3D20DefFile):
             return False
         if not os.path.isfile(dremelPLAfile):
             return False
         if not os.path.isdir(dremelQualityDir):
             return False
+
+        # if everything is there, return True
         return True
 
     # Install the plugin files.
@@ -139,6 +181,7 @@ class Dremel3D20(QObject, Extension):
                     message.show()
                 # either way, the files are now installed, so set the prefrences value
                 Preferences.getInstance().setValue("Dremel3D20/install_status", "installed")
+                Preferences.getInstance().setValue("Dremel3D20/curr_version",version)
                 Preferences.getInstance().writeToFile(Resources.getStoragePath(Resources.Preferences, Application.getInstance().getApplicationName() + ".cfg"))
 
         except: # Installing a new plugin should never crash the application.

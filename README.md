@@ -14,18 +14,18 @@ To install, follow the instructions below:
 1.  Download the plugin files by peforming one of the two actions:
 
     EITHER
-    1. clone the repository onto your machine using the following command
+    1. Navigate to the ["Releases"](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/latest) page to download the latest released version in zip format and extract the zip file to your computer
+
+    OR
+
+    2.  clone the repository onto your machine using the following command
     ```
     git clone https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin.git
     ```
 
-    OR
-
-    2.  Navigate to the ["Releases"](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/latest) page to download the latest released version in zip format and extract the zip file to your computer
-
 2.  Navigate to the folder where you downloaded or extracted the plugin
 
-3.  Install the Dremel Printer Plugin
+3.  Install the Dremel Printer Plugin by following the steps below
 
     1. Open Cura and navigate to the Plugins menu and select "Installed Plugins"
     ![Installed Plugins](/docs/installed_plugins.png)
@@ -33,7 +33,7 @@ To install, follow the instructions below:
     2. Click the Install new plugin button on the screen that pops up:
     ![Install new plugin](/docs/install_new_plugin.png)
 
-    3. Navigate to the folder where you extracted the release, and select the Dremel3D20.umplugin
+    3. Navigate to the folder where you extracted the release, (if you cloned the git repository, this is under Cura-Dremel-3D20-Plugin/plugins) and select the Dremel3D20.umplugin
 
     ![Install new plugin](/docs/curaplugins.png)
 
@@ -42,7 +42,7 @@ To install, follow the instructions below:
 
     5.  Close the Cura application
 
-    6.  (Optional) Copy the resources/meshes/dremel_3D20_platform.stl to the `%CURA_INSTALL_DIR%/resources/meshes` folder.  This file contains the 3D model of the Dremel Ideabuilder print bed.  On MacOS this is folder located at `Ultimaker Cura.app/Contents/Resources/resources/meshes/`  The easiest way on the mac to get to this folder is to right click on the Ultimaker Cura.app application and select the "show package contents" option
+    6.  (Optional) Copy the dremel_3D20_platform.stl to the `%CURA_INSTALL_DIR%/resources/meshes` folder (if you cloned the git repo this file is under Cura-Dremel-3D20-Plugin/resources/meshes/).  This file contains the 3D model of the Dremel Ideabuilder print bed.  On MacOS copy this file to the folder located at `Ultimaker Cura.app/Contents/Resources/resources/meshes/`  The easiest way on the mac to get to this folder is to right click on the Ultimaker Cura.app application and select the "show package contents" option.  Skip this step on Linux
     ![Copy the contents of Dremel print bed file to the meshes directory of cura](/docs/meshesdir.png)
 
     7.  Upon restart you should have an option to add a Dremel3D20 printer (see Usage section below) - the plugin is now installed!  If any errors occurred the Dremel printer files can be re-installed by going to the Extensions menu->Dremel3D20 Printer Plugin->Install Dremel3D20 printer
@@ -50,10 +50,12 @@ To install, follow the instructions below:
 
 ---
 # Uninstallation
-To uninstall the Dremel printer files, open the Extensions menu->Dremel3D20 Printer Plugin and select "Uninstall Dremel3D20 printer".  To delete the plugins
+To uninstall the Dremel printer files, open the Extensions menu->Dremel3D20 Printer Plugin and select "Uninstall Dremel3D20 printer".  To delete the plugins navigate to the directory listed below and delete the DremelGCodeWriter and Dremel3D20 folder.
+  - Windows:  $USER/AppData/Roaming/cura/$CURA_VERSION/plugins
+  - Linux:  $USER/.local/share/cura/$CURA_VERSION/plugins/
+  - Mac:  $User/Library/Application\ Support/Cura/$CURA_VERSION/plugins
 
-**Note:**  If you installed using the .umplugin file, then Cura copies the plugin files to the plugins directory here: `%OS_USER_DIR%\AppData\Roaming\cura\%CURA VERSION%\plugins` as
-specified on [this page](https://github.com/Ultimaker/Cura/wiki/Cura-Preferences-and-Settings-Locations)  Simply navigate to the plugins directory there, and delete the DremelGCodeWriter and Dremel3D20 folder.
+**Note:**  These directories are subject to change at Ultimaker's discretion.  The latest information on these directories can be found on [this page](https://github.com/Ultimaker/Cura/wiki/Cura-Preferences-and-Settings-Locations)  
 
 ---
 # Usage
