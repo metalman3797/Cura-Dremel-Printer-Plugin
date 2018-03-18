@@ -3,11 +3,17 @@ Dremel Ideabuilder 3D20 plugin for [Cura version 3.2](https://ultimaker.com/en/p
 
 ![The Cura GUI](/docs/GUI.PNG)
 
+This software consists of two plugins for Cura.  They are as follows:
+
+1. The Dremel3D20 plugin, which contains the necessary printer files to add the Dremel IdeaBuilder 3D20 to Cura
+2. The G3Drem file format export plugin, which enables Cura to export the proprietary g3drem file format that the Dremel 3D20 needs.
+
 **Note:**  This version of the Cura-Dremel-3D20-Plugin will not work with Cura versions 3.1 or earlier due to changes that Ultimaker implemented in the Cura architecture.  For a version that works with Cura versions 3.0 or 3.1, please check out version 0.2.5 of the plugin [here](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.2.5)
 
 ---
 # Installation
-To install, follow the instructions below:
+
+To install the plugins, follow the instructions below:
 
 0.  [Download and install Cura](https://ultimaker.com/en/products/ultimaker-cura-software) on your machine.  This plugin has been tested on Windows 10 Professional 64 bit edition, and MacOS 10.12 (Sierra), but this plugin should work equally well on linux or any other operating system that Cura supports.
 
@@ -47,6 +53,13 @@ To install, follow the instructions below:
 
     7.  Upon restart you should have an option to add a Dremel3D20 printer (see Usage section below) - the plugin is now installed!  If any errors occurred the Dremel printer files can be re-installed by going to the Extensions menu->Dremel3D20 Printer Plugin->Install Dremel3D20 printer
     ![Install Printer Files](/docs/install_printer_files.png)
+
+**Note:**  If the Dremel3D20 printer file plugin detects an older installation, it will pop up warnings telling the user to remove the old files before it installs the new files.  Once the files have been removed the plugin will automatically install new files to the appropriate locations.
+
+    ![Warn about old installs](/docs/old_install_warning.png)
+
+
+
 
 ---
 # Uninstallation
