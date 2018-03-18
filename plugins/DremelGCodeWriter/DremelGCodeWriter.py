@@ -34,7 +34,7 @@ import struct
 import time
 import os # for listdir
 import os.path # for isfile and join and path
-
+from . import G3DremHeader
 
 ##  Writes a .g3drem file.
 
@@ -82,35 +82,7 @@ class DremelGCodeWriter(MeshWriter):
         Logger.log("d", "Dremel GCode Writer did not find any appropriate image files")
         return None
 
-    ##  Performs the writing of the dremel header and gcode - for a technical
-    ##  breakdown of the dremel g3drem file format see the following page:
-    ##  https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/blob/master/README.md#technical-details-of-the-g3drem-file-format
-    def write(self, stream, nodes, mode = MeshWriter.OutputMode.BinaryMode):
-        if mode != MeshWriter.OutputMode.BinaryMode:
-            Logger.log("e", "Dremel GCode Writer does not support non-binary mode.")
-            return False
-        if stream is None:
-            Logger.log("e", "Dremel GCode Writer - Error writing - no output stream.")
-            return False
-        # write the g3drem header
-        stream.write("g3drem 1.0      ".encode())
-        # write 3 magic numbers
-        stream.write(struct.pack('<lll',58,14512,14512))
-        #get the filament length
-        global_container_stack = Application.getInstance().getGlobalContainerStack()
-        print_information = Application.getInstance().getPrintInformation()
-        extruders = [global_container_stack]
-        extruder = extruders[0]
-        length = int(print_information.materialLengths[int(extruder.getMetaDataEntry("position", "0"))]*1000)
-
-        # get the estimated number of seconds that the print will take
-        seconds = int(print_information.currentPrintTime.getDisplayString(DurationFormat.Format.Seconds))
-        # write the 4 byte number of seconds and the 4 byte filament length
-        stream.write(struct.pack('<ll',seconds,length))
-        # write some more magic numbers
-        stream.write(struct.pack('<lllllh',0,1,196633,100,220,-255))
-
-
+    def getBitmapBytes(self,stream):
         # get the primary screen
         screen = QApplication.primaryScreen()
         bmpError = False
@@ -140,7 +112,7 @@ class DremelGCodeWriter(MeshWriter):
                         bmpError = True
                     # finally write the bitmap to the g3drem file
                     if not bmpError:
-                        stream.write(ba)
+                        return ba
         elif screen is not None:
             # wait for half a second because linux takes a bit of time before
             # it closes the file selection window, and we don't want that in the
@@ -199,7 +171,7 @@ class DremelGCodeWriter(MeshWriter):
                     bmpError = True
                 # finally write the bitmap to the g3drem file
                 if not bmpError:
-                    stream.write(ba)
+                    return ba
             else:
                 Logger.log("d", "Dremel GCode Writer - Could not get window id - using generic cura icon instead")
                 bmpError = True
@@ -210,7 +182,46 @@ class DremelGCodeWriter(MeshWriter):
         if bmpError:
             # if an error ocurred when grabbing a screenshot write the generic cura icon instead
             bmpBytes = struct.pack("{}B".format(len(self.curaIconBmpData)), *self.curaIconBmpData)
-            stream.write(bmpBytes)
+            return bmpBytes
+
+    ##  Performs the writing of the dremel header and gcode - for a technical
+    ##  breakdown of the dremel g3drem file format see the following page:
+    ##  https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/blob/master/README.md#technical-details-of-the-g3drem-file-format
+    def write(self, stream, nodes, mode = MeshWriter.OutputMode.BinaryMode):
+        if mode != MeshWriter.OutputMode.BinaryMode:
+            Logger.log("e", "Dremel GCode Writer does not support non-binary mode.")
+            return False
+        if stream is None:
+            Logger.log("e", "Dremel GCode Writer - Error writing - no output stream.")
+            return False
+
+        g3dremHeader = G3DremHeader.G3DremHeader()
+
+        global_container_stack = Application.getInstance().getGlobalContainerStack()
+        print_information = Application.getInstance().getPrintInformation()
+        extruders = [global_container_stack]
+        extruder = extruders[0]
+        # get estimated length
+        length = int(print_information.materialLengths[int(extruder.getMetaDataEntry("position", "0"))]*1000)
+        g3dremHeader.setMaterialLen(length)
+
+        # get infill percentage
+        g3dremHeader.setInfillPct(int(global_container_stack.getProperty("infill_sparse_density", "value")))
+
+        # set print temperature in header
+        g3dremHeader.setExtruderTemp(int(extruder.getProperty("material_print_temperature", "value")))
+
+        # get the estimated number of seconds that the print will take
+        seconds = int(print_information.currentPrintTime.getDisplayString(DurationFormat.Format.Seconds))
+        g3dremHeader.setEstimatedTime(length)
+
+        # set the thumbnail
+        g3dremHeader.setThumbnailBitmap(self.getBitmapBytes(stream))
+
+        # finally, write the header
+        if not g3dremHeader.writeHeader(stream):
+            Logger.log("e", "Error Writing Dremel Header.")
+            return False
 
         # now that the header is written, write the ascii encoded gcode
         Logger.log("i", "Finished Writing Dremel Header.")

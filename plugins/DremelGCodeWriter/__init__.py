@@ -12,7 +12,7 @@ def getMetaData():
             "output": [{
                 "extension": "g3drem",
                 "description": catalog.i18nc("@item:inlistbox", "g3drem File"),
-                "mime_type": "text/x-g3drem",
+                "mime_type": "application/x-g3drem",
                 "mode": DremelGCodeWriter.DremelGCodeWriter.OutputMode.BinaryMode
             }]
         }
