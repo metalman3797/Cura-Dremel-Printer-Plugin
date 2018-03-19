@@ -17,15 +17,20 @@
 ####################################################################
 
 from UM.Mesh.MeshWriter import MeshWriter
+from UM.Message import Message
+from UM.Extension import Extension
 from UM.Logger import Logger
 from UM.Application import Application
 from UM.Settings.InstanceContainer import InstanceContainer
 from UM.Qt.Duration import DurationFormat
 from UM.Qt.Bindings.Theme import Theme
+from UM.Preferences import Preferences
+from UM.Resources import Resources
+from UM.i18n import i18nCatalog
 
-from PyQt5.QtWidgets import QApplication
-from PyQt5.QtGui import QPixmap, QScreen, QColor, qRgb
-from PyQt5.QtCore import QByteArray, QBuffer, QIODevice, QRect, Qt
+from PyQt5.QtWidgets import QApplication, QFileDialog
+from PyQt5.QtGui import QPixmap, QScreen, QColor, qRgb, QImageReader, QImage
+from PyQt5.QtCore import QByteArray, QBuffer, QIODevice, QRect, Qt, QSize
 
 import re #For escaping characters in the settings.
 import json
@@ -36,9 +41,11 @@ import os # for listdir
 import os.path # for isfile and join and path
 from . import G3DremHeader
 
+catalog = i18nCatalog("cura")
+
 ##  Writes a .g3drem file.
 
-class DremelGCodeWriter(MeshWriter):
+class DremelGCodeWriter(MeshWriter, Extension):
     ##  The file format version of the serialised g-code.
     version = 3
 
@@ -55,7 +62,26 @@ class DremelGCodeWriter(MeshWriter):
 
     def __init__(self):
         super().__init__()
+        if Preferences.getInstance().getValue("DremelGCodeWriter/select_screenshot") is None:
+            Preferences.getInstance().addPreference("DremelGCodeWriter/select_screenshot", False)
 
+        if Preferences.getInstance().getValue("DremelGCodeWriter/last_screenshot_folder") is None:
+            Preferences.getInstance().addPreference("DremelGCodeWriter/last_screenshot_folder",str(os.path.expanduser('~')))
+        Logger.log("i", "DremelGcodewriter Plugin adding menu item for screenshot toggling")
+        self.addMenuItem(catalog.i18nc("@item:inmenu", "Toggle Manual Screenshot Selection"), self.setSelectScreenshot)
+
+    def setSelectScreenshot(self):
+        if Preferences.getInstance().getValue("DremelGCodeWriter/select_screenshot"):
+            Preferences.getInstance().setValue("DremelGCodeWriter/select_screenshot",False)
+            Logger.log("i", "DremelGcodewriter Plugin manual screenshot selection disabled")
+            message = Message(catalog.i18nc("@info:status", "Manual screenshot selection disabled when exporting g3drem files"))
+            message.show()
+        else:
+            Preferences.getInstance().setValue("DremelGCodeWriter/select_screenshot",True)
+            Logger.log("i", "DremelGcodewriter Plugin manual screenshot selection enabled")
+            message = Message(catalog.i18nc("@info:status", "Manual screenshot selection enabled when exporting g3drem files"))
+            message.show()
+        Preferences.getInstance().writeToFile(Resources.getStoragePath(Resources.Preferences, Application.getInstance().getApplicationName() + ".cfg"))
 
     #  find_images_with_name tries to find an image file with the same name in the same direcory where the
     #  user is writing out the g3drem file.  If it finds an image then it reuturns the filename so that the
@@ -86,34 +112,65 @@ class DremelGCodeWriter(MeshWriter):
         # get the primary screen
         screen = QApplication.primaryScreen()
         bmpError = False
-        image_with_same_name = self.find_images_with_name(stream.name)
+
+        if Preferences.getInstance().getValue("DremelGCodeWriter/select_screenshot"):
+            image_with_same_name, _ = QFileDialog.getOpenFileName(None, 'Open file', Preferences.getInstance().getValue("DremelGCodeWriter/last_screenshot_folder"),"Image files (*.jpg *.gif *.png *.bmp *.jpeg)")
+            Logger.log("d", "Dremel GCode Writer using image for screenshot: " + image_with_same_name)
+            Preferences.getInstance().setValue("DremelGCodeWriter/last_screenshot_folder",str(os.path.dirname(image_with_same_name)))
+        else:
+            image_with_same_name = self.find_images_with_name(stream.name)
 
         # find image with same name as saved filename
         if image_with_same_name is not None:
-            imfile = QPixmap(image_with_same_name);
-            if imfile.isNull():
-                Logger.log("d", "Dremel GCode Writer could not open." + image_with_same_name +" - using generic cura icon instead")
-                bmpError = True
-            else:
-                pixMpImg = imfile.scaled(80, 60, Qt.KeepAspectRatioByExpanding).copy(QRect(0,0,80,60))
-                if pixMpImg.width() is not 80 or pixMpImg.height() is not 60:
-                    Logger.log("d", "Dremel GCode Writer - error in size of screenshot - using generic cura icon instead")
-                    bmpError = True
-                else:
-                    # now prepare to write the bitmap
-                    ba = QByteArray()
-                    bmpData = QBuffer(ba)
-                    if not bmpData.open(QIODevice.WriteOnly):
-                        Logger.log("d", "Dremel GCode Writer - Could not open qbuffer - using generic cura icon instead")
-                        bmpError = True
-                    # copy the raw image data to bitmap image format in memory
-                    if not pixMpImg.save(bmpData, "BMP"):
-                        Logger.log("d", "Dremel GCode Writer - Could not save pixmap - using generic cura icon instead")
-                        bmpError = True
-                    # finally write the bitmap to the g3drem file
-                    if not bmpError:
-                        return ba
-        elif screen is not None:
+            try:
+
+                pixMpImg = QImage()
+                reader = QImageReader(image_with_same_name)
+                reader.setScaledSize(QSize(80,60))
+                reader.read(pixMpImg)
+                # now prepare to write the bitmap
+                ba = QByteArray()
+                bmpData = QBuffer(ba)
+                if not bmpData.open(QIODevice.WriteOnly):
+                    Logger.log("d", "Dremel GCode Writer - Could not open qbuffer - using generic cura icon instead")
+                    #bmpError = True
+                # copy the raw image data to bitmap image format in memory
+                if not pixMpImg.save(bmpData, "BMP"):
+                    Logger.log("d", "Dremel GCode Writer - Could not save pixmap - trying to take screenshot instead")
+                    #bmpError = True
+                # finally write the bitmap to the g3drem file
+                if not bmpError:
+                    return ba
+
+                #imfile = QPixmap(image_with_same_name)
+                #if imfile.isNull():
+                #    Logger.log("d", "Dremel GCode Writer could not open." + image_with_same_name +" - using generic cura icon instead")
+                #    #bmpError = True
+                #else:
+                #    Logger.log("d", "Dremel GCode Writer scaling " + image_with_same_name)
+                #    pixMpImg = imfile.scaled(80, 60, Qt.KeepAspectRatioByExpanding).copy(QRect(0,0,80,60))
+                #    Logger.log("d", "Dremel GCode Writer scaled " + image_with_same_name)
+                #    if pixMpImg.width() is not 80 or pixMpImg.height() is not 60:
+                #        Logger.log("d", "Dremel GCode Writer - error in size of screenshot - using generic cura icon instead")
+                #        #bmpError = True
+                #    else:
+                #        # now prepare to write the bitmap
+                #        ba = QByteArray()
+                #        bmpData = QBuffer(ba)
+                #        if not bmpData.open(QIODevice.WriteOnly):
+                #            Logger.log("d", "Dremel GCode Writer - Could not open qbuffer - using generic cura icon instead")
+                #            #bmpError = True
+                #        # copy the raw image data to bitmap image format in memory
+                #        if not pixMpImg.save(bmpData, "BMP"):
+                #            Logger.log("d", "Dremel GCode Writer - Could not save pixmap - trying to take screenshot instead")
+                #            #bmpError = True
+                #        # finally write the bitmap to the g3drem file
+                #        if not bmpError:
+                #            return ba
+            except:
+                Logger.log("e", "Dremel GCode Writer - Could not use pixmap - trying ")
+
+        if screen is not None:
             # wait for half a second because linux takes a bit of time before
             # it closes the file selection window, and we don't want that in the
             # screenshot

@@ -19,4 +19,5 @@ def getMetaData():
     }
 
 def register(app):
-    return { "mesh_writer": DremelGCodeWriter.DremelGCodeWriter() }
+    return { "mesh_writer": DremelGCodeWriter.DremelGCodeWriter(),
+             "extension": DremelGCodeWriter.DremelGCodeWriter()}
