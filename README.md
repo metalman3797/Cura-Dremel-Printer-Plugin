@@ -10,6 +10,12 @@ This software consists of one plugins for Cura.  The Dremel3D20 plugin contains 
 ---
 # Installation
 
+**Note** As of release 0.4.0 the Dremel3D20 plugin now combines the functionality of the DremelGCodeWriter plugin as well as including the ability to automatically install the Dremel printer files.  If you had previously installed the DremelGCodeWriter plugin, please delete it from the following folders before proceeding:
+- Windows:  $USER/AppData/Roaming/cura/$CURA_VERSION/plugins
+            %CURA_INSTALL_DIR%/plugins (i.e. C:\Program Files\Ultimaker Cura\plugins)
+- Mac:      $User/Library/Application\ Support/Cura/$CURA_VERSION/plugins
+- Linux:    $USER/.local/share/cura/$CURA_VERSION/plugins/
+
 To install the plugins, follow the instructions below:
 
 0.  [Download and install Cura](https://ultimaker.com/en/products/ultimaker-cura-software) on your machine.  This plugin has been tested on Windows 10 Professional 64 bit edition, and MacOS 10.12 (Sierra), but this plugin should work equally well on linux or any other operating system that Cura supports.
@@ -58,14 +64,16 @@ To install the plugins, follow the instructions below:
 
     ![Install Printer Files](/docs/install_printer_files.png)
 
-**Note:**  If the Dremel3D20 printer file plugin detects an older installation in the main Cura application directory, it will pop up warnings telling the user to remove the old files before it installs the new files.  Once the files have been removed the plugin will automatically install new files to the appropriate locations.
+**Note:**  If the Dremel3D20 plugin detects an older installation in the main Cura application directory, it will pop up warnings telling the user to remove the old files before it installs the new files.  Once the files have been removed the plugin will automatically install new files to the appropriate locations.
 
 ![Warn about old installs](/docs/old_install_warning.png)
 
 
 ---
 # Uninstallation
-To uninstall the Dremel printer files, open the Extensions menu->Dremel3D20 Printer Plugin and select "Uninstall Dremel3D20 printer".  To delete the plugin itself navigate to the directory listed below and delete the Dremel3D20 folder.
+To uninstall the Dremel printer files, open the Extensions menu->Dremel3D20 Printer Plugin and select "Uninstall Dremel3D20 printer".  
+
+To delete the plugin itself navigate to the directory listed below and delete the Dremel3D20 folder.
   - Windows:  $USER/AppData/Roaming/cura/$CURA_VERSION/plugins
   - Linux:  $USER/.local/share/cura/$CURA_VERSION/plugins/
   - Mac:  $User/Library/Application\ Support/Cura/$CURA_VERSION/plugins
