@@ -31,6 +31,7 @@ To install the plugins, follow the instructions below:
 3.  Install the Dremel Printer Plugin by following the steps below
 
     1. Open Cura and navigate to the Plugins menu and select "Installed Plugins"
+
     ![Installed Plugins](/docs/installed_plugins.png)
 
     2. Click the Install new plugin button on the screen that pops up:
@@ -41,20 +42,24 @@ To install the plugins, follow the instructions below:
 
     ![Install new plugin](/docs/curaplugins.png)
 
-    4. A message window will appear telling you to restart cura.   
+    4. A message window will appear telling you to restart Cura.
+
     ![Install new plugin](/docs/restart.png)
 
     5.  Close the Cura application
 
     6.  (Optional) Copy the dremel_3D20_platform.stl to the `%CURA_INSTALL_DIR%/resources/meshes` folder (if you cloned the git repo this file is under Cura-Dremel-3D20-Plugin/resources/meshes/).  This file contains the 3D model of the Dremel Ideabuilder print bed.  On MacOS copy this file to the folder located at `Ultimaker Cura.app/Contents/Resources/resources/meshes/`  The easiest way on the mac to get to this folder is to right click on the Ultimaker Cura.app application and select the "show package contents" option.  Skip this step on Linux
+
     ![Copy the contents of Dremel print bed file to the meshes directory of cura](/docs/meshesdir.png)
 
     7.  Upon restart you should have an option to add a Dremel3D20 printer (see Usage section below) - the plugin is now installed!  
 
     **Note:** If any errors occurred the Dremel printer files can be re-installed by going to the Extensions menu->Dremel3D20 Printer Plugin->Install Dremel3D20 printer
+
     ![Install Printer Files](/docs/install_printer_files.png)
 
 **Note:**  If the Dremel3D20 printer file plugin detects an older installation in the main Cura application directory, it will pop up warnings telling the user to remove the old files before it installs the new files.  Once the files have been removed the plugin will automatically install new files to the appropriate locations.
+
     ![Warn about old installs](/docs/old_install_warning.png)
 
 
