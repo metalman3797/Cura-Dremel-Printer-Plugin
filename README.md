@@ -3,10 +3,7 @@ Dremel Ideabuilder 3D20 plugin for [Cura version 3.2](https://ultimaker.com/en/p
 
 ![The Cura GUI](/docs/GUI.PNG)
 
-This software consists of two plugins for Cura.  They are as follows:
-
-1. The Dremel3D20 plugin, which contains the necessary printer files to add the Dremel IdeaBuilder 3D20 to Cura
-2. The G3Drem file format export plugin, which enables Cura to export the proprietary g3drem file format that the Dremel 3D20 needs.
+This software consists of one plugins for Cura.  The Dremel3D20 plugin contains the necessary printer files to add the Dremel IdeaBuilder 3D20 to Cura and enables cura to export the proprietary g3drem file format that the Dremel 3D20 needs.
 
 **Note:**  This version of the Cura-Dremel-3D20-Plugin will not work with Cura versions 3.1 or earlier due to changes that Ultimaker implemented in the Cura architecture.  For a version that works with Cura versions 3.0 or 3.1, please check out version 0.2.5 of the plugin [here](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.2.5)
 
@@ -20,7 +17,7 @@ To install the plugins, follow the instructions below:
 1.  Download the plugin files by peforming one of the two actions:
 
     EITHER
-    1. Navigate to the ["Releases"](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/latest) page to download the latest released version in zip format and extract the zip file to your computer
+    1. Navigate to the ["Releases"](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/latest) page to download the latest released version in zip format (named Cura-Dremel-3D20-Plugin-<version>.zip) and extract the zip file to your computer
 
     OR
 
@@ -39,11 +36,11 @@ To install the plugins, follow the instructions below:
     2. Click the Install new plugin button on the screen that pops up:
     ![Install new plugin](/docs/install_new_plugin.png)
 
-    3. Navigate to the folder where you extracted the release, (if you cloned the git repository, this is under Cura-Dremel-3D20-Plugin/plugins) and select the Dremel3D20.umplugin
+    3. Navigate to the folder where you extracted the release, (if you cloned the git repository, this is under Cura-Dremel-3D20-Plugin/plugins) and select the Dremel3D20.curaplugin
 
     ![Install new plugin](/docs/curaplugins.png)
 
-    4. A message window will appear telling you to restart cura.  Before restarting select the "Install new Plugin" button again and select the DremelGCodeWriter.umplugin file as well.  
+    4. A message window will appear telling you to restart cura.   
     ![Install new plugin](/docs/restart.png)
 
     5.  Close the Cura application
