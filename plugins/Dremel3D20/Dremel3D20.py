@@ -146,6 +146,7 @@ class Dremel3D20(MeshWriter, Extension):
     def oldVersionInstalled(self):
         cura_dir=os.path.dirname(os.path.realpath(sys.argv[0]))
         dremelDefinitionFile=os.path.join(cura_dir,"resources","definitions","Dremel3D20.def.json")
+        oldPluginPath=os.path.join(cura_dir,"resources","plugins","DremelGCodeWriter")
         dremelMaterialFile=os.path.join(cura_dir,"resources","materials","dremel_pla.xml.fdm_material")
         dremelQualityFolder=os.path.join(cura_dir,"resources","quality","dremel_3d20")
         ret = []
@@ -155,6 +156,8 @@ class Dremel3D20(MeshWriter, Extension):
             ret.append(dremelMaterialFile)
         if os.path.isdir(dremelQualityFolder):
             ret.append(dremelQualityFolder)
+        if os.path.isdir(oldPluginPath):
+            ret.append(oldPluginPath)
         return ret
 
     # returns true if the versions match and false if they don't
@@ -290,13 +293,13 @@ class Dremel3D20(MeshWriter, Extension):
     def setSelectScreenshot(self):
         if Preferences.getInstance().getValue("Dremel3D20/select_screenshot"):
             Preferences.getInstance().setValue("Dremel3D20/select_screenshot",False)
-            Logger.log("i", "DremelGcodewriter Plugin manual screenshot selection disabled")
-            message = Message(catalog.i18nc("@info:status", "Manual screenshot selection disabled when exporting g3drem files"))
+            Logger.log("i", "Dremel3D20 Plugin manual screenshot selection disabled")
+            message = Message(catalog.i18nc("@info:status", "Manual screenshot selection is disabled when exporting g3drem files"))
             message.show()
         else:
             Preferences.getInstance().setValue("Dremel3D20/select_screenshot",True)
             Logger.log("i", "Dremel3D20 Plugin manual screenshot selection enabled")
-            message = Message(catalog.i18nc("@info:status", "Manual screenshot selection enabled when exporting g3drem files"))
+            message = Message(catalog.i18nc("@info:status", "Manual screenshot selection is enabled when exporting g3drem files"))
             message.show()
         Preferences.getInstance().writeToFile(Resources.getStoragePath(Resources.Preferences, Application.getInstance().getApplicationName() + ".cfg"))
 
@@ -308,7 +311,7 @@ class Dremel3D20(MeshWriter, Extension):
         savepth, savefname = os.path.split(os.path.realpath(gcodefilename))
         # get the path+filename-extension i.e. "/usr/home/llama.g3drem" would split to "/usr/home/llama"  and ".g3drem"
         gcode_path_and_name, file_extension = os.path.splitext(os.path.realpath(gcodefilename))
-        Logger.log("i", "Dremel GCode Writer looking for image with name " + gcode_path_and_name +".[jpg,png,gif,bmp]")
+        Logger.log("i", "Dremel 3D20 Plugin looking for image with name " + gcode_path_and_name +".[jpg,gif,bmp]")
         # get a list of all files in the save directory so that we can traverse over them
         allfiles = [os.path.join(savepth, f) for f in os.listdir(savepth) if os.path.isfile(os.path.join(savepth, f))]
         # search over all the files to see if we find a valid image
@@ -318,11 +321,11 @@ class Dremel3D20(MeshWriter, Extension):
             # compare the path+filename section (i.e. compare /usr/home/llama to /usr/home/camel) if they match then check to see
             # if the extension is a valid image format. and if so, return it.
             if gcode_path_and_name.lower() == currfile_path_and_name.lower():
-                if currfile_extension.lower() in [".png",".jpg",".jpeg",".gif",".bmp"]:
-                    Logger.log("i", "Dremel GCode Writer - using image: " + currfile.lower() )
+                if currfile_extension.lower() in [".png", ".jpg",".jpeg",".gif",".bmp"]:
+                    Logger.log("i", "Dremel 3D20 Plugin - using image: " + currfile.lower() )
                     return currfile
         # if no image with a matching name was found, return
-        Logger.log("d", "Dremel GCode Writer did not find any appropriate image files")
+        Logger.log("d", "Dremel 3D20 Plugin did not find any appropriate image files")
         return None
 
     def getBitmapBytes(self,stream):
@@ -331,8 +334,8 @@ class Dremel3D20(MeshWriter, Extension):
         bmpError = False
         image_with_same_name = None
         if Preferences.getInstance().getValue("Dremel3D20/select_screenshot"):
-            image_with_same_name, _ = QFileDialog.getOpenFileName(None, 'Select Preview Image', Preferences.getInstance().getValue("Dremel3D20/last_screenshot_folder"),"Image files (*.jpg *.gif *.png *.bmp *.jpeg)")
-            Logger.log("d", "Dremel GCode Writer using image for screenshot: " + image_with_same_name)
+            image_with_same_name, _ = QFileDialog.getOpenFileName(None, 'Select Preview Image', Preferences.getInstance().getValue("Dremel3D20/last_screenshot_folder"),"Image files (*png *.jpg *.gif *.bmp *.jpeg)")
+            Logger.log("d", "Dremel 3D20 Plugin using image for screenshot: " + image_with_same_name)
             Preferences.getInstance().setValue("Dremel3D20/last_screenshot_folder",str(os.path.dirname(image_with_same_name)))
             # nee to test this when cancel button is clicked
             if image_with_same_name == "":
@@ -346,48 +349,25 @@ class Dremel3D20(MeshWriter, Extension):
                 pixMpImg = QImage()
                 reader = QImageReader(image_with_same_name)
                 reader.setScaledSize(QSize(80,60))
-                reader.read(pixMpImg)
-                # now prepare to write the bitmap
-                ba = QByteArray()
-                bmpData = QBuffer(ba)
-                if not bmpData.open(QIODevice.WriteOnly):
-                    Logger.log("d", "Dremel GCode Writer - Could not open qbuffer - using generic cura icon instead")
-                    bmpError = True
-                # copy the raw image data to bitmap image format in memory
-                if not pixMpImg.save(bmpData, "BMP"):
-                    Logger.log("d", "Dremel GCode Writer - Could not save pixmap - trying to take screenshot instead")
-                    bmpError = True
-                # finally write the bitmap to the g3drem file
-                if not bmpError and len(ba)>0:
-                    return ba
-
-                #imfile = QPixmap(image_with_same_name)
-                #if imfile.isNull():
-                #    Logger.log("d", "Dremel GCode Writer could not open." + image_with_same_name +" - using generic cura icon instead")
-                #    #bmpError = True
-                #else:
-                #    Logger.log("d", "Dremel GCode Writer scaling " + image_with_same_name)
-                #    pixMpImg = imfile.scaled(80, 60, Qt.KeepAspectRatioByExpanding).copy(QRect(0,0,80,60))
-                #    Logger.log("d", "Dremel GCode Writer scaled " + image_with_same_name)
-                #    if pixMpImg.width() is not 80 or pixMpImg.height() is not 60:
-                #        Logger.log("d", "Dremel GCode Writer - error in size of screenshot - using generic cura icon instead")
-                #        #bmpError = True
-                #    else:
-                #        # now prepare to write the bitmap
-                #        ba = QByteArray()
-                #        bmpData = QBuffer(ba)
-                #        if not bmpData.open(QIODevice.WriteOnly):
-                #            Logger.log("d", "Dremel GCode Writer - Could not open qbuffer - using generic cura icon instead")
-                #            #bmpError = True
-                #        # copy the raw image data to bitmap image format in memory
-                #        if not pixMpImg.save(bmpData, "BMP"):
-                #            Logger.log("d", "Dremel GCode Writer - Could not save pixmap - trying to take screenshot instead")
-                #            #bmpError = True
-                #        # finally write the bitmap to the g3drem file
-                #        if not bmpError:
-                #            return ba
+                if reader.canRead():
+                    reader.read(pixMpImg)
+                    # now prepare to write the bitmap
+                    ba = QByteArray()
+                    bmpData = QBuffer(ba)
+                    if not bmpData.open(QIODevice.WriteOnly):
+                        Logger.log("d", "Dremel 3D20 Plugin - Could not open qbuffer - using generic cura icon instead")
+                        bmpError = True
+                    # copy the raw image data to bitmap image format in memory
+                    if not pixMpImg.save(bmpData, "BMP"):
+                        Logger.log("d", "Dremel 3D20 Plugin - Could not save pixmap - trying to take screenshot instead")
+                        bmpError = True
+                    # finally write the bitmap to the g3drem file
+                    if not bmpError and len(ba)>0:
+                        return ba
+                else:
+                    Logger.log("e", "Dremel 3D20 Plugin - Could not read image file - trying to grab screenshot")
             except:
-                Logger.log("e", "Dremel GCode Writer - Could not use pixmap - trying ")
+                Logger.log("e", "Dremel 3D20 Plugin - Could not use pixmap - trying to grab screenshot")
 
         if screen is not None:
             bmpError = False
@@ -412,7 +392,7 @@ class Dremel3D20(MeshWriter, Extension):
                 rectWidth = Application.getInstance().getMainWindow().width() - sidebarwidth
                 rectHeight = Application.getInstance().getMainWindow().height() - topbarbottom
                 if buttonright < 0 or topbarbottom < 0 or rectWidth < 0 or rectWidth > Application.getInstance().getMainWindow().width() or rectHeight < 0 or rectHeight > Application.getInstance().getMainWindow().height():
-                    Logger.log("d", "Dremel GCode Writer - error in calculated rectangles for screenshot - using generic cura icon instead")
+                    Logger.log("d", "Dremel 3D20 Plugin - error in calculated rectangles for screenshot - using generic cura icon instead")
                     bmpError = True
                 # grab a screenshot of the main window
                 screenImg = screen.grabWindow(winId, buttonright, topbarbottom, rectWidth, rectHeight)
@@ -421,103 +401,113 @@ class Dremel3D20(MeshWriter, Extension):
                 # test the raw screenshot to see if it is all zeros
                 scrI = screenImg.toImage()
                 if scrI.pixel(20,10) == qRgb(0,0,0) and scrI.pixel(40,10) == qRgb(0,0,0) and scrI.pixel(60,10) == qRgb(0,0,0) and scrI.pixel(40,30) == qRgb(0,0,0) and scrI.pixel(20,50) == qRgb(0,0,0) and scrI.pixel(40,50) == qRgb(0,0,0) and scrI.pixel(60,50) == qRgb(0,0,0):
-                    Logger.log("d", "Dremel GCode Writer - Black screenshot detected - using generic cura icon instead")
+                    Logger.log("d", "Dremel 3D20 Plugin - Black screenshot detected - using generic cura icon instead")
                     bmpError = True
                 # end of remove this section
                 #####################################################
                 pixMpImg = screenImg.scaled(80, 60, Qt.KeepAspectRatioByExpanding).copy(QRect(0,0,80,60))
                 # validate the size of the image since the Dremel firmware uses hardcoded offsets
                 if pixMpImg.width() is not 80 or pixMpImg.height() is not 60:
-                    Logger.log("d", "Dremel GCode Writer - error in size of screenshot - using generic cura icon instead")
+                    Logger.log("d", "Dremel 3D20 Plugin - error in size of screenshot - using generic cura icon instead")
                     bmpError = True
                 # spot check the pixels of the image to see if they're all zeros
                 pmI = pixMpImg.toImage()
                 if pmI.pixel(20,10) == qRgb(0,0,0) and pmI.pixel(40,10) == qRgb(0,0,0) and pmI.pixel(60,10) == qRgb(0,0,0) and pmI.pixel(40,30) == qRgb(0,0,0) and pmI.pixel(20,50) == qRgb(0,0,0) and pmI.pixel(40,50) == qRgb(0,0,0) and pmI.pixel(60,50) == qRgb(0,0,0):
-                    Logger.log("d", "Dremel GCode Writer - Black screenshot detected after scaling - using generic cura icon instead")
+                    Logger.log("d", "Dremel 3D20 Plugin - Black screenshot detected after scaling - using generic cura icon instead")
                     bmpError = True
 
                 # now prepare to write the bitmap
                 ba = QByteArray()
                 bmpData = QBuffer(ba)
                 if not bmpData.open(QIODevice.WriteOnly):
-                    Logger.log("d", "Dremel GCode Writer - Could not open qbuffer - using generic cura icon instead")
+                    Logger.log("d", "Dremel 3D20 Plugin - Could not open qbuffer - using generic cura icon instead")
                     bmpError = True
                 # copy the raw image data to bitmap image format in memory
                 if not pixMpImg.save(bmpData, "BMP"):
-                    Logger.log("d", "Dremel GCode Writer - Could not save pixmap - using generic cura icon instead")
+                    Logger.log("d", "Dremel 3D20 Plugin - Could not save pixmap - using generic cura icon instead")
                     bmpError = True
                 # finally write the bitmap to the g3drem file
                 if not bmpError and len(ba)>0:
                     return ba
-            else:
-                Logger.log("d", "Dremel GCode Writer - Could not get window id - using generic cura icon instead")
-                bmpError = True
-        else:
-            Logger.log("d", "Dremel GCode Writer - Could not get screen - using generic cura icon instead")
-            bmpError = True
 
-        if bmpError:
-            # if an error ocurred when grabbing a screenshot write the generic cura icon instead
-            bmpBytes = struct.pack("{}B".format(len(self.curaIconBmpData)), *self.curaIconBmpData)
-            return bmpBytes
+            else:
+                Logger.log("d", "Dremel 3D20 Plugin - Could not get window id - using generic cura icon instead")
+
+        else:
+            Logger.log("d", "Dremel 3D20 Plugin - Could not get screen - using generic cura icon instead")
+
+
+        # if an error ocurred when grabbing a screenshot write the generic cura icon instead
+        bmpBytes = struct.pack("{}B".format(len(self.curaIconBmpData)), *self.curaIconBmpData)
+        return bmpBytes
 
         ##  Performs the writing of the dremel header and gcode - for a technical
         ##  breakdown of the dremel g3drem file format see the following page:
         ##  https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/blob/master/README.md#technical-details-of-the-g3drem-file-format
     def write(self, stream, nodes, mode = MeshWriter.OutputMode.BinaryMode):
-        if mode != MeshWriter.OutputMode.BinaryMode:
-            Logger.log("e", "Dremel GCode Writer does not support non-binary mode.")
+        try:
+            if mode != MeshWriter.OutputMode.BinaryMode:
+                Logger.log("e", "Dremel 3D20 Plugin does not support non-binary mode.")
+                return False
+            if stream is None:
+                Logger.log("e", "Dremel 3D20 Plugin - Error writing - no output stream.")
+                return False
+
+            g3dremHeader = G3DremHeader.G3DremHeader()
+
+            global_container_stack = Application.getInstance().getGlobalContainerStack()
+            print_information = Application.getInstance().getPrintInformation()
+            extruders = [global_container_stack]
+            extruder = extruders[0]
+            # get estimated length
+            length = int(print_information.materialLengths[int(extruder.getMetaDataEntry("position", "0"))]*1000)
+            g3dremHeader.setMaterialLen(length)
+
+            # get infill percentage
+            g3dremHeader.setInfillPct(int(global_container_stack.getProperty("infill_sparse_density", "value")))
+
+            # set print temperature in header
+            g3dremHeader.setExtruderTemp(int(extruder.getProperty("material_print_temperature", "value")))
+
+            # get the estimated number of seconds that the print will take
+            seconds = int(print_information.currentPrintTime.getDisplayString(DurationFormat.Format.Seconds))
+            g3dremHeader.setEstimatedTime(length)
+
+            # set the thumbnail
+            g3dremHeader.setThumbnailBitmap(self.getBitmapBytes(stream))
+
+            # finally, write the header
+            if not g3dremHeader.writeHeader(stream):
+                Logger.log("e", "Error Writing Dremel Header.")
+                return False
+
+            # now that the header is written, write the ascii encoded gcode
+            Logger.log("i", "Finished Writing Dremel Header.")
+            active_build_plate = Application.getInstance().getBuildPlateModel().activeBuildPlate
+            scene = Application.getInstance().getController().getScene()
+            gcode_dict = getattr(scene, "gcode_dict")
+            if not gcode_dict:
+                return False
+            gcode_list = gcode_dict.get(active_build_plate, None)
+            if gcode_list is not None:
+                for gcode in gcode_list:
+                    try:
+                        stream.write(gcode.encode())
+                    except:
+                        Logger.log("i", "Dremel 3D20 plugin - Error writing gcode to file.")
+                        return False
+                try:
+                    # Serialise the current container stack and put it at the end of the file.
+                    settings = self._serialiseSettings(Application.getInstance().getGlobalContainerStack())
+                    stream.write(settings.encode())
+                except:
+                    Logger.log("i", "Exception caught while serializing settings.")
+                return True
+
             return False
-        if stream is None:
-            Logger.log("e", "Dremel GCode Writer - Error writing - no output stream.")
+        except:
+            Logger.log("i", "Exception caught while writing gcode.")
             return False
-
-        g3dremHeader = G3DremHeader.G3DremHeader()
-
-        global_container_stack = Application.getInstance().getGlobalContainerStack()
-        print_information = Application.getInstance().getPrintInformation()
-        extruders = [global_container_stack]
-        extruder = extruders[0]
-        # get estimated length
-        length = int(print_information.materialLengths[int(extruder.getMetaDataEntry("position", "0"))]*1000)
-        g3dremHeader.setMaterialLen(length)
-
-        # get infill percentage
-        g3dremHeader.setInfillPct(int(global_container_stack.getProperty("infill_sparse_density", "value")))
-
-        # set print temperature in header
-        g3dremHeader.setExtruderTemp(int(extruder.getProperty("material_print_temperature", "value")))
-
-        # get the estimated number of seconds that the print will take
-        seconds = int(print_information.currentPrintTime.getDisplayString(DurationFormat.Format.Seconds))
-        g3dremHeader.setEstimatedTime(length)
-
-        # set the thumbnail
-        g3dremHeader.setThumbnailBitmap(self.getBitmapBytes(stream))
-
-        # finally, write the header
-        if not g3dremHeader.writeHeader(stream):
-            Logger.log("e", "Error Writing Dremel Header.")
-            return False
-
-        # now that the header is written, write the ascii encoded gcode
-        Logger.log("i", "Finished Writing Dremel Header.")
-        active_build_plate = Application.getInstance().getBuildPlateModel().activeBuildPlate
-        scene = Application.getInstance().getController().getScene()
-        gcode_dict = getattr(scene, "gcode_dict")
-        if not gcode_dict:
-            return False
-        gcode_list = gcode_dict.get(active_build_plate, None)
-        if gcode_list is not None:
-            for gcode in gcode_list:
-                stream.write(gcode.encode())
-            # Serialise the current container stack and put it at the end of the file.
-            settings = self._serialiseSettings(Application.getInstance().getGlobalContainerStack())
-            stream.write(settings.encode())
-            return True
-
-        return False
-
 
     ##  Create a new container with container 2 as base and container 1 written over it.
     def _createFlattenedContainerInstance(self, instance_container1, instance_container2):
