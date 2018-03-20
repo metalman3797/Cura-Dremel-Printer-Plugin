@@ -329,18 +329,20 @@ class Dremel3D20(MeshWriter, Extension):
         # get the primary screen
         screen = QApplication.primaryScreen()
         bmpError = False
-
+        image_with_same_name = None
         if Preferences.getInstance().getValue("Dremel3D20/select_screenshot"):
-            image_with_same_name, _ = QFileDialog.getOpenFileName(None, 'Open file', Preferences.getInstance().getValue("Dremel3D20/last_screenshot_folder"),"Image files (*.jpg *.gif *.png *.bmp *.jpeg)")
+            image_with_same_name, _ = QFileDialog.getOpenFileName(None, 'Select Preview Image', Preferences.getInstance().getValue("Dremel3D20/last_screenshot_folder"),"Image files (*.jpg *.gif *.png *.bmp *.jpeg)")
             Logger.log("d", "Dremel GCode Writer using image for screenshot: " + image_with_same_name)
             Preferences.getInstance().setValue("Dremel3D20/last_screenshot_folder",str(os.path.dirname(image_with_same_name)))
+            # nee to test this when cancel button is clicked
+            if image_with_same_name == "":
+                image_with_same_name = None
         else:
             image_with_same_name = self.find_images_with_name(stream.name)
 
         # find image with same name as saved filename
         if image_with_same_name is not None:
             try:
-
                 pixMpImg = QImage()
                 reader = QImageReader(image_with_same_name)
                 reader.setScaledSize(QSize(80,60))
@@ -350,13 +352,13 @@ class Dremel3D20(MeshWriter, Extension):
                 bmpData = QBuffer(ba)
                 if not bmpData.open(QIODevice.WriteOnly):
                     Logger.log("d", "Dremel GCode Writer - Could not open qbuffer - using generic cura icon instead")
-                    #bmpError = True
+                    bmpError = True
                 # copy the raw image data to bitmap image format in memory
                 if not pixMpImg.save(bmpData, "BMP"):
                     Logger.log("d", "Dremel GCode Writer - Could not save pixmap - trying to take screenshot instead")
-                    #bmpError = True
+                    bmpError = True
                 # finally write the bitmap to the g3drem file
-                if not bmpError:
+                if not bmpError and len(ba)>0:
                     return ba
 
                 #imfile = QPixmap(image_with_same_name)
@@ -388,6 +390,7 @@ class Dremel3D20(MeshWriter, Extension):
                 Logger.log("e", "Dremel GCode Writer - Could not use pixmap - trying ")
 
         if screen is not None:
+            bmpError = False
             # wait for half a second because linux takes a bit of time before
             # it closes the file selection window, and we don't want that in the
             # screenshot
@@ -444,7 +447,7 @@ class Dremel3D20(MeshWriter, Extension):
                     Logger.log("d", "Dremel GCode Writer - Could not save pixmap - using generic cura icon instead")
                     bmpError = True
                 # finally write the bitmap to the g3drem file
-                if not bmpError:
+                if not bmpError and len(ba)>0:
                     return ba
             else:
                 Logger.log("d", "Dremel GCode Writer - Could not get window id - using generic cura icon instead")

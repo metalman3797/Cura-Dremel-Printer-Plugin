@@ -58,7 +58,7 @@ To install the plugins, follow the instructions below:
 
 ---
 # Uninstallation
-To uninstall the Dremel printer files, open the Extensions menu->Dremel3D20 Printer Plugin and select "Uninstall Dremel3D20 printer".  To delete the plugins navigate to the directory listed below and delete the DremelGCodeWriter and Dremel3D20 folder.
+To uninstall the Dremel printer files, open the Extensions menu->Dremel3D20 Printer Plugin and select "Uninstall Dremel3D20 printer".  To delete the plugin itself navigate to the directory listed below and delete the Dremel3D20 folder.
   - Windows:  $USER/AppData/Roaming/cura/$CURA_VERSION/plugins
   - Linux:  $USER/.local/share/cura/$CURA_VERSION/plugins/
   - Mac:  $User/Library/Application\ Support/Cura/$CURA_VERSION/plugins
@@ -102,12 +102,25 @@ Will show this on the IdeaBuilder 3D20:
 # <a name="Preview_Image_Options"></a>Preview Image Options
 The plugin has implemented the following logic for selecting a preview image that will show up on the Dremel screen:
 
-1. The plugin searches the directory where the user saves the .g3drem file for an image file with the same name.  Valid image extensions are .png, .jpg, .jpeg, .gif, and .bmp.  For example if the user saves llama.g3drem to the dekstop and the desktop folder has a llama.jpg image file within it then the llama.jpg file will be used as the preview image on the Dremel:
+1. The plugin allows you to optionally select an image file for use as the preview on the Ideabuilder 3D20 screen.  To enable this feature, go to the Extensions menu, and select Dremel3D20 Printer Plugin->Toggle Screenshot Selection
+
+![toggle screenshot](/docs/toggle_screenshot.png)
+
+Cura will then pop up a message stating that screenshot selection is enabled
+![screenshot enabled](/docs/screenshot_enabled.png)
+
+Then once you select a location to save the .g3drem file out a secondary file selection menu will come up allowing you to select a screenshot.  If you select one then it will be used, if you press cancel, then the plugin will proceed to Step 3
+
+To disable this feature simply click the "Toggle Screenshot Selection" menu item again, and a message will state that the screenshot selection is disabled
+
+2. If manual screenshot selection is disabled, then the plugin searches the directory where the user saves the .g3drem file for an image file with the same name.  If no valid image file with the same name is found in the same directory, then the plugin proceeds to Step 3.  Valid image extensions are .png, .jpg, .jpeg, .gif, and .bmp.  
+
+For example if the user saves llama.g3drem to the dekstop and the desktop folder has a llama.jpg image file within it then the llama.jpg file will be used as the preview image on the Dremel:
 ![llama preview](/docs/llama.png)
 
-2.  If no image file with the same name is found in the same directory, then the plugin attempts to take a screenshot of the main Cura window as it saves out the file (see [Step 5 above](#Step5))
+3.   The plugin attempts to take a screenshot of the main Cura window as it saves out the file (see [Step 5 above](#Step5))  This is the default behavior of the plugin, and is what will happen normally if the user doesn't do anything after installation.
 
-3.  If the screenshot fails then a generic Cura icon  will be shown on the Dremel IdeaBuilder screen as the preview.
+4.  If the screenshot fails for some reason then a generic Cura icon will be shown on the Dremel IdeaBuilder screen as the preview.
 
 ![cura icon](https://github.com/Ultimaker/Cura/blob/master/icons/cura-64.png)
 ---
