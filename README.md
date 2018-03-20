@@ -60,7 +60,7 @@ To install the plugins, follow the instructions below:
 
 **Note:**  If the Dremel3D20 printer file plugin detects an older installation in the main Cura application directory, it will pop up warnings telling the user to remove the old files before it installs the new files.  Once the files have been removed the plugin will automatically install new files to the appropriate locations.
 
-    ![Warn about old installs](/docs/old_install_warning.png)
+![Warn about old installs](/docs/old_install_warning.png)
 
 
 ---
