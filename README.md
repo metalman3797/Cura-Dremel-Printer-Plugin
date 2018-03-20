@@ -12,8 +12,12 @@ This software consists of one plugins for Cura.  The Dremel3D20 plugin contains 
 
 **Note** As of release 0.4.0 the Dremel3D20 plugin now combines the functionality of the DremelGCodeWriter plugin as well as including the ability to automatically install the Dremel printer files.  If you had previously installed the DremelGCodeWriter plugin, please delete it from the following folders before proceeding:
 - Windows:  $USER/AppData/Roaming/cura/$CURA_VERSION/plugins
+        and
             %CURA_INSTALL_DIR%/plugins (i.e. C:\Program Files\Ultimaker Cura\plugins)
+
 - Mac:      $User/Library/Application\ Support/Cura/$CURA_VERSION/plugins
+        and
+            Applications/Ultimaker Cura.app/Contents/Resources/plugins
 - Linux:    $USER/.local/share/cura/$CURA_VERSION/plugins/
 
 To install the plugins, follow the instructions below:
