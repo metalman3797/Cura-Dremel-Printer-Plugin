@@ -8,7 +8,16 @@ catalog = i18nCatalog("cura")
 
 def getMetaData():
     return {
+        "mesh_writer": {
+            "output": [{
+                "extension": "g3drem",
+                "description": catalog.i18nc("@item:inlistbox", "g3drem File"),
+                "mime_type": "application/x-g3drem",
+                "mode": Dremel3D20.Dremel3D20.OutputMode.BinaryMode
+            }]
+        }
     }
 
 def register(app):
-    return { "extension": Dremel3D20.Dremel3D20()}
+    return { "mesh_writer": Dremel3D20.Dremel3D20(),
+             "extension": Dremel3D20.Dremel3D20()}
