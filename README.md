@@ -3,10 +3,7 @@ Dremel Ideabuilder 3D20 plugin for [Cura version 3.2](https://ultimaker.com/en/p
 
 ![The Cura GUI](/docs/GUI.PNG)
 
-This software consists of two plugins for Cura.  They are as follows:
-
-1. The Dremel3D20 plugin, which contains the necessary printer files to add the Dremel IdeaBuilder 3D20 to Cura
-2. The G3Drem file format export plugin, which enables Cura to export the proprietary g3drem file format that the Dremel 3D20 needs.
+This software consists of one plugins for Cura.  The Dremel3D20 plugin contains the necessary printer files to add the Dremel IdeaBuilder 3D20 to Cura and enables cura to export the proprietary g3drem file format that the Dremel 3D20 needs.
 
 **Note:**  This version of the Cura-Dremel-3D20-Plugin will not work with Cura versions 3.1 or earlier due to changes that Ultimaker implemented in the Cura architecture.  For a version that works with Cura versions 3.0 or 3.1, please check out version 0.2.5 of the plugin [here](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.2.5)
 
@@ -20,7 +17,7 @@ To install the plugins, follow the instructions below:
 1.  Download the plugin files by peforming one of the two actions:
 
     EITHER
-    1. Navigate to the ["Releases"](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/latest) page to download the latest released version in zip format and extract the zip file to your computer
+    1. Navigate to the ["Releases"](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/latest) page to download the latest released version in zip format (named Cura-Dremel-3D20-Plugin-<version>.zip) and extract the zip file to your computer
 
     OR
 
@@ -34,34 +31,41 @@ To install the plugins, follow the instructions below:
 3.  Install the Dremel Printer Plugin by following the steps below
 
     1. Open Cura and navigate to the Plugins menu and select "Installed Plugins"
+
     ![Installed Plugins](/docs/installed_plugins.png)
 
     2. Click the Install new plugin button on the screen that pops up:
+
     ![Install new plugin](/docs/install_new_plugin.png)
 
-    3. Navigate to the folder where you extracted the release, (if you cloned the git repository, this is under Cura-Dremel-3D20-Plugin/plugins) and select the Dremel3D20.umplugin
+    3. Navigate to the folder where you extracted the release, (if you cloned the git repository, this is under Cura-Dremel-3D20-Plugin/plugins) and select the Dremel3D20.curaplugin
 
     ![Install new plugin](/docs/curaplugins.png)
 
-    4. A message window will appear telling you to restart cura.  Before restarting select the "Install new Plugin" button again and select the DremelGCodeWriter.umplugin file as well.  
+    4. A message window will appear telling you to restart Cura.
+
     ![Install new plugin](/docs/restart.png)
 
     5.  Close the Cura application
 
     6.  (Optional) Copy the dremel_3D20_platform.stl to the `%CURA_INSTALL_DIR%/resources/meshes` folder (if you cloned the git repo this file is under Cura-Dremel-3D20-Plugin/resources/meshes/).  This file contains the 3D model of the Dremel Ideabuilder print bed.  On MacOS copy this file to the folder located at `Ultimaker Cura.app/Contents/Resources/resources/meshes/`  The easiest way on the mac to get to this folder is to right click on the Ultimaker Cura.app application and select the "show package contents" option.  Skip this step on Linux
+
     ![Copy the contents of Dremel print bed file to the meshes directory of cura](/docs/meshesdir.png)
 
-    7.  Upon restart you should have an option to add a Dremel3D20 printer (see Usage section below) - the plugin is now installed!  If any errors occurred the Dremel printer files can be re-installed by going to the Extensions menu->Dremel3D20 Printer Plugin->Install Dremel3D20 printer
+    7.  Upon restart you should have an option to add a Dremel3D20 printer (see Usage section below) - the plugin is now installed!  
+
+    **Note:** If any errors occurred the Dremel printer files can be re-installed by going to the Extensions menu->Dremel3D20 Printer Plugin->Install Dremel3D20 printer
+
     ![Install Printer Files](/docs/install_printer_files.png)
 
-**Note:**  If the Dremel3D20 printer file plugin detects an older installation, it will pop up warnings telling the user to remove the old files before it installs the new files.  Once the files have been removed the plugin will automatically install new files to the appropriate locations.
+**Note:**  If the Dremel3D20 printer file plugin detects an older installation in the main Cura application directory, it will pop up warnings telling the user to remove the old files before it installs the new files.  Once the files have been removed the plugin will automatically install new files to the appropriate locations.
 
-    ![Warn about old installs](/docs/old_install_warning.png)
+![Warn about old installs](/docs/old_install_warning.png)
 
 
 ---
 # Uninstallation
-To uninstall the Dremel printer files, open the Extensions menu->Dremel3D20 Printer Plugin and select "Uninstall Dremel3D20 printer".  To delete the plugins navigate to the directory listed below and delete the DremelGCodeWriter and Dremel3D20 folder.
+To uninstall the Dremel printer files, open the Extensions menu->Dremel3D20 Printer Plugin and select "Uninstall Dremel3D20 printer".  To delete the plugin itself navigate to the directory listed below and delete the Dremel3D20 folder.
   - Windows:  $USER/AppData/Roaming/cura/$CURA_VERSION/plugins
   - Linux:  $USER/.local/share/cura/$CURA_VERSION/plugins/
   - Mac:  $User/Library/Application\ Support/Cura/$CURA_VERSION/plugins
@@ -105,12 +109,25 @@ Will show this on the IdeaBuilder 3D20:
 # <a name="Preview_Image_Options"></a>Preview Image Options
 The plugin has implemented the following logic for selecting a preview image that will show up on the Dremel screen:
 
-1. The plugin searches the directory where the user saves the .g3drem file for an image file with the same name.  Valid image extensions are .png, .jpg, .jpeg, .gif, and .bmp.  For example if the user saves llama.g3drem to the dekstop and the desktop folder has a llama.jpg image file within it then the llama.jpg file will be used as the preview image on the Dremel:
+1. The plugin allows you to optionally select an image file for use as the preview on the Ideabuilder 3D20 screen.  To enable this feature, go to the Extensions menu, and select Dremel3D20 Printer Plugin->Toggle Screenshot Selection
+
+![toggle screenshot](/docs/toggle_screenshot.png)
+
+Cura will then pop up a message stating that screenshot selection is enabled
+![screenshot enabled](/docs/screenshot_enabled.png)
+
+Then once you select a location to save the .g3drem file out a secondary file selection menu will come up allowing you to select a screenshot.  If you select one then it will be used, if you press cancel, then the plugin will proceed to Step 3
+
+To disable this feature simply click the "Toggle Screenshot Selection" menu item again, and a message will state that the screenshot selection is disabled
+
+2. If manual screenshot selection is disabled, then the plugin searches the directory where the user saves the .g3drem file for an image file with the same name.  If no valid image file with the same name is found in the same directory, then the plugin proceeds to Step 3.  Valid image extensions are .png, .jpg, .jpeg, .gif, and .bmp.  
+
+For example if the user saves llama.g3drem to the dekstop and the desktop folder has a llama.jpg image file within it then the llama.jpg file will be used as the preview image on the Dremel:
 ![llama preview](/docs/llama.png)
 
-2.  If no image file with the same name is found in the same directory, then the plugin attempts to take a screenshot of the main Cura window as it saves out the file (see [Step 5 above](#Step5))
+3.   The plugin attempts to take a screenshot of the main Cura window as it saves out the file (see [Step 5 above](#Step5))  This is the default behavior of the plugin, and is what will happen normally if the user doesn't do anything after installation.
 
-3.  If the screenshot fails then a generic Cura icon  will be shown on the Dremel IdeaBuilder screen as the preview.
+4.  If the screenshot fails for some reason then a generic Cura icon will be shown on the Dremel IdeaBuilder screen as the preview.
 
 ![cura icon](https://github.com/Ultimaker/Cura/blob/master/icons/cura-64.png)
 ---
