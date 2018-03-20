@@ -51,8 +51,7 @@ To install the plugins, follow the instructions below:
     7.  Upon restart you should have an option to add a Dremel3D20 printer (see Usage section below) - the plugin is now installed!  If any errors occurred the Dremel printer files can be re-installed by going to the Extensions menu->Dremel3D20 Printer Plugin->Install Dremel3D20 printer
     ![Install Printer Files](/docs/install_printer_files.png)
 
-**Note:**  If the Dremel3D20 printer file plugin detects an older installation, it will pop up warnings telling the user to remove the old files before it installs the new files.  Once the files have been removed the plugin will automatically install new files to the appropriate locations.
-
+**Note:**  If the Dremel3D20 printer file plugin detects an older installation in the main cura application directory, it will pop up warnings telling the user to remove the old files before it installs the new files.  Once the files have been removed the plugin will automatically install new files to the appropriate locations.
     ![Warn about old installs](/docs/old_install_warning.png)
 
 
