@@ -121,6 +121,8 @@ Will show this on the IdeaBuilder 3D20:
 # <a name="Preview_Image_Options"></a>Preview Image Options
 The plugin has implemented the following logic for selecting a preview image that will show up on the Dremel screen:
 
+![Image Selection Flowchart](/docs/Image_Selection_Flowchart.png)
+
 1. The plugin allows you to optionally select an image file for use as the preview on the Ideabuilder 3D20 screen.  To enable this feature, go to the Extensions menu, and select Dremel3D20 Printer Plugin->Toggle Screenshot Selection
 
 ![toggle screenshot](/docs/toggle_screenshot.png)
@@ -155,7 +157,7 @@ The following items would be great to add to this plugin - any and all collabora
 * ~~Optimized print profiles for IdeaBuilder 3D20 (current non-custom profiles are pretty generic and may not work as well on the Dremel as they could)~~ **New - [Version 0.3 and above](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/latest):** Thanks to  [metalman3797](https://github.com/metalman3797) the print profiles have been optimized
 * ~~Optimized [Dremel3D20.def.json](resources/definitions/Dremel3D20.def.json) file~~ **New - [Version 0.3 and above](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/latest):** Thanks to  [metalman3797](https://github.com/metalman3797) the Dremel json file has been further improved
 * ~~Optimization of Dremel brand PLA settings~~  **New - [Version 0.3 and above](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/latest):** Thanks to  [metalman3797](https://github.com/metalman3797) the Dremel brand PLA material has been optimized.
-* ~~ Creation of plugin container with Dremel printer json, material json, and printer bed mesh to ease user installation ~~
+* ~~Creation of plugin container with Dremel printer json, material json, and printer bed mesh to ease user installation~~
 * Figure out a way Auto-install the printer bed .stl file in the same way as the other files.  
 ---
 # <a name="Technical_Details"></a>Technical Details of the .g3drem File Format
