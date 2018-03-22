@@ -114,7 +114,7 @@ Will show this on the IdeaBuilder 3D20:
 8. Insert the SD card into your IdeaBuilder 3D20
 9. Turn on the printer
 10. Select the appropriate file to print.  
-    **New - [Version 0.3 and above](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/latest):** The plugin now can implements the logic outlined in the [Preview Image Options](#Preview_Image_Options) section below to select a preview image on the Dremel screen.
+    The plugin implements the logic outlined in the [Preview Image Options](#Preview_Image_Options) section below to select a preview image on the Dremel screen.
 11. Click print
 12. Enjoy - if you have any feature suggestions or encounter issues, feel free to raise them in the ["Issues" section](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/issues).
 ---
