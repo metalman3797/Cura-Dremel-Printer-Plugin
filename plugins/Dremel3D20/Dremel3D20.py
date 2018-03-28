@@ -15,6 +15,7 @@
 ####################################################################
 
 import os # for listdir
+import platform # for platform.system
 import os.path # for isfile and join and path
 import sys
 import zipfile
@@ -374,7 +375,8 @@ class Dremel3D20(MeshWriter, Extension):
             # wait for half a second because linux takes a bit of time before
             # it closes the file selection window, and we don't want that in the
             # screenshot
-            time.sleep(0.5)
+            if platform.system() in ['Linux',"Darwin"]:
+                time.sleep(0.5)
 
             # get the height of the topbar and width of the left and right sidebar
             sidebarwidth = Application.getInstance().getTheme().getSize("sidebar").width()
