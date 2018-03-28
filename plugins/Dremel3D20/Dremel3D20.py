@@ -48,7 +48,7 @@ from . import G3DremHeader
 
 catalog = i18nCatalog("cura")
 
-version = "0.4.0"
+version = "0.4.1"
 
 ##      This Extension runs in the background and sends several bits of information to the Ultimaker servers.
 #       The data is only sent when the user in question gave permission to do so. All data is anonymous and
