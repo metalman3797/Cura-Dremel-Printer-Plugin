@@ -27,7 +27,7 @@ To install the plugins, follow the instructions below:
 1.  Download the plugin files by peforming one of the two actions:
 
     EITHER
-    1. Navigate to the ["Releases"](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/latest) page to download the latest released version in zip format (named Cura-Dremel-3D20-Plugin-<version>.zip) and extract the zip file to your computer
+    1. Navigate to the ["Releases"](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/latest) page to download the latest released version in zip format (named Cura-Dremel-3D20-Plugin-%version%.zip) and extract the zip file to your computer
 
     OR
 
