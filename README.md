@@ -138,7 +138,9 @@ After enabling manual selection, once the user selects a location to save the .g
 2. If manual screenshot selection is disabled, then the plugin searches the directory where the user saves the .g3drem file for an image file with the same name.  If no valid image file with the same name is found in the same directory, then the plugin proceeds to Step 3.  Valid image extensions are .png, .jpg, .jpeg, .gif, and .bmp.  
 
 ```
-For example if the user saves llama.g3drem to the dekstop and the desktop folder has a llama.jpg image file within it then the llama.jpg file will be used as the preview image on the Dremel:
+For example if the user saves llama.g3drem to the dekstop and the desktop
+folder has a llama.jpg image file within it then the llama.jpg file will
+be used as the preview image on the Dremel:
 ```
 
 ![llama preview](/docs/llama.png)
