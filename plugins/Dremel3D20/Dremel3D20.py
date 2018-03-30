@@ -42,14 +42,14 @@ from UM.Qt.Duration import DurationFormat
 from UM.Qt.Bindings.Theme import Theme
 
 from PyQt5.QtWidgets import QApplication, QFileDialog
-from PyQt5.QtGui import QPixmap, QScreen, QColor, qRgb, QImageReader, QImage
-from PyQt5.QtCore import QByteArray, QBuffer, QIODevice, QRect, Qt, QSize, pyqtSlot, QObject
+from PyQt5.QtGui import QPixmap, QScreen, QColor, qRgb, QImageReader, QImage, QDesktopServices
+from PyQt5.QtCore import QByteArray, QBuffer, QIODevice, QRect, Qt, QSize, pyqtSlot, QObject, QUrl
 
 from . import G3DremHeader
 
 catalog = i18nCatalog("cura")
 
-version = "0.4.1"
+version = "0.4.2"
 
 ##      This Extension runs in the background and sends several bits of information to the Ultimaker servers.
 #       The data is only sent when the user in question gave permission to do so. All data is anonymous and
@@ -142,6 +142,10 @@ class Dremel3D20(MeshWriter, Extension):
 
     # silly function so that the menu can display the version
     def getFileVersion(self):
+        url = QUrl('https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases')
+        if not QDesktopServices.openUrl(url):
+            message = Message(catalog.i18nc("@info:status", "Dremel 3D20 plugin could not navigate to https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases"))
+            message.show()
         return
 
     def oldVersionInstalled(self):
