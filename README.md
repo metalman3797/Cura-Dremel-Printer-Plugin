@@ -75,7 +75,7 @@ To install the plugins, follow the instructions below:
 
 ---
 # Uninstallation
-To uninstall the Dremel printer files, open the Extensions menu->Dremel3D20 Printer Plugin and select "Uninstall Dremel3D20 printer".  
+To uninstall the Dremel printer files, open the Extensions menu->Dremel3D20 Printer Plugin->preferences and uncheck the box next to "Dremel 3D Printer File Installed?".  
 
 To delete the plugin itself navigate to the directory listed below and delete the Dremel3D20 folder.
   - Windows:  $USER/AppData/Roaming/cura/$CURA_VERSION/plugins
