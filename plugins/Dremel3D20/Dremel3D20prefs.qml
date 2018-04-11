@@ -1,5 +1,5 @@
 import QtQuick 2.1
-import QtQuick.Controls 1.3
+import QtQuick.Controls 2.1
 import QtQuick.Layouts 1.1
 import QtQuick.Window 2.1
 import QtQuick.Controls.Styles 1.1
@@ -45,11 +45,20 @@ UM.Dialog
           text: qsTr("Select Screenshot Manually")
           checked: checkBooleanVals(UM.Preferences.getValue("Dremel3D20/select_screenshot"))
           onClicked: manager.setSelectScreenshot(checked)
+          ToolTip.timeout: 5000
+          ToolTip.visible: hovered
+          ToolTip.text: "Check this box to allow you when saving a g3drem file to\nmanually select a screenshot from an image stored on your\nhard drive"
+
       } //end CheckBox
 
       CheckBox {
         id: installCB
-        text: "Dremel 3D20 Printer File Installed? "
+        text: "Are Dremel 3D20 Printer File Installed? "
+
+        ToolTip.timeout: 5000
+        ToolTip.visible: hovered
+        ToolTip.text: "Uncheck this checkbox to uninstall the Dremel 3D20 printer files\nCheck it to install the files."
+
         checked: checkInstallStatus(UM.Preferences.getValue("Dremel3D20/install_status"))
         onClicked: manager.changePluginInstallStatus(checked)
       } //end CheckBox
@@ -57,14 +66,19 @@ UM.Dialog
     } // end Column
 
 
-    rightButtons: [
+    leftButtons: [
         Button
         {
             id: button1
             text: qsTr("Open plugin website")
             onClicked: manager.openPluginWebsite()
-        },
+            anchors.left: col1.left
+            anchors.bottom: col1.bottom
+        }
+    ]
 
+
+    rightButtons: [
         Button
         {
             id: button2
@@ -76,6 +90,8 @@ UM.Dialog
 
             text: catalog.i18nc("@action:button", "Close")
             onClicked: base.hide()
+            anchors.right: col1.right
+            anchors.bottom: col1.bottom
         }
     ]
 
