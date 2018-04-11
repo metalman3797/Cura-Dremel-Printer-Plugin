@@ -15,6 +15,7 @@
 ####################################################################
 
 import os # for listdir
+import platform # for platform.system
 import os.path # for isfile and join and path
 import sys
 import zipfile
@@ -39,21 +40,22 @@ from UM.Mesh.MeshWriter import MeshWriter
 from UM.Settings.InstanceContainer import InstanceContainer
 from UM.Qt.Duration import DurationFormat
 from UM.Qt.Bindings.Theme import Theme
+from UM.PluginRegistry import PluginRegistry
 
 from PyQt5.QtWidgets import QApplication, QFileDialog
-from PyQt5.QtGui import QPixmap, QScreen, QColor, qRgb, QImageReader, QImage
-from PyQt5.QtCore import QByteArray, QBuffer, QIODevice, QRect, Qt, QSize, pyqtSlot, QObject
+from PyQt5.QtGui import QPixmap, QScreen, QColor, qRgb, QImageReader, QImage, QDesktopServices
+from PyQt5.QtCore import QByteArray, QBuffer, QIODevice, QRect, Qt, QSize, pyqtSlot, QObject, QUrl, pyqtSlot
 
 from . import G3DremHeader
 
 catalog = i18nCatalog("cura")
 
-version = "0.4.1"
+version = "0.4.2"
 
 ##      This Extension runs in the background and sends several bits of information to the Ultimaker servers.
 #       The data is only sent when the user in question gave permission to do so. All data is anonymous and
 #       no model files are being sent (Just a SHA256 hash of the model).
-class Dremel3D20(MeshWriter, Extension):
+class Dremel3D20(QObject, MeshWriter, Extension):
     ##  The file format version of the serialised g-code.
     version = 3
 
@@ -76,7 +78,8 @@ class Dremel3D20(MeshWriter, Extension):
         if Preferences.getInstance().getValue("Dremel3D20/last_screenshot_folder") is None:
             Preferences.getInstance().addPreference("Dremel3D20/last_screenshot_folder",str(os.path.expanduser('~')))
         Logger.log("i", "Dremel3D20 Plugin adding menu item for screenshot toggling")
-        self.addMenuItem(catalog.i18nc("@item:inmenu", "Toggle Manual Screenshot Selection"), self.setSelectScreenshot)
+
+        self._preferences_window = None
 
         self.this_plugin_path = None
         self.local_meshes_path = None
@@ -128,19 +131,40 @@ class Dremel3D20(MeshWriter, Extension):
             self.installPluginFiles()
 
         # check to see that the install succeeded - if so change the menu item options
-        if os.path.isfile(os.path.join(self.local_printer_def_path,"Dremel3D20.def.json")):
-            Logger.log("i", "Dremel 3D20 Plugin adding menu item for uninstallation")
-            self.addMenuItem(catalog.i18nc("@item:inmenu", "Uninstall Dremel3D20 Printer Files"), self.uninstallPluginFiles)
-        else:
-            Logger.log("i", "Dremel 3D20 Plugin adding menu item for installation")
-            self.addMenuItem(catalog.i18nc("@item:inmenu", "Install Dremel3D20 Printer"), self.installPluginFiles)
+        #if os.path.isfile(os.path.join(self.local_printer_def_path,"Dremel3D20.def.json")):
+        #    Logger.log("i", "Dremel 3D20 Plugin adding menu item for uninstallation")
+        #    self.addMenuItem(catalog.i18nc("@item:inmenu", "Uninstall Dremel3D20 Printer Files"), self.uninstallPluginFiles)
+        #else:
+        #    Logger.log("i", "Dremel 3D20 Plugin adding menu item for installation")
+        #    self.addMenuItem(catalog.i18nc("@item:inmenu", "Install Dremel3D20 Printer"), self.installPluginFiles)
 
-        self.addMenuItem(catalog.i18nc("@item:inmenu", "Dremel Printer Plugin Version "+version), self.getFileVersion)
+        self.addMenuItem(catalog.i18nc("@item:inmenu", "Preferences"), self.showPreferences)
+        self.addMenuItem(catalog.i18nc("@item:inmenu", "Dremel Printer Plugin Version "+version), self.openPluginWebsite)
         # finally save the cura.cfg file
         Preferences.getInstance().writeToFile(Resources.getStoragePath(Resources.Preferences, Application.getInstance().getApplicationName() + ".cfg"))
 
-    # silly function so that the menu can display the version
-    def getFileVersion(self):
+    def createPreferencesWindow(self):
+        path = os.path.join(PluginRegistry.getInstance().getPluginPath(self.getPluginId()), "Dremel3D20prefs.qml")
+        Logger.log("i", "Creating Dremel3D20 preferences UI "+path)
+        self._preferences_window = Application.getInstance().createQmlComponent(path, {"manager": self})
+
+
+    def showPreferences(self):
+        if self._preferences_window is None:
+            self.createPreferencesWindow()
+        self._preferences_window.show()
+
+    def hidePreferences(self):
+        if self._preferences_window is not None:
+            self._preferences_window.hide()
+
+    # function so that the preferences menu can open website the version
+    @pyqtSlot()
+    def openPluginWebsite(self):
+        url = QUrl('https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases')
+        if not QDesktopServices.openUrl(url):
+            message = Message(catalog.i18nc("@info:status", "Dremel 3D20 plugin could not navigate to https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases"))
+            message.show()
         return
 
     def oldVersionInstalled(self):
@@ -194,6 +218,15 @@ class Dremel3D20(MeshWriter, Extension):
         # if everything is there, return True
         return True
 
+    # install based on preference checkbox
+    @pyqtSlot(bool)
+    def changePluginInstallStatus(self, bInstallFiles):
+        if bInstallFiles and not self.isInstalled():
+            self.installPluginFiles()
+        elif not bInstallFiles and self.isInstalled():
+            self.uninstallPluginFiles()
+
+
     # Install the plugin files.
     def installPluginFiles(self):
         Logger.log("i", "Dremel 3D20 Plugin installing printer files")
@@ -228,7 +261,7 @@ class Dremel3D20(MeshWriter, Extension):
             if restartRequired and self.isInstalled():
                 # only show the message if the user called this after having already uninstalled
                 if Preferences.getInstance().getValue("Dremel3D20/install_status") is not "unknown":
-                    message = Message(catalog.i18nc("@info:status", "Dremel 3D20 files installed.  Please Restart cura to complete installation"))
+                    message = Message(catalog.i18nc("@info:status", "Dremel 3D20 files have been installed.  Please restart Cura to complete installation"))
                     message.show()
                 # either way, the files are now installed, so set the prefrences value
                 Preferences.getInstance().setValue("Dremel3D20/install_status", "installed")
@@ -239,6 +272,9 @@ class Dremel3D20(MeshWriter, Extension):
             Logger.logException("d", "An exception occurred in Dremel 3D20 Plugin while installing the files")
             message = Message(catalog.i18nc("@info:status", "Dremel 3D20 Plugin experienced an error installing the files"))
             message.show()
+
+
+
 
     # Uninstall the plugin files.
     def uninstallPluginFiles(self):
@@ -288,10 +324,12 @@ class Dremel3D20(MeshWriter, Extension):
         if restartRequired:
             Preferences.getInstance().setValue("Dremel3D20/install_status", "uninstalled")
             Preferences.getInstance().writeToFile(Resources.getStoragePath(Resources.Preferences, Application.getInstance().getApplicationName() + ".cfg"))
-            message = Message(catalog.i18nc("@info:status", "Dremel 3D20 files uninstalled.  Please Restart cura to complete installation"))
+            message = Message(catalog.i18nc("@info:status", "Dremel 3D20 files have been uninstalled.  Please restart Cura to complete uninstallation"))
             message.show()
-    def setSelectScreenshot(self):
-        if Preferences.getInstance().getValue("Dremel3D20/select_screenshot"):
+
+    @pyqtSlot(bool)
+    def setSelectScreenshot(self,bManualSelectEnabled):
+        if not bManualSelectEnabled:
             Preferences.getInstance().setValue("Dremel3D20/select_screenshot",False)
             Logger.log("i", "Dremel3D20 Plugin manual screenshot selection disabled")
             message = Message(catalog.i18nc("@info:status", "Manual screenshot selection is disabled when exporting g3drem files"))
@@ -374,7 +412,8 @@ class Dremel3D20(MeshWriter, Extension):
             # wait for half a second because linux takes a bit of time before
             # it closes the file selection window, and we don't want that in the
             # screenshot
-            time.sleep(0.5)
+            if platform.system() in ['Linux',"Darwin"]:
+                time.sleep(0.5)
 
             # get the height of the topbar and width of the left and right sidebar
             sidebarwidth = Application.getInstance().getTheme().getSize("sidebar").width()

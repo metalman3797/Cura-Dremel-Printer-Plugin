@@ -64,9 +64,9 @@ To install the plugins, follow the instructions below:
 
     7.  Upon restart you should have an option to add a Dremel3D20 printer (see Usage section below) - the plugin is now installed!  
 
-    **Note:** If any errors occurred the Dremel printer files can be re-installed by going to the Extensions menu->Dremel3D20 Printer Plugin->Install Dremel3D20 printer
+    **Note:** If any errors occurred the Dremel printer files can be re-installed by going to the Extensions menu->Dremel3D20 Printer Plugin->preferences and checking the checkbox next to "Dremel 3D Printer File Installed?" text
 
-    ![Install Printer Files](/docs/install_printer_files.png)
+    ![Install Printer Files](/docs/preferences.png)
 
 **Note:**  If the Dremel3D20 plugin detects an older installation in the main Cura application directory, it will pop up warnings telling the user to remove the old files before it installs the new files.  Once the files have been removed the plugin will automatically install new files to the appropriate locations.
 
@@ -75,7 +75,7 @@ To install the plugins, follow the instructions below:
 
 ---
 # Uninstallation
-To uninstall the Dremel printer files, open the Extensions menu->Dremel3D20 Printer Plugin and select "Uninstall Dremel3D20 printer".  
+To uninstall the Dremel printer files, open the Extensions menu->Dremel3D20 Printer Plugin->preferences and uncheck the box next to "Dremel 3D Printer File Installed?".  
 
 To delete the plugin itself navigate to the directory listed below and delete the Dremel3D20 folder.
   - Windows:  $USER/AppData/Roaming/cura/$CURA_VERSION/plugins
@@ -123,9 +123,9 @@ The plugin has implemented the following logic for selecting a preview image tha
 
 ![Image Selection Flowchart](/docs/Image_Selection_Flowchart.png)
 
-1. The plugin allows the user to optionally select an image file for use as the preview on the Ideabuilder 3D20 screen.  To enable this feature, go to the Extensions menu, and select Dremel3D20 Printer Plugin->Toggle Screenshot Selection
+1. The plugin allows the user to optionally select an image file for use as the preview on the Ideabuilder 3D20 screen.  To enable this feature, go to the Extensions menu, and select Dremel3D20 Printer Plugin->preferences and check the box next to the text that reads "Select Screenshot Manually."
 
-![toggle screenshot](/docs/toggle_screenshot.png)
+![toggle screenshot](/docs/preferences.png)
 
 Cura will then pop up a message stating that screenshot selection is enabled
 ![screenshot enabled](/docs/screenshot_enabled.png)
@@ -138,15 +138,17 @@ After enabling manual selection, once the user selects a location to save the .g
 2. If manual screenshot selection is disabled, then the plugin searches the directory where the user saves the .g3drem file for an image file with the same name.  If no valid image file with the same name is found in the same directory, then the plugin proceeds to Step 3.  Valid image extensions are .png, .jpg, .jpeg, .gif, and .bmp.  
 
 ```
-For example if the user saves llama.g3drem to the dekstop and the desktop
-folder has a llama.jpg image file within it then the llama.jpg file will
-be used as the preview image on the Dremel:
+For example if the user saves llama.g3drem to the dekstop and the desktop folder
+has a llama.jpg image file within it then the llama.jpg file will be used as the
+preview image on the Dremel:
 ```
 
 ![llama preview](/docs/llama.png)
 
+([llama photo](https://en.wikipedia.org/wiki/Llama#/media/File:Llama_lying_down.jpg) by Johann "nojhan" Dréo, distributed under a CC BY-SA 2.0 FR license.)
 
-3.   If a screenshot has not yet been found, then the plugin attempts to take a screenshot of the main Cura window and save it to the file (explained in [Step 5 above](#Step5))  This is the default behavior of the plugin, and is what will happen normally if the user doesn't perform the actions listed in Steps 1 and 2.
+
+3.   If a screenshot has not been found after steps 1 and 2, then the plugin attempts to take a screenshot of the main Cura window and save it to the file (explained in [Step 5 above](#Step5))  This is the default behavior of the plugin, and is what will happen normally if the user doesn't perform the actions listed in Steps 1 and 2.
 
 4.  If the screenshot fails for some reason then a generic Cura icon (below) will be selected as the preview image.
 
@@ -154,18 +156,20 @@ be used as the preview image on the Dremel:
 ---
 # Note
 Please note the following:
-* This plugin has been tested using Cura 3.2.1 on Windows 10 x64, MacOS Sierra (MacOS 10.12), MacOS El Capitan (10.11), and Ubuntu versions 17.10 and 16.04.  If you are using another platform and encounter issues with the plugin, feel free to raise an issue with the ["Issues" section](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/issues) above.
-* With many thanks to [metalman3797](https://github.com/metalman3797) the Dremel 3D20 printer json definition has had an optimization pass - it should work even better now than it did before!
-  * While this plugin works in the basic print case, you may still encounter problems with the print head crashing into your parts if you attempt to print multiple parts on the same print bed one-after-another instead of printing them all-at-once.
+* The plugin has been tested using Cura 3.2.1 on Windows 10 x64, MacOS Sierra (MacOS 10.12), MacOS El Capitan (10.11), and Ubuntu versions 17.10 and 16.04.  Testing on non-Windows platforms happens less frequently than on Windows.  If you are using another platform and encounter issues with the plugin, feel free to raise an issue with the ["Issues" section](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/issues) above.
+* While this plugin works in the basic print case, you may still encounter problems with the print head crashing into your parts if you attempt to print multiple parts on the same print bed one-after-another instead of printing them all-at-once.
 
 ---
 # Wishlist
 The following items would be great to add to this plugin - any and all collaboration is welcome - feel free to raise an issue if there's a feature you'd like
-* ~~Optimized print profiles for IdeaBuilder 3D20 (current non-custom profiles are pretty generic and may not work as well on the Dremel as they could)~~ **New - [Version 0.3 and above](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/latest):** Thanks to  [metalman3797](https://github.com/metalman3797) the print profiles have been optimized
-* ~~Optimized [Dremel3D20.def.json](resources/definitions/Dremel3D20.def.json) file~~ **New - [Version 0.3 and above](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/latest):** Thanks to  [metalman3797](https://github.com/metalman3797) the Dremel json file has been further improved
-* ~~Optimization of Dremel brand PLA settings~~  **New - [Version 0.3 and above](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/latest):** Thanks to  [metalman3797](https://github.com/metalman3797) the Dremel brand PLA material has been optimized.
+* Figure out a way Auto-install the printer bed .stl file in the same way as the other files.
+* ~~Make small GUI to display plugin preferences as checkboxes~~
 * ~~Creation of plugin container with Dremel printer json, material json, and printer bed mesh to ease user installation~~
-* Figure out a way Auto-install the printer bed .stl file in the same way as the other files.  
+* Thanks to [metalman3797](https://github.com/metalman3797) the following items have been optimized
+  * ~~Optimized print profiles for IdeaBuilder 3D20 (current non-custom profiles are pretty generic and may not work as well on the Dremel as they could)~~
+  * ~~Optimized [Dremel3D20.def.json](resources/definitions/Dremel3D20.def.json) file~~
+  * ~~Optimization of Dremel brand PLA settings~~
+
 ---
 # <a name="Technical_Details"></a>Technical Details of the .g3drem File Format
 The g3drem file format consists of a few sections.  The header is a mix of binary data and ASCII data, which is followed by an 80x60 pixel bitmap image written to the file, which is then followed by standard 3d printer gcode saved in ASCII format.
@@ -176,13 +180,13 @@ The g3drem file format consists of a few sections.  The header is a mix of binar
 
 A description of the current understanding of this file format is below:
 
-| Binary Data                                     | Description                                                       |
-|-------------------------------------------------|-------------------------------------------------------------------|
-`67 33 64 72 65 6d 20 31 2e 30 20 20 20 20 20 20` | Ascii for 'g3drem 1.0      '            (See 1 below )            |
-`3a 00 00 00 b0 38 00 00 b0 38 00 00 38 04 00 00` | Memory Locations #s and Time(sec)       (See 2 through 5 below )  |
-`8f 04 00 00 00 00 00 00 01 00 00 00 19 00 03 00` | Filament(mm), Flags, Height, and Infill (See 6 through 11 below)  |
-`64 00 00 00 DC 00 00 00 01 ff [80x60 Bmp image]` | Shell, Speed, Temps, Material and BMP   (See 8, 9, 10, 11  )      |
-`[standard 3d printer gcode]`                     | Gcode in ASCII                          (See 12 below      )      |
+| Binary Data                                     | Description                                                          |
+|-------------------------------------------------|----------------------------------------------------------------------|
+`67 33 64 72 65 6d 20 31 2e 30 20 20 20 20 20 20` | Ascii for 'g3drem 1.0      '               (See 1 below )            |
+`3a 00 00 00 b0 38 00 00 b0 38 00 00 38 04 00 00` | Memory Locations #s and Time(sec)          (See 2 through 5 below )  |
+`8f 04 00 00 00 00 00 00 01 00 00 00 19 00 03 00` | Filament(mm), Flags, Height, Infill, Shell (See 6 through 11 below)  |
+`64 00 00 00 DC 00 00 00 01 ff [80x60 Bmp image]` | Speed, Temps, Material and BMP             (See 12 through 18 below) |
+`[standard 3d printer gcode]`                     | Gcode in ASCII                             (See 19 below)            |
 
 **The sections of the file are:**
 1. `67 33 64 72 65 6d 20 31 2e 30 20 20 20 20 20 20` = ASCII text 'g3drem 1.0      '
