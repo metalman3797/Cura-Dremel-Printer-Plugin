@@ -50,7 +50,9 @@ from . import G3DremHeader
 
 catalog = i18nCatalog("cura")
 
-version = "0.4.2"
+version = "0.4.3"
+
+_setting_keyword = ";SETTING_"
 
 ##      This Extension runs in the background and sends several bits of information to the Ultimaker servers.
 #       The data is only sent when the user in question gave permission to do so. All data is anonymous and
@@ -72,6 +74,8 @@ class Dremel3D20(QObject, MeshWriter, Extension):
 
     def __init__(self):
         super().__init__()
+        self._application = Application.getInstance()
+
         if Preferences.getInstance().getValue("Dremel3D20/select_screenshot") is None:
             Preferences.getInstance().addPreference("Dremel3D20/select_screenshot", False)
 
@@ -363,7 +367,7 @@ class Dremel3D20(QObject, MeshWriter, Extension):
                     Logger.log("i", "Dremel 3D20 Plugin - using image: " + currfile.lower() )
                     return currfile
         # if no image with a matching name was found, return
-        Logger.log("d", "Dremel 3D20 Plugin did not find any appropriate image files")
+        Logger.log("d", "Dremel 3D20 Plugin did not find any appropriate image files  - trying to take screenshot instead")
         return None
 
     def getBitmapBytes(self,stream):
@@ -522,27 +526,31 @@ class Dremel3D20(QObject, MeshWriter, Extension):
 
             # now that the header is written, write the ascii encoded gcode
             Logger.log("i", "Finished Writing Dremel Header.")
-            active_build_plate = Application.getInstance().getBuildPlateModel().activeBuildPlate
+            active_build_plate = Application.getInstance().getMultiBuildPlateModel().activeBuildPlate
             scene = Application.getInstance().getController().getScene()
             gcode_dict = getattr(scene, "gcode_dict")
             if not gcode_dict:
                 return False
             gcode_list = gcode_dict.get(active_build_plate, None)
+            Logger.log("i", "Got active build plate")
             if gcode_list is not None:
+                has_settings = False
                 for gcode in gcode_list:
                     try:
+                        if gcode[:len(self._setting_keyword)] == self._setting_keyword:
+                            has_settings = True
                         stream.write(gcode.encode())
                     except:
                         Logger.log("i", "Dremel 3D20 plugin - Error writing gcode to file.")
                         return False
                 try:
                     # Serialise the current container stack and put it at the end of the file.
-                    settings = self._serialiseSettings(Application.getInstance().getGlobalContainerStack())
-                    stream.write(settings.encode())
+                    if not has_settings:
+                        settings = self._serialiseSettings(Application.getInstance().getGlobalContainerStack())
+                        stream.write(settings.encode())
+                    return True
                 except:
                     Logger.log("i", "Exception caught while serializing settings.")
-                return True
-
             return False
         except:
             Logger.log("i", "Exception caught while writing gcode.")
@@ -551,11 +559,12 @@ class Dremel3D20(QObject, MeshWriter, Extension):
     ##  Create a new container with container 2 as base and container 1 written over it.
     def _createFlattenedContainerInstance(self, instance_container1, instance_container2):
         flat_container = InstanceContainer(instance_container2.getName())
-        if instance_container1.getDefinition():
-            flat_container.setDefinition(instance_container1.getDefinition())
-        else:
-            flat_container.setDefinition(instance_container2.getDefinition())
+
+        # The metadata includes id, name and definition
         flat_container.setMetaData(copy.deepcopy(instance_container2.getMetaData()))
+
+        if instance_container1.getDefinition():
+            flat_container.setDefinition(instance_container1.getDefinition().getId())
 
         for key in instance_container2.getAllKeys():
             flat_container.setProperty(key, "value", instance_container2.getProperty(key, "value"))
@@ -575,15 +584,20 @@ class Dremel3D20(QObject, MeshWriter, Extension):
     #   \param settings A container stack to serialise.
     #   \return A serialised string of the settings.
     def _serialiseSettings(self, stack):
-        prefix = ";SETTING_" + str(Dremel3D20.version) + " "  # The prefix to put before each line.
+        container_registry = self._application.getContainerRegistry()
+        quality_manager = self._application.getQualityManager()
+
+        prefix = self._setting_keyword + str(GCodeWriter.version) + " "  # The prefix to put before each line.
         prefix_length = len(prefix)
 
+        quality_type = stack.quality.getMetaDataEntry("quality_type")
         container_with_profile = stack.qualityChanges
         if container_with_profile.getId() == "empty_quality_changes":
-            Logger.log("e", "No valid quality profile found, not writing settings to GCode!")
-            return ""
+            # If the global quality changes is empty, create a new one
+            quality_name = container_registry.uniqueName(stack.quality.getName())
+            container_with_profile = quality_manager._createQualityChanges(quality_type, quality_name, stack, None)
 
-        flat_global_container = self._createFlattenedContainerInstance(stack.getTop(), container_with_profile)
+        flat_global_container = self._createFlattenedContainerInstance(stack.userChanges, container_with_profile)
         # If the quality changes is not set, we need to set type manually
         if flat_global_container.getMetaDataEntry("type", None) is None:
             flat_global_container.addMetaDataEntry("type", "quality_changes")
@@ -592,43 +606,61 @@ class Dremel3D20(QObject, MeshWriter, Extension):
         if flat_global_container.getMetaDataEntry("quality_type", None) is None:
             flat_global_container.addMetaDataEntry("quality_type", stack.quality.getMetaDataEntry("quality_type", "normal"))
 
+        # Get the machine definition ID for quality profiles
+        machine_definition_id_for_quality = getMachineDefinitionIDForQualitySearch(stack.definition)
+        flat_global_container.setMetaDataEntry("definition", machine_definition_id_for_quality)
+
         serialized = flat_global_container.serialize()
         data = {"global_quality": serialized}
 
-        for extruder in sorted(stack.extruders.values(), key = lambda k: k.getMetaDataEntry("position")):
+        all_setting_keys = set(flat_global_container.getAllKeys())
+        for extruder in sorted(stack.extruders.values(), key = lambda k: int(k.getMetaDataEntry("position"))):
             extruder_quality = extruder.qualityChanges
             if extruder_quality.getId() == "empty_quality_changes":
-                Logger.log("w", "No extruder quality profile found, not writing quality for extruder %s to file!", extruder.getId())
-                continue
-            flat_extruder_quality = self._createFlattenedContainerInstance(extruder.getTop(), extruder_quality)
+                # Same story, if quality changes is empty, create a new one
+                quality_name = container_registry.uniqueName(stack.quality.getName())
+                extruder_quality = quality_manager._createQualityChanges(quality_type, quality_name, stack, None)
+
+            flat_extruder_quality = self._createFlattenedContainerInstance(extruder.userChanges, extruder_quality)
             # If the quality changes is not set, we need to set type manually
             if flat_extruder_quality.getMetaDataEntry("type", None) is None:
                 flat_extruder_quality.addMetaDataEntry("type", "quality_changes")
 
             # Ensure that extruder is set. (Can happen if we have empty quality changes).
-            if flat_extruder_quality.getMetaDataEntry("extruder", None) is None:
-                flat_extruder_quality.addMetaDataEntry("extruder", extruder.getBottom().getId())
+            if flat_extruder_quality.getMetaDataEntry("position", None) is None:
+                flat_extruder_quality.addMetaDataEntry("position", extruder.getMetaDataEntry("position"))
 
             # Ensure that quality_type is set. (Can happen if we have empty quality changes).
             if flat_extruder_quality.getMetaDataEntry("quality_type", None) is None:
                 flat_extruder_quality.addMetaDataEntry("quality_type", extruder.quality.getMetaDataEntry("quality_type", "normal"))
+
+            # Change the default definition
+            flat_extruder_quality.setMetaDataEntry("definition", machine_definition_id_for_quality)
+
             extruder_serialized = flat_extruder_quality.serialize()
             data.setdefault("extruder_quality", []).append(extruder_serialized)
+
+            all_setting_keys.update(set(flat_extruder_quality.getAllKeys()))
+
+        # Check if there is any profiles
+        if not all_setting_keys:
+            Logger.log("i", "No custom settings found, not writing settings to g-code.")
+            return ""
 
         json_string = json.dumps(data)
 
         # Escape characters that have a special meaning in g-code comments.
-        pattern = re.compile("|".join(Dremel3D20.escape_characters.keys()))
+        pattern = re.compile("|".join(GCodeWriter.escape_characters.keys()))
 
         # Perform the replacement with a regular expression.
-        escaped_string = pattern.sub(lambda m: Dremel3D20.escape_characters[re.escape(m.group(0))], json_string)
+        escaped_string = pattern.sub(lambda m: GCodeWriter.escape_characters[re.escape(m.group(0))], json_string)
 
         # Introduce line breaks so that each comment is no longer than 80 characters. Prepend each line with the prefix.
         result = ""
 
         # Lines have 80 characters, so the payload of each line is 80 - prefix.
         for pos in range(0, len(escaped_string), 80 - prefix_length):
-            result += prefix + escaped_string[pos : pos + 80 - prefix_length] + "\n"
+            result += prefix + escaped_string[pos: pos + 80 - prefix_length] + "\n"
         return result
 
     # cura icon in bmp format in binary
