@@ -537,17 +537,17 @@ class Dremel3D20(QObject, MeshWriter, Extension):
                 has_settings = False
                 for gcode in gcode_list:
                     try:
-                        if gcode[:len(self._setting_keyword)] == self._setting_keyword:
-                            has_settings = True
+                        #if gcode[:len(self._setting_keyword)] == self._setting_keyword:
+                        #     has_settings = True
                         stream.write(gcode.encode())
                     except:
-                        Logger.log("i", "Dremel 3D20 plugin - Error writing gcode to file.")
+                        Logger.log("e", "Dremel 3D20 plugin - Error writing gcode to file.")
                         return False
                 try:
-                    # Serialise the current container stack and put it at the end of the file.
-                    if not has_settings:
-                        settings = self._serialiseSettings(Application.getInstance().getGlobalContainerStack())
-                        stream.write(settings.encode())
+                    ## Serialise the current container stack and put it at the end of the file.
+                    #if not has_settings:
+                    #    settings = self._serialiseSettings(Application.getInstance().getGlobalContainerStack())
+                    #    stream.write(settings.encode())
                     return True
                 except:
                     Logger.log("i", "Exception caught while serializing settings.")
