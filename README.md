@@ -44,19 +44,11 @@ To install the plugins, follow the instructions below:
 
 3.  Install the Dremel Printer Plugin by following the steps below
 
-    1. Open Cura and navigate to the Plugins menu and select "Installed Plugins"
+    1. Open Cura and open the folder with the .curaplugin file that you extracted earlier
 
-    ![Installed Plugins](./docs/installed_plugins.png)
+    2. Drag the .curaplugin file onto the main window of Cura.
 
-    2. Click the Install new plugin button on the screen that pops up:
-
-    ![Install new plugin](./docs/install_new_plugin.png)
-
-    3. Navigate to the folder where you extracted the release, (if you cloned the git repository, this is under Cura-Dremel-3D20-Plugin/plugins) and select the Dremel3D20.curaplugin
-
-    ![Install new plugin](./docs/curaplugins.png)
-
-    4. A message window will appear telling you to restart Cura.
+    4. Cura will display a message window telling you to restart Cura.
 
     ![Install new plugin](./docs/restart.png)
 
