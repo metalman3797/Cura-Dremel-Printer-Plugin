@@ -50,7 +50,7 @@ from . import G3DremHeader
 
 catalog = i18nCatalog("cura")
 
-version = "0.4.3"
+version = "0.4.4"
 
 _setting_keyword = ";SETTING_"
 
