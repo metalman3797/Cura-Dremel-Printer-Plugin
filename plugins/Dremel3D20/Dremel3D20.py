@@ -30,7 +30,6 @@ import time
 from distutils.version import StrictVersion # for upgrade installations
 
 from UM.i18n import i18nCatalog
-from UM.Application import Application
 from UM.Extension import Extension
 from UM.Message import Message
 from UM.Resources import Resources
@@ -42,6 +41,7 @@ from UM.Qt.Duration import DurationFormat
 from UM.Qt.Bindings.Theme import Theme
 from UM.PluginRegistry import PluginRegistry
 
+from cura.CuraApplication import CuraApplication
 from cura.Machines.QualityManager import getMachineDefinitionIDForQualitySearch
 
 from PyQt5.QtWidgets import QApplication, QFileDialog
@@ -76,8 +76,13 @@ class Dremel3D20(QObject, MeshWriter, Extension):
 
     def __init__(self):
         super().__init__()
-        self._application = Application.getInstance()
+        self._application = CuraApplication.getInstance()
         self._setting_keyword = ";SETTING_"
+        self._application.initializationFinished.connect(self._onInitialized)
+
+    def _onInitialized(self):
+        if not self._application.getPluginRegistry().isActivePlugin("Dremel3D20"):
+            return #Plug-in is disabled.
         if self._application.getPreferences().getValue("Dremel3D20/select_screenshot") is None:
             self._application.getPreferences().addPreference("Dremel3D20/select_screenshot", False)
 
@@ -149,12 +154,12 @@ class Dremel3D20(QObject, MeshWriter, Extension):
         self.addMenuItem(catalog.i18nc("@item:inmenu", "Dremel Printer Plugin Version "+Dremel3D20.version), self.openPluginWebsite)
 
         # finally save the cura.cfg file
-        self._application.getPreferences().writeToFile(Resources.getStoragePath(Resources.Preferences, Application.getInstance().getApplicationName() + ".cfg"))
+        self._application.getPreferences().writeToFile(Resources.getStoragePath(Resources.Preferences, self._application.getApplicationName() + ".cfg"))
 
     def createPreferencesWindow(self):
         path = os.path.join(PluginRegistry.getInstance().getPluginPath(self.getPluginId()), "Dremel3D20prefs.qml")
         Logger.log("i", "Creating Dremel3D20 preferences UI "+path)
-        self._preferences_window = Application.getInstance().createQmlComponent(path, {"manager": self})
+        self._preferences_window = self._application.createQmlComponent(path, {"manager": self})
 
 
     def showPreferences(self):
@@ -254,7 +259,7 @@ class Dremel3D20(QObject, MeshWriter, Extension):
 
         try:
             restartRequired = False
-            zipdata = os.path.join(self.this_plugin_path,"Dremel3D20.zip")
+            zipdata = os.path.join(self._application.getPluginRegistry().getPluginPath("Dremel3D20"), "Dremel3D20.zip")
             with zipfile.ZipFile(zipdata, "r") as zip_ref:
                 for info in zip_ref.infolist():
                     Logger.log("i", "Dremel 3D20 Plugin: found in zipfile: " + info.filename )
@@ -287,7 +292,7 @@ class Dremel3D20(QObject, MeshWriter, Extension):
                 # either way, the files are now installed, so set the prefrences value
                 self._application.getPreferences().setValue("Dremel3D20/install_status", "installed")
                 self._application.getPreferences().setValue("Dremel3D20/curr_version",Dremel3D20.version)
-                self._application.getPreferences().writeToFile(Resources.getStoragePath(Resources.Preferences, Application.getInstance().getApplicationName() + ".cfg"))
+                self._application.getPreferences().writeToFile(Resources.getStoragePath(Resources.Preferences, self._application.getApplicationName() + ".cfg"))
 
         except: # Installing a new plugin should never crash the application.
             Logger.logException("d", "An exception occurred in Dremel 3D20 Plugin while installing the files")
@@ -344,7 +349,7 @@ class Dremel3D20(QObject, MeshWriter, Extension):
         # prompt the user to restart
         if restartRequired:
             self._application.getPreferences().setValue("Dremel3D20/install_status", "uninstalled")
-            self._application.getPreferences().writeToFile(Resources.getStoragePath(Resources.Preferences, Application.getInstance().getApplicationName() + ".cfg"))
+            self._application.getPreferences().writeToFile(Resources.getStoragePath(Resources.Preferences, self._application.getApplicationName() + ".cfg"))
             message = Message(catalog.i18nc("@info:status", "Dremel 3D20 files have been uninstalled.  Please restart Cura to complete uninstallation"))
             message.show()
 
@@ -360,7 +365,7 @@ class Dremel3D20(QObject, MeshWriter, Extension):
             Logger.log("i", "Dremel3D20 Plugin manual screenshot selection enabled")
             message = Message(catalog.i18nc("@info:status", "Manual screenshot selection is enabled when exporting g3drem files"))
             message.show()
-        self._application.getPreferences().writeToFile(Resources.getStoragePath(Resources.Preferences, Application.getInstance().getApplicationName() + ".cfg"))
+        self._application.getPreferences().writeToFile(Resources.getStoragePath(Resources.Preferences, self._application.getApplicationName() + ".cfg"))
 
     #  find_images_with_name tries to find an image file with the same name in the same direcory where the
     #  user is writing out the g3drem file.  If it finds an image then it reuturns the filename so that the
@@ -437,21 +442,21 @@ class Dremel3D20(QObject, MeshWriter, Extension):
                 time.sleep(0.5)
 
             # get the height of the topbar and width of the left and right sidebar
-            sidebarwidth = Application.getInstance().getTheme().getSize("sidebar").width()
-            buttonwidth = Application.getInstance().getTheme().getSize("button_icon").width()
-            marginwidth = Application.getInstance().getTheme().getSize("sidebar_margin").width()
-            topbarheight = Application.getInstance().getTheme().getSize("sidebar_header").height()
-            marginheight = Application.getInstance().getTheme().getSize("sidebar_header_mode_toggle").height()
+            sidebarwidth = self._application.getTheme().getSize("sidebar").width()
+            buttonwidth = self._application.getTheme().getSize("button_icon").width()
+            marginwidth = self._application.getTheme().getSize("sidebar_margin").width()
+            topbarheight = self._application.getTheme().getSize("sidebar_header").height()
+            marginheight = self._application.getTheme().getSize("sidebar_header_mode_toggle").height()
             buttonright = buttonwidth + marginwidth
             topbarbottom = topbarheight + marginheight
 
             # get the main window ID
-            winId = Application.getInstance().getMainWindow().winId()
+            winId = self._application.getMainWindow().winId()
             if winId is not None:
                 # calculate the appropriate rectangle to grab
-                rectWidth = Application.getInstance().getMainWindow().width() - sidebarwidth
-                rectHeight = Application.getInstance().getMainWindow().height() - topbarbottom
-                if buttonright < 0 or topbarbottom < 0 or rectWidth < 0 or rectWidth > Application.getInstance().getMainWindow().width() or rectHeight < 0 or rectHeight > Application.getInstance().getMainWindow().height():
+                rectWidth = self._application.getMainWindow().width() - sidebarwidth
+                rectHeight = self._application.getMainWindow().height() - topbarbottom
+                if buttonright < 0 or topbarbottom < 0 or rectWidth < 0 or rectWidth > self._application.getMainWindow().width() or rectHeight < 0 or rectHeight > self._application.getMainWindow().height():
                     Logger.log("d", "Dremel 3D20 Plugin - error in calculated rectangles for screenshot - using generic cura icon instead")
                     bmpError = True
                 # grab a screenshot of the main window
@@ -515,8 +520,8 @@ class Dremel3D20(QObject, MeshWriter, Extension):
 
             g3dremHeader = G3DremHeader.G3DremHeader()
 
-            global_container_stack = Application.getInstance().getGlobalContainerStack()
-            print_information = Application.getInstance().getPrintInformation()
+            global_container_stack = self._application.getGlobalContainerStack()
+            print_information = self._application.getPrintInformation()
             extruders = [global_container_stack]
             extruder = extruders[0]
             # get estimated length
@@ -543,8 +548,8 @@ class Dremel3D20(QObject, MeshWriter, Extension):
 
             # now that the header is written, write the ascii encoded gcode
             Logger.log("i", "Finished Writing Dremel Header.")
-            active_build_plate = Application.getInstance().getMultiBuildPlateModel().activeBuildPlate
-            scene = Application.getInstance().getController().getScene()
+            active_build_plate = self._application.getMultiBuildPlateModel().activeBuildPlate
+            scene = self._application.getController().getScene()
             gcode_dict = getattr(scene, "gcode_dict")
             if not gcode_dict:
                 return False
