@@ -647,7 +647,7 @@ class Dremel3D20(QObject, MeshWriter, Extension):
             extruder_serialized = flat_extruder_quality.serialize()
             data.setdefault("extruder_quality", []).append(extruder_serialized)
 
-            #all_setting_keys.update(flat_extruder_quality.getAllKeys())
+            all_setting_keys.append(flat_extruder_quality.getAllKeys())
 
         # Check if there is any profiles
         if not all_setting_keys:
@@ -657,10 +657,10 @@ class Dremel3D20(QObject, MeshWriter, Extension):
         json_string = json.dumps(data)
         Logger.log("i", "H")
         # Escape characters that have a special meaning in g-code comments.
-        pattern = re.compile("|".join(GCodeWriter.escape_characters.keys()))
+        pattern = re.compile("|".join(Dremel3D20.escape_characters.keys()))
 
         # Perform the replacement with a regular expression.
-        escaped_string = pattern.sub(lambda m: GCodeWriter.escape_characters[re.escape(m.group(0))], json_string)
+        escaped_string = pattern.sub(lambda m: Dremel3D20.escape_characters[re.escape(m.group(0))], json_string)
         Logger.log("i", "I")
         # Introduce line breaks so that each comment is no longer than 80 characters. Prepend each line with the prefix.
         result = ""
