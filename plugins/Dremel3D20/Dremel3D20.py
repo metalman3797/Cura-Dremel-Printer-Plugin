@@ -145,7 +145,9 @@ class Dremel3D20(QObject, MeshWriter, Extension):
         #    self.addMenuItem(catalog.i18nc("@item:inmenu", "Install Dremel3D20 Printer"), self.installPluginFiles)
 
         self.addMenuItem(catalog.i18nc("@item:inmenu", "Preferences"), self.showPreferences)
+        self.addMenuItem(catalog.i18nc("@item:inmenu", "Help "), self.showHelp)
         self.addMenuItem(catalog.i18nc("@item:inmenu", "Dremel Printer Plugin Version "+Dremel3D20.version), self.openPluginWebsite)
+
         # finally save the cura.cfg file
         self._application.getPreferences().writeToFile(Resources.getStoragePath(Resources.Preferences, Application.getInstance().getApplicationName() + ".cfg"))
 
