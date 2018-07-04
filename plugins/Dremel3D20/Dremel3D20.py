@@ -171,6 +171,19 @@ class Dremel3D20(QObject, MeshWriter, Extension):
             message.show()
         return
 
+    @pyqtSlot()
+    def showHelp(self):
+        url = os.path.join(PluginRegistry.getInstance().getPluginPath(self.getPluginId()), "README.pdf")
+        Logger.log("i", "Dremel 3D20 Plugin opening help document: "+url)
+        try
+            if not QDesktopServices.openUrl(QUrl("file:///"+url)):
+                message = Message(catalog.i18nc("@info:status", "Dremel 3D20 plugin could not open help document.\n Please download it from here: https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/raw/cura-3.4/README.pdf"))
+                message.show()
+        except:
+            message = Message(catalog.i18nc("@info:status", "Dremel 3D20 plugin could not open help document.\n Please download it from here: https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/raw/cura-3.4/README.pdf"))
+            message.show()
+        return
+
     def oldVersionInstalled(self):
         cura_dir=os.path.dirname(os.path.realpath(sys.argv[0]))
         dremelDefinitionFile=os.path.join(cura_dir,"resources","definitions","Dremel3D20.def.json")

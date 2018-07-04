@@ -11,8 +11,8 @@ UM.Dialog
     id: base
     property string installStatusText
 
-    minimumWidth: (UM.Theme.getSize("modal_window_minimum").width * 0.5) | 0
-    minimumHeight: (UM.Theme.getSize("modal_window_minimum").height * 0.25) | 0
+    minimumWidth: (Math.floor(UM.Theme.getSize("modal_window_minimum").width * 0.5)) | 0
+    minimumHeight: (Math.floor(UM.Theme.getSize("modal_window_minimum").height * 0.35)) | 0
     width: minimumWidth
     height: minimumHeight
     title: catalog.i18nc("@label", "Dremel 3D20 Plugin Preferences")
@@ -38,61 +38,82 @@ UM.Dialog
     }
 
 
-    Column {
+    ColumnLayout {
       id: col1
-      CheckBox {
-          id: screenshotCB
-          text: qsTr("Select Screenshot Manually")
-          checked: checkBooleanVals(UM.Preferences.getValue("Dremel3D20/select_screenshot"))
-          onClicked: manager.setSelectScreenshot(checked)
-          ToolTip.timeout: 5000
-          ToolTip.visible: hovered
-          ToolTip.text: "Check this box to allow you when saving a g3drem file to\nmanually select a screenshot from an image stored on your\nhard drive"
+      anchors.fill: parent
+      anchors.margins: margin
+      GroupBox {
+        id: colBox
+        Layout.fillHeight: true
+        ColumnLayout {
+          id: rowLayout
+          anchors.fill: parent
+          width: parent.width
+          height: parent.height
+          CheckBox {
+              id: screenshotCB
+              text: qsTr("Select Screenshot Manually")
+              checked: checkBooleanVals(UM.Preferences.getValue("Dremel3D20/select_screenshot"))
+              onClicked: manager.setSelectScreenshot(checked)
+              ToolTip.timeout: 5000
+              ToolTip.visible: hovered
+              ToolTip.text: "Check this box to allow you when saving a g3drem file to\nmanually select a screenshot from an image stored on your\nhard drive"
+          } //end CheckBox
 
-      } //end CheckBox
+          CheckBox {
+            id: installCB
+            text: "Are Dremel 3D20 Printer File Installed? "
+            ToolTip.timeout: 5000
+            ToolTip.visible: hovered
+            ToolTip.text: "Uncheck this checkbox to uninstall the Dremel 3D20 printer files\nCheck it to install the files."
+            checked: checkInstallStatus(UM.Preferences.getValue("Dremel3D20/install_status"))
+            onClicked: manager.changePluginInstallStatus(checked)
+          } //end CheckBox
+        } // end columnlayout
+      } // end GroupBox
+      GroupBox {
+        id: rowBox
+        Layout.fillWidth: true
 
-      CheckBox {
-        id: installCB
-        text: "Are Dremel 3D20 Printer File Installed? "
+        RowLayout {
+            id: buttonRow
+            anchors.fill: parent
 
-        ToolTip.timeout: 5000
-        ToolTip.visible: hovered
-        ToolTip.text: "Uncheck this checkbox to uninstall the Dremel 3D20 printer files\nCheck it to install the files."
-
-        checked: checkInstallStatus(UM.Preferences.getValue("Dremel3D20/install_status"))
-        onClicked: manager.changePluginInstallStatus(checked)
-      } //end CheckBox
-
-    } // end Column
-
-
-    leftButtons: [
-        Button
-        {
-            id: button1
-            text: qsTr("Open plugin website")
-            onClicked: manager.openPluginWebsite()
-            anchors.left: col1.left
-            anchors.bottom: col1.bottom
-        }
-    ]
-
-
-    rightButtons: [
-        Button
-        {
-            id: button2
-            UM.I18nCatalog
+            Button
             {
-                id: catalog
-                name: "cura"
+                id: button1
+                text: qsTr("Open plugin website")
+                onClicked: manager.openPluginWebsite()
+                anchors.left: parent.left
+                anchors.bottom: parent.bottom
             }
 
-            text: catalog.i18nc("@action:button", "Close")
-            onClicked: base.hide()
-            anchors.right: col1.right
-            anchors.bottom: col1.bottom
-        }
-    ]
+            Button
+            {
+                id: helpButton
+                UM.I18nCatalog
+                {
+                    id: catalog
+                    name: "cura"
+                }
+                text: catalog.i18nc("@action:button", "Help")
+                onClicked: manager.showHelp()
+            }
 
+            Button
+            {
+                id: button
+                UM.I18nCatalog
+                {
+                    id: catalog1
+                    name: "cura"
+                }
+                text: catalog1.i18nc("@action:button", "Close")
+                onClicked: base.hide()
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+            }
+        } // end RowLayout
+      } // end GroupBox
+    } // end ColumnLayout
 }

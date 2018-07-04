@@ -40,6 +40,18 @@ rmdir %PLUGIN_DIR%\dremel_3d20
 
 ::::::::::::::::::::::::::::::::::
 :: Step 5
+:: Create the Readme pdf file
+::::::::::::::::::::::::::::::::::
+cd ..
+if EXIST README.html (del README.html)
+if EXIST README.pdf (del README.pdf)
+grip README.md --export README.html
+"c:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe" README.html README.pdf
+cd tools
+xcopy ..\README.pdf %PLUGIN_DIR%\
+
+::::::::::::::::::::::::::::::::::
+:: Step 6
 :: Create the plugin
 ::::::::::::::::::::::::::::::::::
 xcopy ..\plugins\Dremel3D20\* %PLUGIN_DIR%
@@ -47,14 +59,14 @@ python.exe create_plugin.py %PLUGIN_DIR%
 move .\Dremel3D20.umplugin .\Dremel3D20.curaplugin
 
 ::::::::::::::::::::::::::::::::::
-:: Step 6
+:: Step 7
 :: Move the plugin to the correct directory
 ::::::::::::::::::::::::::::::::::
 del /f /s /q %PLUGIN_DIR%\*.*
-move .\Dremel3D20.curaplugin %PLUGIN_DIR%
+move .\Dremel3D20.curaplugin %PLUGIN_DIR%\
 
 ::::::::::::::::::::::::::::::::::
-:: Step 7
+:: Step 8
 :: Move some files to the release directory
 ::::::::::::::::::::::::::::::::::
 xcopy ..\LICENSE %RELEASE_DIR%
@@ -69,25 +81,13 @@ xcopy ..\resources\package.json %RELEASE_DIR%
 :: xcopy ..\resources\meshes\dremel_3D20_platform.stl .\Cura-Dremel-3D20-Plugin
 
 ::::::::::::::::::::::::::::::::::
-:: Step 10 - TODO: copy it into the plugin
-:: Create the Readme pdf file
-::::::::::::::::::::::::::::::::::
-cd ..
-if EXIST README.html (del README.html)
-if EXIST README.pdf (del README.pdf)
-grip README.md --export README.html
-"c:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe" README.html README.pdf
-::xcopy README.pdf plugins\Cura-Dremel-3D20-Plugin
-cd tools
-
-::::::::::::::::::::::::::::::::::
-:: Step 9
+:: Step 10
 :: Zip up the plugin for release
 ::::::::::::::::::::::::::::::::::
 7za.exe a .\Cura-Dremel-3D20.zip %RELEASE_DIR%
 
 ::::::::::::::::::::::::::::::::::
-:: Step 10
+:: Step 11
 :: Cleanup the files and directories
 ::::::::::::::::::::::::::::::::::
 del /f /s /q  %RELEASE_DIR%
