@@ -206,3 +206,6 @@ Many thanks belong to the following users, who have spent their time and energy 
 * [WeavingColors](https://github.com/WeavingColors)
 * [SwapFaceL](https://github.com/SwapFaceL)
 * [metalman3797](https://github.com/metalman3797)
+* [blablaaddi](https://github.com/blablaaddi)
+* [Swizzler121](https://github.com/Swizzler121)
+* [Appesteijn](https://github.com/Appesteijn)
