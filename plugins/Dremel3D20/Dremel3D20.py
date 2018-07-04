@@ -78,11 +78,11 @@ class Dremel3D20(QObject, MeshWriter, Extension):
         super().__init__()
         self._application = Application.getInstance()
         self._setting_keyword = ";SETTING_"
-        if Preferences.getInstance().getValue("Dremel3D20/select_screenshot") is None:
-            Preferences.getInstance().addPreference("Dremel3D20/select_screenshot", False)
+        if self._application.getPreferences().getValue("Dremel3D20/select_screenshot") is None:
+            self._application.getPreferences().addPreference("Dremel3D20/select_screenshot", False)
 
-        if Preferences.getInstance().getValue("Dremel3D20/last_screenshot_folder") is None:
-            Preferences.getInstance().addPreference("Dremel3D20/last_screenshot_folder",str(os.path.expanduser('~')))
+        if self._application.getPreferences().getValue("Dremel3D20/last_screenshot_folder") is None:
+            self._application.getPreferences().addPreference("Dremel3D20/last_screenshot_folder",str(os.path.expanduser('~')))
         Logger.log("i", "Dremel3D20 Plugin adding menu item for screenshot toggling")
 
         self._preferences_window = None
@@ -115,24 +115,24 @@ class Dremel3D20(QObject, MeshWriter, Extension):
         if bExit:
             return False
 
-        if Preferences.getInstance().getValue("Dremel3D20/install_status") is None:
-            Preferences.getInstance().addPreference("Dremel3D20/install_status", "unknown")
+        if self._application.getPreferences().getValue("Dremel3D20/install_status") is None:
+            self._application.getPreferences().addPreference("Dremel3D20/install_status", "unknown")
 
         # if something got messed up, set back to reasonable values
-        if not self.isInstalled() and Preferences.getInstance().getValue("Dremel3D20/install_status") is "installed":
-            Preferences.getInstance().setValue("Dremel3D20/install_status", "unknown")
+        if not self.isInstalled() and self._application.getPreferences().getValue("Dremel3D20/install_status") is "installed":
+            self._application.getPreferences().setValue("Dremel3D20/install_status", "unknown")
 
         # if it's installed, and it's listed as uninstalled, then change that to reflect the truth
-        if self.isInstalled() and Preferences.getInstance().getValue("Dremel3D20/install_status") is "uninstalled":
-            Preferences.getInstance().setValue("Dremel3D20/install_status", "installed")
+        if self.isInstalled() and self._application.getPreferences().getValue("Dremel3D20/install_status") is "uninstalled":
+            self._application.getPreferences().setValue("Dremel3D20/install_status", "installed")
 
         # if the version isn't the same, then force installation
         if self.isInstalled() and not self.versionsMatch():
-            Preferences.getInstance().setValue("Dremel3D20/install_status", "unknown")
+            self._application.getPreferences().setValue("Dremel3D20/install_status", "unknown")
 
         # Check the preferences to see if the user uninstalled the files -
         # if so don't automatically install them
-        if Preferences.getInstance().getValue("Dremel3D20/install_status") is "unknown":
+        if self._application.getPreferences().getValue("Dremel3D20/install_status") is "unknown":
             # if the user never installed the files, then automatically install it
             self.installPluginFiles()
 
@@ -147,7 +147,7 @@ class Dremel3D20(QObject, MeshWriter, Extension):
         self.addMenuItem(catalog.i18nc("@item:inmenu", "Preferences"), self.showPreferences)
         self.addMenuItem(catalog.i18nc("@item:inmenu", "Dremel Printer Plugin Version "+Dremel3D20.version), self.openPluginWebsite)
         # finally save the cura.cfg file
-        Preferences.getInstance().writeToFile(Resources.getStoragePath(Resources.Preferences, Application.getInstance().getApplicationName() + ".cfg"))
+        self._application.getPreferences().writeToFile(Resources.getStoragePath(Resources.Preferences, Application.getInstance().getApplicationName() + ".cfg"))
 
     def createPreferencesWindow(self):
         path = os.path.join(PluginRegistry.getInstance().getPluginPath(self.getPluginId()), "Dremel3D20prefs.qml")
@@ -206,10 +206,10 @@ class Dremel3D20(QObject, MeshWriter, Extension):
     # returns true if the versions match and false if they don't
     def versionsMatch(self):
         # get the currently installed plugin version number
-        if Preferences.getInstance().getValue("Dremel3D20/curr_version") is None:
-            Preferences.getInstance().addPreference("Dremel3D20/curr_version", "0.0.0")
+        if self._application.getPreferences().getValue("Dremel3D20/curr_version") is None:
+            self._application.getPreferences().addPreference("Dremel3D20/curr_version", "0.0.0")
 
-        installedVersion = Preferences.getInstance().getValue("Dremel3D20/curr_version")
+        installedVersion = self._application.getPreferences().getValue("Dremel3D20/curr_version")
 
         if StrictVersion(installedVersion) == StrictVersion(Dremel3D20.version):
             # if the version numbers match, then return true
@@ -279,13 +279,13 @@ class Dremel3D20(QObject, MeshWriter, Extension):
 
             if restartRequired and self.isInstalled():
                 # only show the message if the user called this after having already uninstalled
-                if Preferences.getInstance().getValue("Dremel3D20/install_status") is not "unknown":
+                if self._application.getPreferences().getValue("Dremel3D20/install_status") is not "unknown":
                     message = Message(catalog.i18nc("@info:status", "Dremel 3D20 files have been installed.  Please restart Cura to complete installation"))
                     message.show()
                 # either way, the files are now installed, so set the prefrences value
-                Preferences.getInstance().setValue("Dremel3D20/install_status", "installed")
-                Preferences.getInstance().setValue("Dremel3D20/curr_version",Dremel3D20.version)
-                Preferences.getInstance().writeToFile(Resources.getStoragePath(Resources.Preferences, Application.getInstance().getApplicationName() + ".cfg"))
+                self._application.getPreferences().setValue("Dremel3D20/install_status", "installed")
+                self._application.getPreferences().setValue("Dremel3D20/curr_version",Dremel3D20.version)
+                self._application.getPreferences().writeToFile(Resources.getStoragePath(Resources.Preferences, Application.getInstance().getApplicationName() + ".cfg"))
 
         except: # Installing a new plugin should never crash the application.
             Logger.logException("d", "An exception occurred in Dremel 3D20 Plugin while installing the files")
@@ -341,24 +341,24 @@ class Dremel3D20(QObject, MeshWriter, Extension):
 
         # prompt the user to restart
         if restartRequired:
-            Preferences.getInstance().setValue("Dremel3D20/install_status", "uninstalled")
-            Preferences.getInstance().writeToFile(Resources.getStoragePath(Resources.Preferences, Application.getInstance().getApplicationName() + ".cfg"))
+            self._application.getPreferences().setValue("Dremel3D20/install_status", "uninstalled")
+            self._application.getPreferences().writeToFile(Resources.getStoragePath(Resources.Preferences, Application.getInstance().getApplicationName() + ".cfg"))
             message = Message(catalog.i18nc("@info:status", "Dremel 3D20 files have been uninstalled.  Please restart Cura to complete uninstallation"))
             message.show()
 
     @pyqtSlot(bool)
     def setSelectScreenshot(self,bManualSelectEnabled):
         if not bManualSelectEnabled:
-            Preferences.getInstance().setValue("Dremel3D20/select_screenshot",False)
+            self._application.getPreferences().setValue("Dremel3D20/select_screenshot",False)
             Logger.log("i", "Dremel3D20 Plugin manual screenshot selection disabled")
             message = Message(catalog.i18nc("@info:status", "Manual screenshot selection is disabled when exporting g3drem files"))
             message.show()
         else:
-            Preferences.getInstance().setValue("Dremel3D20/select_screenshot",True)
+            self._application.getPreferences().setValue("Dremel3D20/select_screenshot",True)
             Logger.log("i", "Dremel3D20 Plugin manual screenshot selection enabled")
             message = Message(catalog.i18nc("@info:status", "Manual screenshot selection is enabled when exporting g3drem files"))
             message.show()
-        Preferences.getInstance().writeToFile(Resources.getStoragePath(Resources.Preferences, Application.getInstance().getApplicationName() + ".cfg"))
+        self._application.getPreferences().writeToFile(Resources.getStoragePath(Resources.Preferences, Application.getInstance().getApplicationName() + ".cfg"))
 
     #  find_images_with_name tries to find an image file with the same name in the same direcory where the
     #  user is writing out the g3drem file.  If it finds an image then it reuturns the filename so that the
@@ -390,10 +390,10 @@ class Dremel3D20(QObject, MeshWriter, Extension):
         screen = QApplication.primaryScreen()
         bmpError = False
         image_with_same_name = None
-        if Preferences.getInstance().getValue("Dremel3D20/select_screenshot"):
-            image_with_same_name, _ = QFileDialog.getOpenFileName(None, 'Select Preview Image', Preferences.getInstance().getValue("Dremel3D20/last_screenshot_folder"),"Image files (*png *.jpg *.gif *.bmp *.jpeg)")
+        if self._application.getPreferences().getValue("Dremel3D20/select_screenshot"):
+            image_with_same_name, _ = QFileDialog.getOpenFileName(None, 'Select Preview Image', self._application.getPreferences().getValue("Dremel3D20/last_screenshot_folder"),"Image files (*png *.jpg *.gif *.bmp *.jpeg)")
             Logger.log("d", "Dremel 3D20 Plugin using image for screenshot: " + image_with_same_name)
-            Preferences.getInstance().setValue("Dremel3D20/last_screenshot_folder",str(os.path.dirname(image_with_same_name)))
+            self._application.getPreferences().setValue("Dremel3D20/last_screenshot_folder",str(os.path.dirname(image_with_same_name)))
             # nee to test this when cancel button is clicked
             if image_with_same_name == "":
                 image_with_same_name = None
