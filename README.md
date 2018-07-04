@@ -6,6 +6,7 @@ Although the software functions reasonably well for the author, the author will 
 
 This code is **heavily** based upon the [Cura gcode writer plugin](https://github.com/Ultimaker/Cura/tree/master/plugins/GCodeWriter).  
 
+
 ![The Cura GUI](./docs/GUI.PNG)
 
 This software consists of one plugin for Cura and an optionally installed 3d model of the Dremel print bed.  The Dremel3D20 plugin contains the necessary printer files to add the Dremel IdeaBuilder 3D20 to Cura and enables Cura to export the proprietary g3drem file format that the Dremel 3D20 needs.
@@ -14,6 +15,7 @@ This software consists of one plugin for Cura and an optionally installed 3d mod
 
 | Cura Version | Last version of the plugin that works with the version of Cura         |
 |--------------|------------------------------------------------------------------------|
+
 3.4 | [version 0.4.5](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.4.5)
 3.3 or 3.3.1 | [version 0.4.3](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.4.3)
 3.2 or 3.2.1 | [version 0.4.2](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.4.2)
