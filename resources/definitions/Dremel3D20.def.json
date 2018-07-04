@@ -13,7 +13,11 @@
         "has_materials": true,
         "preferred_material": "dremel_pla",
         "exclude_materials": [ "generic_hips", "generic_petg", "generic_abs", "generic_cpa", "generic_nylon", "generic_bam", "generic_pc", "generic_pva", "generic_tpu", "generic_tough", "generic_cpe", "generic_pet"],
-        "preferred_quality": "low"
+        "preferred_quality": "low",
+        "machine_extruder_trains":
+        {
+            "0": "dremel_3d20_extruder_0"
+        }
     },
 
     "overrides": {
@@ -37,7 +41,6 @@
         "machine_gcode_flavor": { "default_value": "Marlin" },
         "machine_depth": { "default_value": 150 },
         "machine_width": { "default_value": 230 },
-        "material_diameter": { "default_value": 1.75 },
         "retraction_speed": {"default_value":25},
         "cool_fan_speed_min": {"default_value": 0},
         "cool_fan_speed_max": {"default_value": 100},
