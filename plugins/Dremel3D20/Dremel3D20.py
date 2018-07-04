@@ -42,6 +42,8 @@ from UM.Qt.Duration import DurationFormat
 from UM.Qt.Bindings.Theme import Theme
 from UM.PluginRegistry import PluginRegistry
 
+from cura.Machines.QualityManager import getMachineDefinitionIDForQualitySearch
+
 from PyQt5.QtWidgets import QApplication, QFileDialog
 from PyQt5.QtGui import QPixmap, QScreen, QColor, qRgb, QImageReader, QImage, QDesktopServices
 from PyQt5.QtCore import QByteArray, QBuffer, QIODevice, QRect, Qt, QSize, pyqtSlot, QObject, QUrl, pyqtSlot
@@ -50,16 +52,16 @@ from . import G3DremHeader
 
 catalog = i18nCatalog("cura")
 
-version = "0.4.3"
 
-_setting_keyword = ";SETTING_"
+
+
 
 ##      This Extension runs in the background and sends several bits of information to the Ultimaker servers.
 #       The data is only sent when the user in question gave permission to do so. All data is anonymous and
 #       no model files are being sent (Just a SHA256 hash of the model).
 class Dremel3D20(QObject, MeshWriter, Extension):
     ##  The file format version of the serialised g-code.
-    version = 3
+    version = "0.4.5"
 
     ##  Dictionary that defines how characters are escaped when embedded in
     #   g-code.
@@ -75,12 +77,12 @@ class Dremel3D20(QObject, MeshWriter, Extension):
     def __init__(self):
         super().__init__()
         self._application = Application.getInstance()
+        self._setting_keyword = ";SETTING_"
+        if self._application.getPreferences().getValue("Dremel3D20/select_screenshot") is None:
+            self._application.getPreferences().addPreference("Dremel3D20/select_screenshot", False)
 
-        if Preferences.getInstance().getValue("Dremel3D20/select_screenshot") is None:
-            Preferences.getInstance().addPreference("Dremel3D20/select_screenshot", False)
-
-        if Preferences.getInstance().getValue("Dremel3D20/last_screenshot_folder") is None:
-            Preferences.getInstance().addPreference("Dremel3D20/last_screenshot_folder",str(os.path.expanduser('~')))
+        if self._application.getPreferences().getValue("Dremel3D20/last_screenshot_folder") is None:
+            self._application.getPreferences().addPreference("Dremel3D20/last_screenshot_folder",str(os.path.expanduser('~')))
         Logger.log("i", "Dremel3D20 Plugin adding menu item for screenshot toggling")
 
         self._preferences_window = None
@@ -113,24 +115,24 @@ class Dremel3D20(QObject, MeshWriter, Extension):
         if bExit:
             return False
 
-        if Preferences.getInstance().getValue("Dremel3D20/install_status") is None:
-            Preferences.getInstance().addPreference("Dremel3D20/install_status", "unknown")
+        if self._application.getPreferences().getValue("Dremel3D20/install_status") is None:
+            self._application.getPreferences().addPreference("Dremel3D20/install_status", "unknown")
 
         # if something got messed up, set back to reasonable values
-        if not self.isInstalled() and Preferences.getInstance().getValue("Dremel3D20/install_status") is "installed":
-            Preferences.getInstance().setValue("Dremel3D20/install_status", "unknown")
+        if not self.isInstalled() and self._application.getPreferences().getValue("Dremel3D20/install_status") is "installed":
+            self._application.getPreferences().setValue("Dremel3D20/install_status", "unknown")
 
         # if it's installed, and it's listed as uninstalled, then change that to reflect the truth
-        if self.isInstalled() and Preferences.getInstance().getValue("Dremel3D20/install_status") is "uninstalled":
-            Preferences.getInstance().setValue("Dremel3D20/install_status", "installed")
+        if self.isInstalled() and self._application.getPreferences().getValue("Dremel3D20/install_status") is "uninstalled":
+            self._application.getPreferences().setValue("Dremel3D20/install_status", "installed")
 
         # if the version isn't the same, then force installation
         if self.isInstalled() and not self.versionsMatch():
-            Preferences.getInstance().setValue("Dremel3D20/install_status", "unknown")
+            self._application.getPreferences().setValue("Dremel3D20/install_status", "unknown")
 
         # Check the preferences to see if the user uninstalled the files -
         # if so don't automatically install them
-        if Preferences.getInstance().getValue("Dremel3D20/install_status") is "unknown":
+        if self._application.getPreferences().getValue("Dremel3D20/install_status") is "unknown":
             # if the user never installed the files, then automatically install it
             self.installPluginFiles()
 
@@ -143,9 +145,11 @@ class Dremel3D20(QObject, MeshWriter, Extension):
         #    self.addMenuItem(catalog.i18nc("@item:inmenu", "Install Dremel3D20 Printer"), self.installPluginFiles)
 
         self.addMenuItem(catalog.i18nc("@item:inmenu", "Preferences"), self.showPreferences)
-        self.addMenuItem(catalog.i18nc("@item:inmenu", "Dremel Printer Plugin Version "+version), self.openPluginWebsite)
+        self.addMenuItem(catalog.i18nc("@item:inmenu", "Help "), self.showHelp)
+        self.addMenuItem(catalog.i18nc("@item:inmenu", "Dremel Printer Plugin Version "+Dremel3D20.version), self.openPluginWebsite)
+
         # finally save the cura.cfg file
-        Preferences.getInstance().writeToFile(Resources.getStoragePath(Resources.Preferences, Application.getInstance().getApplicationName() + ".cfg"))
+        self._application.getPreferences().writeToFile(Resources.getStoragePath(Resources.Preferences, Application.getInstance().getApplicationName() + ".cfg"))
 
     def createPreferencesWindow(self):
         path = os.path.join(PluginRegistry.getInstance().getPluginPath(self.getPluginId()), "Dremel3D20prefs.qml")
@@ -171,6 +175,19 @@ class Dremel3D20(QObject, MeshWriter, Extension):
             message.show()
         return
 
+    @pyqtSlot()
+    def showHelp(self):
+        url = os.path.join(PluginRegistry.getInstance().getPluginPath(self.getPluginId()), "README.pdf")
+        Logger.log("i", "Dremel 3D20 Plugin opening help document: "+url)
+        try:
+            if not QDesktopServices.openUrl(QUrl("file:///"+url)):
+                message = Message(catalog.i18nc("@info:status", "Dremel 3D20 plugin could not open help document.\n Please download it from here: https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/raw/cura-3.4/README.pdf"))
+                message.show()
+        except:
+            message = Message(catalog.i18nc("@info:status", "Dremel 3D20 plugin could not open help document.\n Please download it from here: https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/raw/cura-3.4/README.pdf"))
+            message.show()
+        return
+
     def oldVersionInstalled(self):
         cura_dir=os.path.dirname(os.path.realpath(sys.argv[0]))
         dremelDefinitionFile=os.path.join(cura_dir,"resources","definitions","Dremel3D20.def.json")
@@ -191,17 +208,17 @@ class Dremel3D20(QObject, MeshWriter, Extension):
     # returns true if the versions match and false if they don't
     def versionsMatch(self):
         # get the currently installed plugin version number
-        if Preferences.getInstance().getValue("Dremel3D20/curr_version") is None:
-            Preferences.getInstance().addPreference("Dremel3D20/curr_version", "0.0.0")
+        if self._application.getPreferences().getValue("Dremel3D20/curr_version") is None:
+            self._application.getPreferences().addPreference("Dremel3D20/curr_version", "0.0.0")
 
-        installedVersion = Preferences.getInstance().getValue("Dremel3D20/curr_version")
+        installedVersion = self._application.getPreferences().getValue("Dremel3D20/curr_version")
 
-        if StrictVersion(installedVersion) == StrictVersion(version):
+        if StrictVersion(installedVersion) == StrictVersion(Dremel3D20.version):
             # if the version numbers match, then return true
-            Logger.log("i", "Dremel 3D20 Plugin versions match: "+installedVersion+" matches "+version)
+            Logger.log("i", "Dremel 3D20 Plugin versions match: "+installedVersion+" matches "+Dremel3D20.version)
             return True
         else:
-            Logger.log("i", "Dremel 3D20 Plugin installed version: " +installedVersion+ " doesn't match this version: "+version)
+            Logger.log("i", "Dremel 3D20 Plugin installed version: " +installedVersion+ " doesn't match this version: "+Dremel3D20.version)
             return False
 
 
@@ -264,13 +281,13 @@ class Dremel3D20(QObject, MeshWriter, Extension):
 
             if restartRequired and self.isInstalled():
                 # only show the message if the user called this after having already uninstalled
-                if Preferences.getInstance().getValue("Dremel3D20/install_status") is not "unknown":
+                if self._application.getPreferences().getValue("Dremel3D20/install_status") is not "unknown":
                     message = Message(catalog.i18nc("@info:status", "Dremel 3D20 files have been installed.  Please restart Cura to complete installation"))
                     message.show()
                 # either way, the files are now installed, so set the prefrences value
-                Preferences.getInstance().setValue("Dremel3D20/install_status", "installed")
-                Preferences.getInstance().setValue("Dremel3D20/curr_version",version)
-                Preferences.getInstance().writeToFile(Resources.getStoragePath(Resources.Preferences, Application.getInstance().getApplicationName() + ".cfg"))
+                self._application.getPreferences().setValue("Dremel3D20/install_status", "installed")
+                self._application.getPreferences().setValue("Dremel3D20/curr_version",Dremel3D20.version)
+                self._application.getPreferences().writeToFile(Resources.getStoragePath(Resources.Preferences, Application.getInstance().getApplicationName() + ".cfg"))
 
         except: # Installing a new plugin should never crash the application.
             Logger.logException("d", "An exception occurred in Dremel 3D20 Plugin while installing the files")
@@ -326,24 +343,24 @@ class Dremel3D20(QObject, MeshWriter, Extension):
 
         # prompt the user to restart
         if restartRequired:
-            Preferences.getInstance().setValue("Dremel3D20/install_status", "uninstalled")
-            Preferences.getInstance().writeToFile(Resources.getStoragePath(Resources.Preferences, Application.getInstance().getApplicationName() + ".cfg"))
+            self._application.getPreferences().setValue("Dremel3D20/install_status", "uninstalled")
+            self._application.getPreferences().writeToFile(Resources.getStoragePath(Resources.Preferences, Application.getInstance().getApplicationName() + ".cfg"))
             message = Message(catalog.i18nc("@info:status", "Dremel 3D20 files have been uninstalled.  Please restart Cura to complete uninstallation"))
             message.show()
 
     @pyqtSlot(bool)
     def setSelectScreenshot(self,bManualSelectEnabled):
         if not bManualSelectEnabled:
-            Preferences.getInstance().setValue("Dremel3D20/select_screenshot",False)
+            self._application.getPreferences().setValue("Dremel3D20/select_screenshot",False)
             Logger.log("i", "Dremel3D20 Plugin manual screenshot selection disabled")
             message = Message(catalog.i18nc("@info:status", "Manual screenshot selection is disabled when exporting g3drem files"))
             message.show()
         else:
-            Preferences.getInstance().setValue("Dremel3D20/select_screenshot",True)
+            self._application.getPreferences().setValue("Dremel3D20/select_screenshot",True)
             Logger.log("i", "Dremel3D20 Plugin manual screenshot selection enabled")
             message = Message(catalog.i18nc("@info:status", "Manual screenshot selection is enabled when exporting g3drem files"))
             message.show()
-        Preferences.getInstance().writeToFile(Resources.getStoragePath(Resources.Preferences, Application.getInstance().getApplicationName() + ".cfg"))
+        self._application.getPreferences().writeToFile(Resources.getStoragePath(Resources.Preferences, Application.getInstance().getApplicationName() + ".cfg"))
 
     #  find_images_with_name tries to find an image file with the same name in the same direcory where the
     #  user is writing out the g3drem file.  If it finds an image then it reuturns the filename so that the
@@ -375,10 +392,10 @@ class Dremel3D20(QObject, MeshWriter, Extension):
         screen = QApplication.primaryScreen()
         bmpError = False
         image_with_same_name = None
-        if Preferences.getInstance().getValue("Dremel3D20/select_screenshot"):
-            image_with_same_name, _ = QFileDialog.getOpenFileName(None, 'Select Preview Image', Preferences.getInstance().getValue("Dremel3D20/last_screenshot_folder"),"Image files (*png *.jpg *.gif *.bmp *.jpeg)")
+        if self._application.getPreferences().getValue("Dremel3D20/select_screenshot"):
+            image_with_same_name, _ = QFileDialog.getOpenFileName(None, 'Select Preview Image', self._application.getPreferences().getValue("Dremel3D20/last_screenshot_folder"),"Image files (*png *.jpg *.gif *.bmp *.jpeg)")
             Logger.log("d", "Dremel 3D20 Plugin using image for screenshot: " + image_with_same_name)
-            Preferences.getInstance().setValue("Dremel3D20/last_screenshot_folder",str(os.path.dirname(image_with_same_name)))
+            self._application.getPreferences().setValue("Dremel3D20/last_screenshot_folder",str(os.path.dirname(image_with_same_name)))
             # nee to test this when cancel button is clicked
             if image_with_same_name == "":
                 image_with_same_name = None
@@ -537,23 +554,25 @@ class Dremel3D20(QObject, MeshWriter, Extension):
                 has_settings = False
                 for gcode in gcode_list:
                     try:
-                        #if gcode[:len(self._setting_keyword)] == self._setting_keyword:
-                        #     has_settings = True
+                        if gcode[:len(self._setting_keyword)] == self._setting_keyword:
+                             has_settings = True
                         stream.write(gcode.encode())
                     except:
                         Logger.log("e", "Dremel 3D20 plugin - Error writing gcode to file.")
                         return False
                 try:
                     ## Serialise the current container stack and put it at the end of the file.
-                    #if not has_settings:
-                    #    settings = self._serialiseSettings(Application.getInstance().getGlobalContainerStack())
-                    #    stream.write(settings.encode())
+                    if not has_settings:
+                        settings = self._serialiseSettings(global_container_stack)
+                        stream.write(settings.encode())
                     return True
-                except:
+                except Exception as e:
                     Logger.log("i", "Exception caught while serializing settings.")
+                    Logger.log("d",sys.exc_info()[:2])
             return False
-        except:
+        except Exception as e:
             Logger.log("i", "Exception caught while writing gcode.")
+            Logger.log("d",sys.exc_info()[:2])
             return False
 
     ##  Create a new container with container 2 as base and container 1 written over it.
@@ -586,61 +605,51 @@ class Dremel3D20(QObject, MeshWriter, Extension):
     def _serialiseSettings(self, stack):
         container_registry = self._application.getContainerRegistry()
         quality_manager = self._application.getQualityManager()
-
-        prefix = self._setting_keyword + str(GCodeWriter.version) + " "  # The prefix to put before each line.
+        prefix = self._setting_keyword  + Dremel3D20.version + " "  # The prefix to put before each line.
         prefix_length = len(prefix)
-
         quality_type = stack.quality.getMetaDataEntry("quality_type")
         container_with_profile = stack.qualityChanges
         if container_with_profile.getId() == "empty_quality_changes":
             # If the global quality changes is empty, create a new one
             quality_name = container_registry.uniqueName(stack.quality.getName())
             container_with_profile = quality_manager._createQualityChanges(quality_type, quality_name, stack, None)
-
         flat_global_container = self._createFlattenedContainerInstance(stack.userChanges, container_with_profile)
         # If the quality changes is not set, we need to set type manually
         if flat_global_container.getMetaDataEntry("type", None) is None:
             flat_global_container.addMetaDataEntry("type", "quality_changes")
-
         # Ensure that quality_type is set. (Can happen if we have empty quality changes).
         if flat_global_container.getMetaDataEntry("quality_type", None) is None:
             flat_global_container.addMetaDataEntry("quality_type", stack.quality.getMetaDataEntry("quality_type", "normal"))
-
         # Get the machine definition ID for quality profiles
         machine_definition_id_for_quality = getMachineDefinitionIDForQualitySearch(stack.definition)
         flat_global_container.setMetaDataEntry("definition", machine_definition_id_for_quality)
-
         serialized = flat_global_container.serialize()
         data = {"global_quality": serialized}
 
-        all_setting_keys = set(flat_global_container.getAllKeys())
+        all_setting_keys = flat_global_container.getAllKeys()
         for extruder in sorted(stack.extruders.values(), key = lambda k: int(k.getMetaDataEntry("position"))):
             extruder_quality = extruder.qualityChanges
             if extruder_quality.getId() == "empty_quality_changes":
                 # Same story, if quality changes is empty, create a new one
                 quality_name = container_registry.uniqueName(stack.quality.getName())
                 extruder_quality = quality_manager._createQualityChanges(quality_type, quality_name, stack, None)
-
             flat_extruder_quality = self._createFlattenedContainerInstance(extruder.userChanges, extruder_quality)
             # If the quality changes is not set, we need to set type manually
             if flat_extruder_quality.getMetaDataEntry("type", None) is None:
                 flat_extruder_quality.addMetaDataEntry("type", "quality_changes")
-
             # Ensure that extruder is set. (Can happen if we have empty quality changes).
             if flat_extruder_quality.getMetaDataEntry("position", None) is None:
                 flat_extruder_quality.addMetaDataEntry("position", extruder.getMetaDataEntry("position"))
-
             # Ensure that quality_type is set. (Can happen if we have empty quality changes).
             if flat_extruder_quality.getMetaDataEntry("quality_type", None) is None:
                 flat_extruder_quality.addMetaDataEntry("quality_type", extruder.quality.getMetaDataEntry("quality_type", "normal"))
-
             # Change the default definition
             flat_extruder_quality.setMetaDataEntry("definition", machine_definition_id_for_quality)
 
             extruder_serialized = flat_extruder_quality.serialize()
             data.setdefault("extruder_quality", []).append(extruder_serialized)
 
-            all_setting_keys.update(set(flat_extruder_quality.getAllKeys()))
+            all_setting_keys.append(flat_extruder_quality.getAllKeys())
 
         # Check if there is any profiles
         if not all_setting_keys:
@@ -648,19 +657,20 @@ class Dremel3D20(QObject, MeshWriter, Extension):
             return ""
 
         json_string = json.dumps(data)
-
+        Logger.log("i", "H")
         # Escape characters that have a special meaning in g-code comments.
-        pattern = re.compile("|".join(GCodeWriter.escape_characters.keys()))
+        pattern = re.compile("|".join(Dremel3D20.escape_characters.keys()))
 
         # Perform the replacement with a regular expression.
-        escaped_string = pattern.sub(lambda m: GCodeWriter.escape_characters[re.escape(m.group(0))], json_string)
-
+        escaped_string = pattern.sub(lambda m: Dremel3D20.escape_characters[re.escape(m.group(0))], json_string)
+        Logger.log("i", "I")
         # Introduce line breaks so that each comment is no longer than 80 characters. Prepend each line with the prefix.
         result = ""
-
+        Logger.log("i", "J")
         # Lines have 80 characters, so the payload of each line is 80 - prefix.
         for pos in range(0, len(escaped_string), 80 - prefix_length):
             result += prefix + escaped_string[pos: pos + 80 - prefix_length] + "\n"
+        Logger.log("i", "K")
         return result
 
     # cura icon in bmp format in binary
