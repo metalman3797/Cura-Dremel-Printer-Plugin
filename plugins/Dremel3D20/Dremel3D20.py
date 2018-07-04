@@ -189,12 +189,15 @@ class Dremel3D20(QObject, MeshWriter, Extension):
     def oldVersionInstalled(self):
         cura_dir=os.path.dirname(os.path.realpath(sys.argv[0]))
         dremelDefinitionFile=os.path.join(cura_dir,"resources","definitions","Dremel3D20.def.json")
+        dremelExtruderFile=os.path.join(cura_dir,"resources","definitions","dremel_3d20_extruder_0.def.json")
         oldPluginPath=os.path.join(cura_dir,"resources","plugins","DremelGCodeWriter")
         dremelMaterialFile=os.path.join(cura_dir,"resources","materials","dremel_pla.xml.fdm_material")
         dremelQualityFolder=os.path.join(cura_dir,"resources","quality","dremel_3d20")
         ret = []
         if os.path.isfile(dremelDefinitionFile):
             ret.append(dremelDefinitionFile)
+        if os.path.isfile(dremelExtruderFile):
+            ret.append(dremelExtruderFile)
         if os.path.isfile(dremelMaterialFile):
             ret.append(dremelMaterialFile)
         if os.path.isdir(dremelQualityFolder):
@@ -223,11 +226,14 @@ class Dremel3D20(QObject, MeshWriter, Extension):
     # check to see if the plugin files are all installed
     def isInstalled(self):
         dremel3D20DefFile = os.path.join(self.local_printer_def_path,"Dremel3D20.def.json")
+        dremelExtruderDefFile = os.path.join(self.local_printer_def_path,"dremel_3d20_extruder_0.def.json")
         dremelPLAfile = os.path.join(self.local_materials_path,"dremel_pla.xml.fdm_material")
         dremelQualityDir = os.path.join(self.local_quality_path,"dremel_3d20")
 
         # if some files are missing then return that this plugin as not installed
         if not os.path.isfile(dremel3D20DefFile):
+            return False
+        if not os.path.isfile(dremelExtruderDefFile):
             return False
         if not os.path.isfile(dremelPLAfile):
             return False
@@ -305,6 +311,16 @@ class Dremel3D20(QObject, MeshWriter, Extension):
                 os.remove(dremel3D20DefFile)
                 restartRequired = True
         except: # Installing a new plugin should never crash the application.
+            Logger.logException("d", "An exception occurred in Dremel 3D20 Plugin while uninstalling files")
+
+        # remove the extruder definition file
+        try:
+            dremel3D20ExtruderFile = os.path.join(self.local_printer_def_path,"dremel_3d20_extruder_0.def.json")
+            if os.path.isfile(dremel3D20ExtruderFile):
+                Logger.log("i", "Dremel 3D20 Plugin removing extruder definition from " + dremel3D20ExtruderFile)
+                os.remove(dremel3D20ExtruderFile)
+                restartRequired = True
+        except: # Installing a new plug-in should never crash the application.
             Logger.logException("d", "An exception occurred in Dremel 3D20 Plugin while uninstalling files")
 
         # remove the pla material file
