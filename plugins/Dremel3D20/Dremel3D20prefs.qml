@@ -11,8 +11,8 @@ UM.Dialog
     id: base
     property string installStatusText
 
-    minimumWidth: (Math.floor(UM.Theme.getSize("modal_window_minimum").width * 0.5)) | 0
-    minimumHeight: (Math.floor(UM.Theme.getSize("modal_window_minimum").height * 0.35)) | 0
+    minimumWidth: (Math.floor(UM.Theme.getSize("modal_window_minimum").width * 0.45)) | 0
+    minimumHeight: (Math.floor(UM.Theme.getSize("modal_window_minimum").height * 0.27)) | 0
     width: minimumWidth
     height: minimumHeight
     title: catalog.i18nc("@label", "Dremel 3D20 Plugin Preferences")
@@ -42,12 +42,11 @@ UM.Dialog
       id: col1
       anchors.fill: parent
       anchors.margins: margin
-      GroupBox {
-        id: colBox
-        Layout.fillHeight: true
+
         ColumnLayout {
           id: rowLayout
-          anchors.fill: parent
+          Layout.fillWidth: true
+
           width: parent.width
           height: parent.height
           CheckBox {
@@ -70,14 +69,10 @@ UM.Dialog
             onClicked: manager.changePluginInstallStatus(checked)
           } //end CheckBox
         } // end columnlayout
-      } // end GroupBox
-      GroupBox {
-        id: rowBox
-        Layout.fillWidth: true
 
         RowLayout {
             id: buttonRow
-            anchors.fill: parent
+
 
             Button
             {
@@ -114,6 +109,6 @@ UM.Dialog
                 anchors.bottom: parent.bottom
             }
         } // end RowLayout
-      } // end GroupBox
+
     } // end ColumnLayout
 }

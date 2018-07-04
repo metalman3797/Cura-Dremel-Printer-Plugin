@@ -13,6 +13,7 @@ if NOT EXIST %RELEASE_DIR%\files\plugins (mkdir %RELEASE_DIR%\files\plugins)
 if NOT EXIST %RELEASE_DIR%\files\plugins\Dremel3D20 (mkdir %RELEASE_DIR%\files\plugins\Dremel3D20)
 set PLUGIN_DIR=%RELEASE_DIR%\files\plugins\Dremel3D20
 if EXIST %PLUGIN_DIR%\Dremel3D20.zip (del %PLUGIN_DIR%\Dremel3D20.zip)
+if EXIST .\Cura-Dremel-3D20.curapackage (del .\Cura-Dremel-3D20.curapackage)
 
 ::::::::::::::::::::::::::::::::::
 :: Step 2
@@ -55,19 +56,11 @@ xcopy ..\README.pdf %PLUGIN_DIR%\
 :: Create the plugin
 ::::::::::::::::::::::::::::::::::
 xcopy ..\plugins\Dremel3D20\* %PLUGIN_DIR%
-python.exe create_plugin.py %PLUGIN_DIR%
-move .\Dremel3D20.umplugin .\Dremel3D20.curaplugin
+
 
 ::::::::::::::::::::::::::::::::::
 :: Step 7
-:: Move the plugin to the correct directory
-::::::::::::::::::::::::::::::::::
-del /f /s /q %PLUGIN_DIR%\*.*
-move .\Dremel3D20.curaplugin %PLUGIN_DIR%\
-
-::::::::::::::::::::::::::::::::::
-:: Step 8
-:: Move some files to the release directory
+:: Copy required files to the release directory
 ::::::::::::::::::::::::::::::::::
 xcopy ..\LICENSE %RELEASE_DIR%
 xcopy ..\docs\icon.png %RELEASE_DIR%
@@ -75,21 +68,23 @@ xcopy ..\resources\package.json %RELEASE_DIR%
 
 
 ::::::::::::::::::::::::::::::::::
-:: Step 9 - TODO: Work with cura team to get this integrated
+:: Step 8 - TODO: Work with cura team to get this integrated
 :: Copy the platform mesh over
 ::::::::::::::::::::::::::::::::::
 :: xcopy ..\resources\meshes\dremel_3D20_platform.stl .\Cura-Dremel-3D20-Plugin
 
 ::::::::::::::::::::::::::::::::::
-:: Step 10
+:: Step 9
 :: Zip up the plugin for release
 ::::::::::::::::::::::::::::::::::
-7za.exe a .\Cura-Dremel-3D20.zip %RELEASE_DIR%
+7za.exe a .\Cura-Dremel-3D20.zip %RELEASE_DIR%\*
+move .\Cura-Dremel-3D20.zip .\Cura-Dremel-3D20.curapackage
 
 ::::::::::::::::::::::::::::::::::
-:: Step 11
+:: Step 10
 :: Cleanup the files and directories
 ::::::::::::::::::::::::::::::::::
+del /f /s /q %PLUGIN_DIR%\*.*
 del /f /s /q  %RELEASE_DIR%
 rmdir %PLUGIN_DIR%
 rmdir %RELEASE_DIR%\files\plugins
