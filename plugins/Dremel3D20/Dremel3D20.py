@@ -92,19 +92,12 @@ class Dremel3D20(QObject, MeshWriter, Extension):
 
         self._preferences_window = None
 
-        self.this_plugin_path = None
         self.local_meshes_path = None
         self.local_printer_def_path = None
         self.local_materials_path = None
         self.local_quality_path = None
         Logger.log("i", "Dremel 3D20 Plugin setting up")
-        local_plugin_path = os.path.join(Resources.getStoragePath(Resources.Resources), "plugins")
-        self.this_plugin_path=os.path.join(local_plugin_path,"Dremel3D20","Dremel3D20")
-        local_meshes_paths = Resources.getAllPathsForType(Resources.Meshes)
-
-        for path in local_meshes_paths:
-            if os.path.isdir(path):
-                self.local_meshes_path = path
+        self.local_meshes_path = os.path.join(Resources.getStoragePathForType(Resources.Resources), "meshes")
         self.local_printer_def_path = Resources.getStoragePath(Resources.DefinitionContainers)
         self.local_materials_path = os.path.join(Resources.getStoragePath(Resources.Resources), "materials")
         self.local_quality_path = os.path.join(Resources.getStoragePath(Resources.Resources), "quality")
@@ -270,12 +263,10 @@ class Dremel3D20(QObject, MeshWriter, Extension):
                         folder = self.local_materials_path
                     elif info.filename.endswith(".cfg"):
                         folder = self.local_quality_path
-                    # TODO: figure out a way to install the stl file
-                    # currently Cura doesn't have a local "meshes" folder
-                    # and on windows writing to Program Files requires admin
-                    # access
                     elif info.filename.endswith(".stl"):
                         folder = self.local_meshes_path
+                        if not os.path.exists(folder): #Cura doesn't create this by itself. We may have to.
+                            os.mkdir(folder)
 
                     if folder is not None:
                         extracted_path = zip_ref.extract(info.filename, path = folder)
