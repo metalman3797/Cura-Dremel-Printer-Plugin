@@ -11,8 +11,8 @@ UM.Dialog
     id: base
     property string installStatusText
 
-    minimumWidth: (Math.floor(UM.Theme.getSize("modal_window_minimum").width * 0.45)) | 0
-    minimumHeight: (Math.floor(UM.Theme.getSize("modal_window_minimum").height * 0.27)) | 0
+    minimumWidth: 380 * screenScaleFactor
+    minimumHeight: 200 * screenScaleFactor
     title: catalog.i18nc("@label", "Dremel 3D20 Plugin Preferences")
 
     function checkBooleanVals(val) {
@@ -70,15 +70,13 @@ UM.Dialog
 
         RowLayout {
             id: buttonRow
-
-
+            width: parent.width
+            anchors.bottom: parent.bottom
             Button
             {
                 id: button1
                 text: qsTr("Open plugin website")
                 onClicked: manager.openPluginWebsite()
-                anchors.left: parent.left
-                anchors.bottom: parent.bottom
             }
 
             Button
@@ -103,8 +101,6 @@ UM.Dialog
                 }
                 text: catalog1.i18nc("@action:button", "Close")
                 onClicked: base.hide()
-                anchors.right: parent.right
-                anchors.bottom: parent.bottom
             }
         } // end RowLayout
 

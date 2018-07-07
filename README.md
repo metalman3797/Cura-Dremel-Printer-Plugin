@@ -19,7 +19,7 @@ This software consists of one plugin for Cura.  The Dremel3D20 plugin contains t
 
 | Cura Version | Last version of the plugin that works with the version of Cura         |
 |--------------|------------------------------------------------------------------------|
-3.4 | [version 0.4.6](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.4.6)
+3.4 | [version 0.4.7](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/latest)
 3.3 or 3.3.1 | [version 0.4.3](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.4.3)
 3.2 or 3.2.1 | [version 0.4.2](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.4.2)
 3.0 or 3.1 | [version 0.2.5](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.2.5)
@@ -28,6 +28,8 @@ This software consists of one plugin for Cura.  The Dremel3D20 plugin contains t
 # Installation
 
 To install the plugins, follow the instructions below:
+
+**Note:** Prior versions of this plugin are incompatible with Cura 3.4  Users upgrading from an older version may experience Cura crashing after upgrading.  A fix for this is outlined below
 
 0.  [Download and install Cura](https://ultimaker.com/en/products/ultimaker-cura-software) on your machine.  This plugin has been tested on Windows 10 Professional 64 bit edition, and MacOS 10.12 (Sierra), but this plugin should work equally well on linux or any other operating system that Cura supports.
 
@@ -55,9 +57,47 @@ To install the plugins, follow the instructions below:
 
     ![Install Printer Files](./docs/preferences.png)
 
-**Note:**  If the Dremel3D20 plugin detects an installation in the main Cura application directory, it will pop up warnings telling the user to remove the old files before it installs the new files.  Once the old files in the main cura application directory have been removed the plugin will automatically install new files to the appropriate locations without user intervention.
+    **Note:**  If the Dremel3D20 plugin detects an installation in the main Cura application directory, it will pop up warnings telling the user to remove the old files before it installs the new files.  Once the old files in the main cura application directory have been removed the plugin will automatically install new files to the appropriate locations without user intervention.
 
-![Warn about old installs](./docs/old_install_warning.png)
+    ![Warn about old installs](./docs/old_install_warning.png)
+
+
+**Users Upgrading from Cura 3.3 or earlier:**
+
+Upon installation Cura attempts to upgrade older versions of plugins and printers to the latest version.  Unfortunately earlier versions of this plugin are incompatible with Cura 3.4 and users may experience a crash when updating.  To fix this users should clear out their cache when prompted to by Cura either by manually clearing out the contents of the settings folder by:
+
+EITHER:
+
+1. Clicking the "Reset" button on Cura which says "Would you like to reset to factory defaults"
+![Configuration Errors](./docs/configurationerror.png)
+
+2. Relaunch Cura
+
+3. Reinstall the [latest version](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/latest) of the plugin
+
+OR:
+
+1. Deleting all contents within
+
+Windows:
+```
+$USER/AppData/Roaming/cura/3.4/  where
+$USER is your user's home directory, e.g. C:\Users\user
+```
+Mac:
+```
+$User/Library/Application\ Support/Cura/3.4/ where
+$USER is your user's home directory, e.g. /Users/user
+```
+Linux:
+```
+$USER/.local/share/cura/$CURA_VERSION/settings/
+$USER is your user's home directory, e.g. /home/user
+```
+
+2. Relaunch Cura
+
+3. Reinstall the [latest version](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/latest) of the plugin
 
 
 ---
