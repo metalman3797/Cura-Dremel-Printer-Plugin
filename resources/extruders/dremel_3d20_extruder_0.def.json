@@ -1,6 +1,7 @@
 {
+    "id": "dremel_3d20_extruder_0",
     "version": 2,
-    "name": "Extruder 1",
+    "name": "Extruder1",
     "inherits": "fdmextruder",
     "metadata": {
         "machine": "Dremel3D20",
