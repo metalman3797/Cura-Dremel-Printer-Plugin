@@ -4,13 +4,13 @@
     <name>
       <brand>Dremel</brand>
       <material>PLA</material>
-      <color>Generic</color>
+      <color>Dremel</color>
     </name>
     <adhesion_info>Print on bare glass. Use tape for cold build plates.  Glue sticks can be used to further improve adhesion.</adhesion_info>
     <description>Fast, safe and reliable printing material from Dremel. PLA is ideal for the fast and reliable printing of parts and prototypes with a great surface quality.</description>
     <GUID>a3eb7626-4495-47cc-b242-7eec5172bed5</GUID>
     <version>2</version>
-    <color_code>#0033a0</color_code>
+    <color_code>#00CED1</color_code>
   </metadata>
   <properties>
     <density>1.14</density>
