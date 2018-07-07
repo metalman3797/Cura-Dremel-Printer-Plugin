@@ -30,7 +30,6 @@ import time
 from distutils.version import StrictVersion # for upgrade installations
 
 from UM.i18n import i18nCatalog
-from UM.Application import Application
 from UM.Extension import Extension
 from UM.Message import Message
 from UM.Resources import Resources
@@ -42,6 +41,7 @@ from UM.Qt.Duration import DurationFormat
 from UM.Qt.Bindings.Theme import Theme
 from UM.PluginRegistry import PluginRegistry
 
+from cura.CuraApplication import CuraApplication
 from cura.Machines.QualityManager import getMachineDefinitionIDForQualitySearch
 
 from PyQt5.QtWidgets import QApplication, QFileDialog
@@ -53,15 +53,9 @@ from . import G3DremHeader
 catalog = i18nCatalog("cura")
 
 
-
-
-
-##      This Extension runs in the background and sends several bits of information to the Ultimaker servers.
-#       The data is only sent when the user in question gave permission to do so. All data is anonymous and
-#       no model files are being sent (Just a SHA256 hash of the model).
 class Dremel3D20(QObject, MeshWriter, Extension):
     ##  The file format version of the serialised g-code.
-    version = "0.4.5"
+    version = "0.4.6"
 
     ##  Dictionary that defines how characters are escaped when embedded in
     #   g-code.
@@ -76,8 +70,15 @@ class Dremel3D20(QObject, MeshWriter, Extension):
 
     def __init__(self):
         super().__init__()
-        self._application = Application.getInstance()
+        self._application = CuraApplication.getInstance()
         self._setting_keyword = ";SETTING_"
+        #self._application.initializationFinished.connect(self._onInitialized)
+
+        #def _onInitialized(self):
+        self.this_plugin_path=os.path.join(Resources.getStoragePath(Resources.Resources), "plugins","Dremel3D20","Dremel3D20")
+        if not self._application.getPluginRegistry().isActivePlugin("Dremel3D20"):
+            Logger.log("i", "Dremel3D20 Plugin is disabled")
+            return #Plug-in is disabled.
         if self._application.getPreferences().getValue("Dremel3D20/select_screenshot") is None:
             self._application.getPreferences().addPreference("Dremel3D20/select_screenshot", False)
 
@@ -87,38 +88,29 @@ class Dremel3D20(QObject, MeshWriter, Extension):
 
         self._preferences_window = None
 
-        self.this_plugin_path = None
         self.local_meshes_path = None
         self.local_printer_def_path = None
         self.local_materials_path = None
         self.local_quality_path = None
+        self.local_extruder_path = None
         Logger.log("i", "Dremel 3D20 Plugin setting up")
-        local_plugin_path = os.path.join(Resources.getStoragePath(Resources.Resources), "plugins")
-        self.this_plugin_path=os.path.join(local_plugin_path,"Dremel3D20","Dremel3D20")
-        local_meshes_paths = Resources.getAllPathsForType(Resources.Meshes)
-
-        for path in local_meshes_paths:
-            if os.path.isdir(path):
-                self.local_meshes_path = path
+        self.local_meshes_path = os.path.join(Resources.getStoragePathForType(Resources.Resources), "meshes")
         self.local_printer_def_path = Resources.getStoragePath(Resources.DefinitionContainers)
         self.local_materials_path = os.path.join(Resources.getStoragePath(Resources.Resources), "materials")
         self.local_quality_path = os.path.join(Resources.getStoragePath(Resources.Resources), "quality")
-
-        # Check to see if the user had installed the plugin from an old version
-        bExit = False
+        self.local_extruder_path = os.path.join(Resources.getStoragePath(Resources.Resources),"extruders")
+        # Check to see if the user had installed the plugin in the main directory
         for fil in self.oldVersionInstalled():
             Logger.log("i", "Dremel 3D20 Plugin found files from previous install: " + fil)
             message = Message(catalog.i18nc("@info:status", "Old Dremel IdeaBuilder 3D20 files detected.  Please delete "+ fil))
             message.show()
-            bExit = True
-
-        if bExit:
             return False
 
+        # if the plugin was never installed, then force installation
         if self._application.getPreferences().getValue("Dremel3D20/install_status") is None:
             self._application.getPreferences().addPreference("Dremel3D20/install_status", "unknown")
 
-        # if something got messed up, set back to reasonable values
+        # if something got messed up, force installation
         if not self.isInstalled() and self._application.getPreferences().getValue("Dremel3D20/install_status") is "installed":
             self._application.getPreferences().setValue("Dremel3D20/install_status", "unknown")
 
@@ -149,13 +141,12 @@ class Dremel3D20(QObject, MeshWriter, Extension):
         self.addMenuItem(catalog.i18nc("@item:inmenu", "Dremel Printer Plugin Version "+Dremel3D20.version), self.openPluginWebsite)
 
         # finally save the cura.cfg file
-        self._application.getPreferences().writeToFile(Resources.getStoragePath(Resources.Preferences, Application.getInstance().getApplicationName() + ".cfg"))
+        self._application.getPreferences().writeToFile(Resources.getStoragePath(Resources.Preferences, self._application.getApplicationName() + ".cfg"))
 
     def createPreferencesWindow(self):
         path = os.path.join(PluginRegistry.getInstance().getPluginPath(self.getPluginId()), "Dremel3D20prefs.qml")
         Logger.log("i", "Creating Dremel3D20 preferences UI "+path)
-        self._preferences_window = Application.getInstance().createQmlComponent(path, {"manager": self})
-
+        self._preferences_window = self._application.createQmlComponent(path, {"manager": self})
 
     def showPreferences(self):
         if self._preferences_window is None:
@@ -191,12 +182,15 @@ class Dremel3D20(QObject, MeshWriter, Extension):
     def oldVersionInstalled(self):
         cura_dir=os.path.dirname(os.path.realpath(sys.argv[0]))
         dremelDefinitionFile=os.path.join(cura_dir,"resources","definitions","Dremel3D20.def.json")
+        dremelExtruderFile=os.path.join(cura_dir,"resources","definitions","dremel_3d20_extruder_0.def.json")
         oldPluginPath=os.path.join(cura_dir,"resources","plugins","DremelGCodeWriter")
         dremelMaterialFile=os.path.join(cura_dir,"resources","materials","dremel_pla.xml.fdm_material")
         dremelQualityFolder=os.path.join(cura_dir,"resources","quality","dremel_3d20")
         ret = []
         if os.path.isfile(dremelDefinitionFile):
             ret.append(dremelDefinitionFile)
+        if os.path.isfile(dremelExtruderFile):
+            ret.append(dremelExtruderFile)
         if os.path.isfile(dremelMaterialFile):
             ret.append(dremelMaterialFile)
         if os.path.isdir(dremelQualityFolder):
@@ -225,18 +219,26 @@ class Dremel3D20(QObject, MeshWriter, Extension):
     # check to see if the plugin files are all installed
     def isInstalled(self):
         dremel3D20DefFile = os.path.join(self.local_printer_def_path,"Dremel3D20.def.json")
+        dremelExtruderDefFile = os.path.join(self.local_extruder_path,"dremel_3d20_extruder_0.def.json")
         dremelPLAfile = os.path.join(self.local_materials_path,"dremel_pla.xml.fdm_material")
         dremelQualityDir = os.path.join(self.local_quality_path,"dremel_3d20")
 
         # if some files are missing then return that this plugin as not installed
         if not os.path.isfile(dremel3D20DefFile):
+            Logger.log("i", "Dremel 3D20 Plugin dremel definition file is NOT installed ")
+            return False
+        if not os.path.isfile(dremelExtruderDefFile):
+            Logger.log("i", "Dremel 3D20 Plugin dremel extruder file is NOT installed ")
             return False
         if not os.path.isfile(dremelPLAfile):
+            Logger.log("i", "Dremel 3D20 Plugin dremel PLA file is NOT installed ")
             return False
         if not os.path.isdir(dremelQualityDir):
+            Logger.log("i", "Dremel 3D20 Plugin dremel quality files are NOT installed ")
             return False
 
         # if everything is there, return True
+        Logger.log("i", "Dremel 3D20 Plugin all files ARE installed")
         return True
 
     # install based on preference checkbox
@@ -255,22 +257,23 @@ class Dremel3D20(QObject, MeshWriter, Extension):
         try:
             restartRequired = False
             zipdata = os.path.join(self.this_plugin_path,"Dremel3D20.zip")
+            #zipdata = os.path.join(self._application.getPluginRegistry().getPluginPath(self.getPluginId()), "Dremel3D20.zip")
             with zipfile.ZipFile(zipdata, "r") as zip_ref:
                 for info in zip_ref.infolist():
                     Logger.log("i", "Dremel 3D20 Plugin: found in zipfile: " + info.filename )
                     folder = None
-                    if info.filename.endswith(".json"):
+                    if info.filename == "Dremel3D20.def.json":
                         folder = self.local_printer_def_path
+                    if info.filename == "dremel_3d20_extruder_0.def.json":
+                        folder = self.local_extruder_path
                     elif info.filename.endswith("fdm_material"):
                         folder = self.local_materials_path
                     elif info.filename.endswith(".cfg"):
                         folder = self.local_quality_path
-                    # TODO: figure out a way to install the stl file
-                    # currently Cura doesn't have a local "meshes" folder
-                    # and on windows writing to Program Files requires admin
-                    # access
                     elif info.filename.endswith(".stl"):
                         folder = self.local_meshes_path
+                        if not os.path.exists(folder): #Cura doesn't create this by itself. We may have to.
+                            os.mkdir(folder)
 
                     if folder is not None:
                         extracted_path = zip_ref.extract(info.filename, path = folder)
@@ -287,7 +290,8 @@ class Dremel3D20(QObject, MeshWriter, Extension):
                 # either way, the files are now installed, so set the prefrences value
                 self._application.getPreferences().setValue("Dremel3D20/install_status", "installed")
                 self._application.getPreferences().setValue("Dremel3D20/curr_version",Dremel3D20.version)
-                self._application.getPreferences().writeToFile(Resources.getStoragePath(Resources.Preferences, Application.getInstance().getApplicationName() + ".cfg"))
+                Logger.log("i", "Dremel 3D20 Plugin is now installed - Please restart ")
+                self._application.getPreferences().writeToFile(Resources.getStoragePath(Resources.Preferences, self._application.getApplicationName() + ".cfg"))
 
         except: # Installing a new plugin should never crash the application.
             Logger.logException("d", "An exception occurred in Dremel 3D20 Plugin while installing the files")
@@ -311,12 +315,32 @@ class Dremel3D20(QObject, MeshWriter, Extension):
         except: # Installing a new plugin should never crash the application.
             Logger.logException("d", "An exception occurred in Dremel 3D20 Plugin while uninstalling files")
 
+        # remove the extruder definition file
+        try:
+            dremel3D20ExtruderFile = os.path.join(self.local_printer_def_path,"dremel_3d20_extruder_0.def.json")
+            if os.path.isfile(dremel3D20ExtruderFile):
+                Logger.log("i", "Dremel 3D20 Plugin removing extruder definition from " + dremel3D20ExtruderFile)
+                os.remove(dremel3D20ExtruderFile)
+                restartRequired = True
+        except: # Installing a new plug-in should never crash the application.
+            Logger.logException("d", "An exception occurred in Dremel 3D20 Plugin while uninstalling files")
+
         # remove the pla material file
         try:
             dremelPLAfile = os.path.join(self.local_materials_path,"dremel_pla.xml.fdm_material")
             if os.path.isfile(dremelPLAfile):
                 Logger.log("i", "Dremel 3D20 Plugin removing dremel pla file from " + dremelPLAfile)
                 os.remove(dremelPLAfile)
+                restartRequired = True
+        except: # Installing a new plugin should never crash the application.
+            Logger.logException("d", "An exception occurred in Dremel 3D20 Plugin while uninstalling files")
+
+        # remove the extruder file
+        try:
+            dremelExtruder = os.path.join(self.local_extruder_path,"dremel_3d20_extruder_0.def.json")
+            if os.path.isfile(dremelExtruder):
+                Logger.log("i", "Dremel 3D20 Plugin removing dremel extruder file from " + dremelExtruder)
+                os.remove(dremelExtruder)
                 restartRequired = True
         except: # Installing a new plugin should never crash the application.
             Logger.logException("d", "An exception occurred in Dremel 3D20 Plugin while uninstalling files")
@@ -344,7 +368,7 @@ class Dremel3D20(QObject, MeshWriter, Extension):
         # prompt the user to restart
         if restartRequired:
             self._application.getPreferences().setValue("Dremel3D20/install_status", "uninstalled")
-            self._application.getPreferences().writeToFile(Resources.getStoragePath(Resources.Preferences, Application.getInstance().getApplicationName() + ".cfg"))
+            self._application.getPreferences().writeToFile(Resources.getStoragePath(Resources.Preferences, self._application.getApplicationName() + ".cfg"))
             message = Message(catalog.i18nc("@info:status", "Dremel 3D20 files have been uninstalled.  Please restart Cura to complete uninstallation"))
             message.show()
 
@@ -360,7 +384,7 @@ class Dremel3D20(QObject, MeshWriter, Extension):
             Logger.log("i", "Dremel3D20 Plugin manual screenshot selection enabled")
             message = Message(catalog.i18nc("@info:status", "Manual screenshot selection is enabled when exporting g3drem files"))
             message.show()
-        self._application.getPreferences().writeToFile(Resources.getStoragePath(Resources.Preferences, Application.getInstance().getApplicationName() + ".cfg"))
+        self._application.getPreferences().writeToFile(Resources.getStoragePath(Resources.Preferences, self._application.getApplicationName() + ".cfg"))
 
     #  find_images_with_name tries to find an image file with the same name in the same direcory where the
     #  user is writing out the g3drem file.  If it finds an image then it reuturns the filename so that the
@@ -437,21 +461,21 @@ class Dremel3D20(QObject, MeshWriter, Extension):
                 time.sleep(0.5)
 
             # get the height of the topbar and width of the left and right sidebar
-            sidebarwidth = Application.getInstance().getTheme().getSize("sidebar").width()
-            buttonwidth = Application.getInstance().getTheme().getSize("button_icon").width()
-            marginwidth = Application.getInstance().getTheme().getSize("sidebar_margin").width()
-            topbarheight = Application.getInstance().getTheme().getSize("sidebar_header").height()
-            marginheight = Application.getInstance().getTheme().getSize("sidebar_header_mode_toggle").height()
+            sidebarwidth = self._application.getTheme().getSize("sidebar").width()
+            buttonwidth = self._application.getTheme().getSize("button_icon").width()
+            marginwidth = self._application.getTheme().getSize("sidebar_margin").width()
+            topbarheight = self._application.getTheme().getSize("sidebar_header").height()
+            marginheight = self._application.getTheme().getSize("sidebar_header_mode_toggle").height()
             buttonright = buttonwidth + marginwidth
             topbarbottom = topbarheight + marginheight
 
             # get the main window ID
-            winId = Application.getInstance().getMainWindow().winId()
+            winId = self._application.getMainWindow().winId()
             if winId is not None:
                 # calculate the appropriate rectangle to grab
-                rectWidth = Application.getInstance().getMainWindow().width() - sidebarwidth
-                rectHeight = Application.getInstance().getMainWindow().height() - topbarbottom
-                if buttonright < 0 or topbarbottom < 0 or rectWidth < 0 or rectWidth > Application.getInstance().getMainWindow().width() or rectHeight < 0 or rectHeight > Application.getInstance().getMainWindow().height():
+                rectWidth = self._application.getMainWindow().width() - sidebarwidth
+                rectHeight = self._application.getMainWindow().height() - topbarbottom
+                if buttonright < 0 or topbarbottom < 0 or rectWidth < 0 or rectWidth > self._application.getMainWindow().width() or rectHeight < 0 or rectHeight > self._application.getMainWindow().height():
                     Logger.log("d", "Dremel 3D20 Plugin - error in calculated rectangles for screenshot - using generic cura icon instead")
                     bmpError = True
                 # grab a screenshot of the main window
@@ -515,8 +539,8 @@ class Dremel3D20(QObject, MeshWriter, Extension):
 
             g3dremHeader = G3DremHeader.G3DremHeader()
 
-            global_container_stack = Application.getInstance().getGlobalContainerStack()
-            print_information = Application.getInstance().getPrintInformation()
+            global_container_stack = self._application.getGlobalContainerStack()
+            print_information = self._application.getPrintInformation()
             extruders = [global_container_stack]
             extruder = extruders[0]
             # get estimated length
@@ -543,8 +567,8 @@ class Dremel3D20(QObject, MeshWriter, Extension):
 
             # now that the header is written, write the ascii encoded gcode
             Logger.log("i", "Finished Writing Dremel Header.")
-            active_build_plate = Application.getInstance().getMultiBuildPlateModel().activeBuildPlate
-            scene = Application.getInstance().getController().getScene()
+            active_build_plate = self._application.getMultiBuildPlateModel().activeBuildPlate
+            scene = self._application.getController().getScene()
             gcode_dict = getattr(scene, "gcode_dict")
             if not gcode_dict:
                 return False
@@ -657,20 +681,16 @@ class Dremel3D20(QObject, MeshWriter, Extension):
             return ""
 
         json_string = json.dumps(data)
-        Logger.log("i", "H")
         # Escape characters that have a special meaning in g-code comments.
         pattern = re.compile("|".join(Dremel3D20.escape_characters.keys()))
 
         # Perform the replacement with a regular expression.
         escaped_string = pattern.sub(lambda m: Dremel3D20.escape_characters[re.escape(m.group(0))], json_string)
-        Logger.log("i", "I")
         # Introduce line breaks so that each comment is no longer than 80 characters. Prepend each line with the prefix.
         result = ""
-        Logger.log("i", "J")
         # Lines have 80 characters, so the payload of each line is 80 - prefix.
         for pos in range(0, len(escaped_string), 80 - prefix_length):
             result += prefix + escaped_string[pos: pos + 80 - prefix_length] + "\n"
-        Logger.log("i", "K")
         return result
 
     # cura icon in bmp format in binary

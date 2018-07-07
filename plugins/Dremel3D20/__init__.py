@@ -19,5 +19,6 @@ def getMetaData():
     }
 
 def register(app):
-    return { "mesh_writer": Dremel3D20.Dremel3D20(),
-             "extension": Dremel3D20.Dremel3D20()}
+    plugin = Dremel3D20.Dremel3D20()
+    return { "mesh_writer": plugin,
+             "extension": plugin}
