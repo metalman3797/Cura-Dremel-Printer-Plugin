@@ -20,6 +20,7 @@ if EXIST .\Cura-Dremel-3D20.curapackage (del .\Cura-Dremel-3D20.curapackage)
 :: copy the dremel printer definitions, the materials, and the quality files
 ::::::::::::::::::::::::::::::::::
 xcopy ..\resources\definitions\Dremel3D20.def.json %PLUGIN_DIR%
+xcopy ..\resources\definitions\dremel_3d20_extruder_0.def.json %PLUGIN_DIR%
 xcopy ..\resources\materials\dremel_pla.xml.fdm_material %PLUGIN_DIR%
 mkdir %PLUGIN_DIR%\dremel_3d20
 xcopy ..\resources\quality\dremel_3d20 %PLUGIN_DIR%\dremel_3d20 /E
@@ -35,6 +36,7 @@ xcopy ..\resources\quality\dremel_3d20 %PLUGIN_DIR%\dremel_3d20 /E
 :: now delete the files that were copied in Step 2
 ::::::::::::::::::::::::::::::::::
 del /f /s /q %PLUGIN_DIR%\Dremel3D20.def.json
+del /f /s /q %PLUGIN_DIR%\dremel_3d20_extruder_0.def.json
 del /f /s /q %PLUGIN_DIR%\dremel_pla.xml.fdm_material
 del /f /s /q %PLUGIN_DIR%\dremel_3d20
 rmdir %PLUGIN_DIR%\dremel_3d20
