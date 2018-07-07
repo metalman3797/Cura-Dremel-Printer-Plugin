@@ -13,8 +13,6 @@ UM.Dialog
 
     minimumWidth: (Math.floor(UM.Theme.getSize("modal_window_minimum").width * 0.45)) | 0
     minimumHeight: (Math.floor(UM.Theme.getSize("modal_window_minimum").height * 0.27)) | 0
-    width: minimumWidth
-    height: minimumHeight
     title: catalog.i18nc("@label", "Dremel 3D20 Plugin Preferences")
 
     function checkBooleanVals(val) {

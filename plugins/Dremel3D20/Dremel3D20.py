@@ -53,12 +53,6 @@ from . import G3DremHeader
 catalog = i18nCatalog("cura")
 
 
-
-
-
-##      This Extension runs in the background and sends several bits of information to the Ultimaker servers.
-#       The data is only sent when the user in question gave permission to do so. All data is anonymous and
-#       no model files are being sent (Just a SHA256 hash of the model).
 class Dremel3D20(QObject, MeshWriter, Extension):
     ##  The file format version of the serialised g-code.
     version = "0.4.6"
@@ -687,20 +681,16 @@ class Dremel3D20(QObject, MeshWriter, Extension):
             return ""
 
         json_string = json.dumps(data)
-        Logger.log("i", "H")
         # Escape characters that have a special meaning in g-code comments.
         pattern = re.compile("|".join(Dremel3D20.escape_characters.keys()))
 
         # Perform the replacement with a regular expression.
         escaped_string = pattern.sub(lambda m: Dremel3D20.escape_characters[re.escape(m.group(0))], json_string)
-        Logger.log("i", "I")
         # Introduce line breaks so that each comment is no longer than 80 characters. Prepend each line with the prefix.
         result = ""
-        Logger.log("i", "J")
         # Lines have 80 characters, so the payload of each line is 80 - prefix.
         for pos in range(0, len(escaped_string), 80 - prefix_length):
             result += prefix + escaped_string[pos: pos + 80 - prefix_length] + "\n"
-        Logger.log("i", "K")
         return result
 
     # cura icon in bmp format in binary
