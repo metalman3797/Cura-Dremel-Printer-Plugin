@@ -1,6 +1,6 @@
 # Cura-Dremel-3D20-Plugin
 
-**UPDATE July 12, 2018:** Cura has now included this plugin within their plugin browser.  Users are encouraged to use the plugin browser to install & update this plugin
+**UPDATE July 12, 2018:** Cura has now included this plugin within the Cura plugin browser.  Users are encouraged to use the built-in Cura toolbox browser to install & update this plugin
 
 https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/
 
@@ -67,7 +67,7 @@ EITHER:
 
 2. Relaunch Cura
 
-3. Reinstall the [latest version](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/latest) of the plugin
+3. Reinstall the latest version of the plugin using the instructions above
 
 OR:
 
@@ -91,7 +91,7 @@ $USER is your user's home directory, e.g. /home/user
 
 2. Relaunch Cura
 
-3. Reinstall the [latest version](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/latest) of the plugin
+3. Reinstall the latest version of the plugin using the instructions above
 
 
 ---
@@ -99,8 +99,6 @@ $USER is your user's home directory, e.g. /home/user
 To uninstall the Dremel printer files, open the Extensions menu->Dremel3D20 Printer Plugin->preferences and uncheck the box next to "Dremel 3D Printer File Installed?".  
 
 To uninstall the plugin itself, navigate to Cura's Toolbox menu, select "Browse Packages" then click the installed button.  Then
-
-**Note:**  These directories are subject to change at Ultimaker's discretion.  The latest information on these directories can be found on [this page](https://github.com/Ultimaker/Cura/wiki/Cura-Preferences-and-Settings-Locations)  
 
 ---
 # Using the Plugin
@@ -114,7 +112,7 @@ Once the plugin has been installed you can use it by following the steps outline
 
 4. Set the slicing options that you want.
 
-5. <a name="Step5"></a>(Optional, but recommended if using the screenshot feature outlined in the [Preview Image Options](#Preview_Image_Options) section below) Zoom in on the part until it fills the screen.  As the plugin saves out the .g3drem file it will grab a screenshot of the main Cura window for use as the preview image that is displayed on the Ideabuilder screen. The area inside the red box shown in the image below will be used in the screenshot (the red box will not appear in the actual Cura window when you use the plugin).  **Please Note:** The preview on the Dremel will be **much** better if you zoom in on the part that you're printing until the part fills the screenshot area.
+5. <a name="Step5"></a>Zoom in on the part until it fills the screen.  When the plugin saves out the .g3drem file, by default it will grab a screenshot of the main Cura window for use as the preview image that is displayed on the Ideabuilder screen. You can change this behavior as outlined in the [Preview Image Options](#Preview_Image_Options) section below. The area inside the red box shown in the image below will be used in the screenshot (the red box is for illustration purposes only, and will not appear in the Cura window, nor in the screenshot when you use the plugin).  **Please Note:** The preview on the Dremel will be **much** better if you zoom in on the part that you're printing until the part fills the screenshot area.
 
 For instance:
 ![Zoom in on the part](./docs/Zoom_For_Screenshot.PNG)
@@ -122,7 +120,7 @@ For instance:
 Will show this on the IdeaBuilder 3D20:
 ![Ideabuilder Screen](./docs/Ideabuilder_screen.jpg)
 
-**Nifty Feature:** The screenshot will work with the visualizer plugins, so feel free to try the "xray view" or "layer view" options if you like those visualizations better.
+**Nifty Feature:** The screenshot will work with the different visualizers, so feel free to try the "xray view" or "layer view" options if you like those visualizations better.
 
 6. Click "File->Save As", or "save to file", selecting .g3drem as the output file format.
 
@@ -137,7 +135,7 @@ Will show this on the IdeaBuilder 3D20:
 12. Enjoy - if you have any feature suggestions or encounter issues, feel free to raise them in the ["Issues" section](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/issues).
 ---
 # <a name="Preview_Image_Options"></a>Preview Image Options
-The plugin has implemented the following logic for selecting a preview image that will show up on the Dremel screen.  The thick dark line follows the default options which are selected at plugin installation.  To deviate from the default options you must intervene as outlined in the text below:
+The plugin has implemented the following logic for selecting a preview image that will show up on the Dremel screen.  The thick green line follows the default options which are selected at plugin installation.  To deviate from the default options you must intervene as outlined in the text below:
 
 ![Image Selection Flowchart](./docs/Image_Selection_Flowchart.png)
 
