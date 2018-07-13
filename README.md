@@ -21,7 +21,7 @@ This software consists of one plugin for Cura.  The Dremel3D20 plugin contains t
 
 | Cura Version | Last version of the plugin that works with the version of Cura         |
 |--------------|------------------------------------------------------------------------|
-3.4 | [version 0.4.7](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/latest)
+3.4 or 3.4.1 | [version 0.4.7](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/latest)
 3.3 or 3.3.1 | [version 0.4.3](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.4.3)
 3.2 or 3.2.1 | [version 0.4.2](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.4.2)
 3.0 or 3.1 | [version 0.2.5](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.2.5)
