@@ -176,9 +176,7 @@ Please note the following:
 
 ---
 # Wishlist
-The following items would be great to add to this plugin - any and all collaboration is welcome - feel free to raise an issue if there's a feature you'd like
-* Get this plugin integrated into Ultimaker's plugin repo (in progress)
-
+If any user would like a feature added, please feel free to raise an issue above to ask for it.  Any and all collaboration is welcome from users and/or developers.
 ---
 # <a name="Technical_Details"></a>Technical Details of the .g3drem File Format
 The g3drem file format consists of a few sections.  The header is a mix of binary data and ASCII data, which is followed by an 80x60 pixel bitmap image written to the file, which is then followed by standard 3d printer gcode saved in ASCII format.
