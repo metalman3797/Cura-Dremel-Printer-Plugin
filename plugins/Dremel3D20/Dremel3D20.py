@@ -163,7 +163,7 @@ class Dremel3D20(QObject, MeshWriter, Extension):
     # function so that the preferences menu can open website the version
     @pyqtSlot()
     def openPluginWebsite(self):
-        url = QUrl('https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases')
+        url = QUrl('https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases', QUrl.TolerantMode)
         if not QDesktopServices.openUrl(url):
             message = Message(catalog.i18nc("@info:status", "Dremel 3D20 plugin could not navigate to https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases"))
             message.show()
@@ -174,7 +174,7 @@ class Dremel3D20(QObject, MeshWriter, Extension):
         url = os.path.join(PluginRegistry.getInstance().getPluginPath(self.getPluginId()), "README.pdf")
         Logger.log("i", "Dremel 3D20 Plugin opening help document: "+url)
         try:
-            if not QDesktopServices.openUrl(QUrl("file:///"+url)):
+            if not QDesktopServices.openUrl(QUrl("file:///"+url, QUrl.TolerantMode)):
                 message = Message(catalog.i18nc("@info:status", "Dremel 3D20 plugin could not open help document.\n Please download it from here: https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/raw/cura-3.4/README.pdf"))
                 message.show()
         except:
