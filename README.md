@@ -8,18 +8,18 @@ https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/
 
 This is a plugin for [Cura version 3.4](https://ultimaker.com/en/products/ultimaker-cura-software) that adds the Dremel Ideabuilder 3D20 printer to Cura and enables Cura to export to the proprietary g3drem file format that the IdeaBuilder 3D20 uses.
 
-# Table Of Contents
-- [Introduction](#Introduction)
-- [Installation Instructions](#Installation)
-- [Uninstallation Instructions](#Uninstallation )
-- [Using the Plugin](#Using-the-Plugin)
-- [Preview Image Options](#Preview-Image-Options)
+# <a name="Table_Of_Contents"></a>Table Of Contents
+- [Introduction](#introduction)
+- [Installation Instructions](#installation)
+- [Uninstallation Instructions](#uninstallation)
+- [Using the Plugin](#Using_the_Plugin)
+- [Preview Image Options](#Preview_Image_Options)
 - [Note](#Note)
 - [Wishlist](#Wishlist)
-- [Technical Details of the .g3drem File Format](#Technical-Details-of-the-.g3drem-File-Format)
+- [Technical Details of the .g3drem File Format](#Technical_Details)
 - [Contributors](#Contributors)
 
-# Introduction
+# <a name="Introduction"></a>Introduction
 This plugin enables the user to select a Dremel Ideabuilder 3D20 printer for use with Cura, and to export the proprietary .g3drem files using Cura as the slicing engine.
 
 Users should be aware that neither the author of this software nor Ultimaker are in any way associated nor affiliated with Dremel or Bosch Industries, and although the software functions well for the author and many other users, the author will not guarantee that using the software and the files that it produces won't break your 3D printer, set property on fire, or do other **really_bad_things**.  
@@ -45,7 +45,7 @@ This software is released as a plugin for the [Ultimaker Cura](https://ultimaker
 3.0 or 3.1 | [version 0.2.5](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.2.5)
 
 ---
-# Installation
+# <a name="Installation"></a>Installation
 
 To install the plugins, follow the instructions below:
 
@@ -106,14 +106,14 @@ Linux:
 ```
 
 ---
-# Uninstallation
+# <a name="Uninstallation"></a>Uninstallation
 To uninstall the Dremel printer files, open the Extensions menu->Dremel3D20 Printer Plugin->preferences and uncheck the box next to "Dremel 3D Printer File Installed?".  
 
 To uninstall the plugin itself, navigate to Cura's Toolbox menu, select "Browse Packages" then click the installed button.  Then find the "Dremel 3D20" plugin, and click the uninstall button.
 ![Uninstall](./docs/uninstall.png)
 
 ---
-# Using the Plugin
+# <a name="Using_the_Plugin"></a>Using the Plugin
 Once the plugin has been installed you can use it by following the steps outlined below:
 1. Open Cura
 2. Select the Dremel 3D20 as your printer (cura->preferences->printers->add)
@@ -181,13 +181,13 @@ preview image on the Dremel:
 4.  If the screenshot fails for some reason then a generic Cura icon will be selected as the preview image.
 
 ---
-# Note
+# <a name="Note"></a>Note
 Please note the following:
 * The plugin has been tested using Cura 3.4 on Windows 10 x64, MacOS Sierra (MacOS 10.12), MacOS El Capitan (10.11), and Ubuntu versions 17.10 and 16.04.  Testing on non-Windows platforms occurs less frequently than on Windows.  If you are using another platform and encounter issues with the plugin, feel free to raise an issue with the ["Issues" section](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/issues/new) of the plugin's website.
 * This plugin has been tested to work in the basic print case, however users may still encounter problems with the print head crashing into your parts if you attempt to print multiple parts on the same print bed one-after-another instead of printing them all-at-once.
 
 ---
-# Wishlist
+# <a name="Wishlist"></a>Wishlist
 
 If any user would like a feature added, please feel free to [raise an issue](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/issues/new) to ask for it.  Any and all collaboration is welcome from users and/or developers.
 
@@ -231,7 +231,7 @@ A description of the current understanding of this file format is below:
 19. Standard 3d printer gcode (Marlin flavor seems to be working, but if you encounter issues please feel free to raise them [here](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/issues/new)
 
 ---
-# Contributors
+# <a name="Contributors"></a>Contributors
 Many thanks belong to the following users, who have spent their time and energy to report issues and help make the plugin better:
 * [WeavingColors](https://github.com/WeavingColors)
 * [SwapFaceL](https://github.com/SwapFaceL)
