@@ -6,7 +6,21 @@
 
 https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/
 
-Dremel Ideabuilder 3D20 plugin for [Cura version 3.4](https://ultimaker.com/en/products/ultimaker-cura-software). This plugin enables the user to select a Dremel Ideabuilder 3D20 printer for use with Cura, and to export the proprietary .g3drem files using Cura as the slicing engine.
+This is a plugin for [Cura version 3.4](https://ultimaker.com/en/products/ultimaker-cura-software) that adds the Dremel Ideabuilder 3D20 printer to Cura and enables Cura to export to the proprietary g3drem file format that the IdeaBuilder 3D20 uses.
+
+# Table Of Contents
+- [Introduction](#Introduction)
+- [Installation Instructions](#Installation)
+- [Uninstallation Instructions](#Uninstallation )
+- [Using the Plugin](#Using-the-Plugin)
+- [Preview Image Options](#Preview-Image-Options)
+- [Note](#Note)
+- [Wishlist](#Wishlist)
+- [Technical Details of the .g3drem File Format](#Technical-Details-of-the-.g3drem-File-Format)
+- [Contributors](#Contributors)
+
+# Introduction
+This plugin enables the user to select a Dremel Ideabuilder 3D20 printer for use with Cura, and to export the proprietary .g3drem files using Cura as the slicing engine.
 
 Users should be aware that neither the author of this software nor Ultimaker are in any way associated nor affiliated with Dremel or Bosch Industries, and although the software functions well for the author and many other users, the author will not guarantee that using the software and the files that it produces won't break your 3D printer, set property on fire, or do other **really_bad_things**.  
 
@@ -217,7 +231,7 @@ A description of the current understanding of this file format is below:
 19. Standard 3d printer gcode (Marlin flavor seems to be working, but if you encounter issues please feel free to raise them [here](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/issues/new)
 
 ---
-# Contributors:
+# Contributors
 Many thanks belong to the following users, who have spent their time and energy to report issues and help make the plugin better:
 * [WeavingColors](https://github.com/WeavingColors)
 * [SwapFaceL](https://github.com/SwapFaceL)
