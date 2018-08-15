@@ -54,11 +54,11 @@ catalog = i18nCatalog("cura")
 
 
 class Dremel3D20(QObject, MeshWriter, Extension):
-    # The version number of this plugin - please change this in all three Locations
+    # The version number of this plugin - please change this in all three of the following Locations:
     # 1) here
     # 2) plugin.json
     # 3) package.json
-    version = "0.4.7"
+    version = "0.4.8"
 
     ##  Dictionary that defines how characters are escaped when embedded in
     #   g-code.
