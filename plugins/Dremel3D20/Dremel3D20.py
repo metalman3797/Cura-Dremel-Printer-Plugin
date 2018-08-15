@@ -54,11 +54,11 @@ catalog = i18nCatalog("cura")
 
 
 class Dremel3D20(QObject, MeshWriter, Extension):
-    # The version number of this plugin - please change this in all three Locations
+    # The version number of this plugin - please change this in all three of the following Locations:
     # 1) here
     # 2) plugin.json
     # 3) package.json
-    version = "0.4.7"
+    version = "0.4.8"
 
     ##  Dictionary that defines how characters are escaped when embedded in
     #   g-code.
@@ -140,6 +140,7 @@ class Dremel3D20(QObject, MeshWriter, Extension):
         #    self.addMenuItem(catalog.i18nc("@item:inmenu", "Install Dremel3D20 Printer"), self.installPluginFiles)
 
         self.addMenuItem(catalog.i18nc("@item:inmenu", "Preferences"), self.showPreferences)
+        self.addMenuItem(catalog.i18nc("@item:inmenu", "Report Issue"), self.reportIssue)
         self.addMenuItem(catalog.i18nc("@item:inmenu", "Help "), self.showHelp)
         self.addMenuItem(catalog.i18nc("@item:inmenu", "Dremel Printer Plugin Version "+Dremel3D20.version), self.openPluginWebsite)
 
@@ -163,7 +164,7 @@ class Dremel3D20(QObject, MeshWriter, Extension):
     # function so that the preferences menu can open website the version
     @pyqtSlot()
     def openPluginWebsite(self):
-        url = QUrl('https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases')
+        url = QUrl('https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases', QUrl.TolerantMode)
         if not QDesktopServices.openUrl(url):
             message = Message(catalog.i18nc("@info:status", "Dremel 3D20 plugin could not navigate to https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases"))
             message.show()
@@ -174,13 +175,26 @@ class Dremel3D20(QObject, MeshWriter, Extension):
         url = os.path.join(PluginRegistry.getInstance().getPluginPath(self.getPluginId()), "README.pdf")
         Logger.log("i", "Dremel 3D20 Plugin opening help document: "+url)
         try:
-            if not QDesktopServices.openUrl(QUrl("file:///"+url)):
+            if not QDesktopServices.openUrl(QUrl("file:///"+url, QUrl.TolerantMode)):
                 message = Message(catalog.i18nc("@info:status", "Dremel 3D20 plugin could not open help document.\n Please download it from here: https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/raw/cura-3.4/README.pdf"))
                 message.show()
         except:
             message = Message(catalog.i18nc("@info:status", "Dremel 3D20 plugin could not open help document.\n Please download it from here: https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/raw/cura-3.4/README.pdf"))
             message.show()
         return
+
+    @pyqtSlot()
+    def reportIssue(self):
+        Logger.log("i", "Dremel 3D20 Plugin opening issue page: https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/issues/new")
+        try:
+            if not QDesktopServices.openUrl(QUrl("https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/issues/new")):
+                message = Message(catalog.i18nc("@info:status", "Dremel 3D20 plugin could not open https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/issues/new please navigate to the page and report an issue"))
+                message.show()
+        except:
+            message = Message(catalog.i18nc("@info:status", "Dremel 3D20 plugin could not open https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/issues/new please navigate to the page and report an issue"))
+            message.show()
+        return
+
 
     def oldVersionInstalled(self):
         cura_dir=os.path.dirname(os.path.realpath(sys.argv[0]))

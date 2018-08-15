@@ -81,6 +81,18 @@ UM.Dialog
 
             Button
             {
+                id: button
+                UM.I18nCatalog
+                {
+                    id: catalog1
+                    name: "cura"
+                }
+                text: catalog1.i18nc("@action:button", "Report Issue")
+                onClicked: manager.reportIssue()
+            }
+
+            Button
+            {
                 id: helpButton
                 UM.I18nCatalog
                 {
@@ -89,18 +101,6 @@ UM.Dialog
                 }
                 text: catalog.i18nc("@action:button", "Help")
                 onClicked: manager.showHelp()
-            }
-
-            Button
-            {
-                id: button
-                UM.I18nCatalog
-                {
-                    id: catalog1
-                    name: "cura"
-                }
-                text: catalog1.i18nc("@action:button", "Close")
-                onClicked: base.hide()
             }
         } // end RowLayout
 
