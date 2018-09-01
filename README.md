@@ -6,7 +6,7 @@
 
 https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/
 
-This is a plugin for [Cura version 3.4](https://ultimaker.com/en/products/ultimaker-cura-software) that adds the Dremel Ideabuilder 3D20 printer to Cura and enables Cura to export to the proprietary g3drem file format that the IdeaBuilder 3D20 uses.
+This is a plugin for [Cura version 3.x](https://ultimaker.com/en/products/ultimaker-cura-software) that adds the Dremel Ideabuilder 3D20 printer to Cura and enables Cura to export to the proprietary g3drem file format that the IdeaBuilder 3D20 uses.
 
 # <a name="Table_Of_Contents"></a>Table Of Contents
 - [Introduction](#Introduction)
@@ -40,7 +40,8 @@ This software is released as a plugin for the [Ultimaker Cura](https://ultimaker
 
 | Cura Version | Last version of the plugin that works with the version of Cura         |
 |--------------|------------------------------------------------------------------------|
-3.4 or 3.4.1 | [version 0.4.8](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/latest)
+3.5            | [version 0.5.0](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/latest)
+3.4 or 3.4.1 | [version 0.4.8](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.4.8)
 3.3 or 3.3.1 | [version 0.4.3](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.4.3)
 3.2 or 3.2.1 | [version 0.4.2](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.4.2)
 3.0 or 3.1 | [version 0.2.5](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.2.5)
@@ -50,7 +51,7 @@ This software is released as a plugin for the [Ultimaker Cura](https://ultimaker
 
 To install the plugins, follow the instructions below:
 
-**Note:** Prior versions of this plugin are incompatible with Cura 3.4  Users upgrading from an older version may experience Cura crashing after upgrading.  A fix for this is outlined below
+**Note:** Prior versions of this plugin are incompatible with Cura 3.5  Users upgrading from an older version may experience Cura crashing after upgrading.  A fix for this is outlined below
 
 0.  [Download and install Cura](https://ultimaker.com/en/products/ultimaker-cura-software) on your machine.  This plugin has been tested on Windows 10 Professional 64 bit edition, and MacOS 10.12 (Sierra), but this plugin should work equally well on linux or any other operating system that Cura supports.
 
