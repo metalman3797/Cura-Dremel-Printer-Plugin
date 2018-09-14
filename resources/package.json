@@ -9,7 +9,7 @@
     "display_name": "Dremel 3D20",
     "package_id": "Dremel3D20",
     "package_type": "plugin",
-    "package_version": "0.5.1",
+    "package_version": "0.5.2",
     "sdk_version": 4,
     "tags": [
         "Dremel",
