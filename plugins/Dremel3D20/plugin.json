@@ -1,8 +1,8 @@
 {
     "name": "Dremel 3D20 Printer Plugin",
     "author": "Tim Schoenmackers",
-    "version": "0.4.8",
-    "description": "Installs the necessary files to support the Dremel Ideabuilder 3D20.",
-    "api": 4,
+    "version": "0.5.2",
+    "description": "Enables the user to add the Dremel Ideabuilder 3D20 printer to Cura and export the proprietary .g3drem files.",
+    "api": 5,
     "i18n-catalog": "cura"
 }
