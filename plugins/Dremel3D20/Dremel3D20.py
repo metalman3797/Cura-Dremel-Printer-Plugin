@@ -58,7 +58,7 @@ class Dremel3D20(QObject, MeshWriter, Extension):
     # 1) here
     # 2) plugin.json
     # 3) package.json
-    version = "0.5.2"
+    version = "0.5.3"
 
     ##  Dictionary that defines how characters are escaped when embedded in
     #   g-code.
@@ -646,24 +646,30 @@ class Dremel3D20(QObject, MeshWriter, Extension):
     def _serialiseSettings(self, stack):
         container_registry = self._application.getContainerRegistry()
         quality_manager = self._application.getQualityManager()
-        prefix = self._setting_keyword  + Dremel3D20.version + " "  # The prefix to put before each line.
+
+        prefix = self._setting_keyword + str(Dremel3D20.version) + " "  # The prefix to put before each line.
         prefix_length = len(prefix)
+
         quality_type = stack.quality.getMetaDataEntry("quality_type")
         container_with_profile = stack.qualityChanges
         if container_with_profile.getId() == "empty_quality_changes":
             # If the global quality changes is empty, create a new one
             quality_name = container_registry.uniqueName(stack.quality.getName())
             container_with_profile = quality_manager._createQualityChanges(quality_type, quality_name, stack, None)
+
         flat_global_container = self._createFlattenedContainerInstance(stack.userChanges, container_with_profile)
         # If the quality changes is not set, we need to set type manually
         if flat_global_container.getMetaDataEntry("type", None) is None:
-            flat_global_container.addMetaDataEntry("type", "quality_changes")
+            flat_global_container.setMetaDataEntry("type", "quality_changes")
+
         # Ensure that quality_type is set. (Can happen if we have empty quality changes).
         if flat_global_container.getMetaDataEntry("quality_type", None) is None:
-            flat_global_container.addMetaDataEntry("quality_type", stack.quality.getMetaDataEntry("quality_type", "normal"))
+            flat_global_container.setMetaDataEntry("quality_type", stack.quality.getMetaDataEntry("quality_type", "normal"))
+
         # Get the machine definition ID for quality profiles
         machine_definition_id_for_quality = getMachineDefinitionIDForQualitySearch(stack.definition)
         flat_global_container.setMetaDataEntry("definition", machine_definition_id_for_quality)
+
         serialized = flat_global_container.serialize()
         data = {"global_quality": serialized}
 
@@ -674,23 +680,27 @@ class Dremel3D20(QObject, MeshWriter, Extension):
                 # Same story, if quality changes is empty, create a new one
                 quality_name = container_registry.uniqueName(stack.quality.getName())
                 extruder_quality = quality_manager._createQualityChanges(quality_type, quality_name, stack, None)
+
             flat_extruder_quality = self._createFlattenedContainerInstance(extruder.userChanges, extruder_quality)
             # If the quality changes is not set, we need to set type manually
             if flat_extruder_quality.getMetaDataEntry("type", None) is None:
-                flat_extruder_quality.addMetaDataEntry("type", "quality_changes")
+                flat_extruder_quality.setMetaDataEntry("type", "quality_changes")
+
             # Ensure that extruder is set. (Can happen if we have empty quality changes).
             if flat_extruder_quality.getMetaDataEntry("position", None) is None:
-                flat_extruder_quality.addMetaDataEntry("position", extruder.getMetaDataEntry("position"))
+                flat_extruder_quality.setMetaDataEntry("position", extruder.getMetaDataEntry("position"))
+
             # Ensure that quality_type is set. (Can happen if we have empty quality changes).
             if flat_extruder_quality.getMetaDataEntry("quality_type", None) is None:
-                flat_extruder_quality.addMetaDataEntry("quality_type", extruder.quality.getMetaDataEntry("quality_type", "normal"))
+                flat_extruder_quality.setMetaDataEntry("quality_type", extruder.quality.getMetaDataEntry("quality_type", "normal"))
+
             # Change the default definition
             flat_extruder_quality.setMetaDataEntry("definition", machine_definition_id_for_quality)
 
             extruder_serialized = flat_extruder_quality.serialize()
             data.setdefault("extruder_quality", []).append(extruder_serialized)
 
-            all_setting_keys.append(flat_extruder_quality.getAllKeys())
+            all_setting_keys.update(flat_extruder_quality.getAllKeys())
 
         # Check if there is any profiles
         if not all_setting_keys:
@@ -698,13 +708,16 @@ class Dremel3D20(QObject, MeshWriter, Extension):
             return ""
 
         json_string = json.dumps(data)
+
         # Escape characters that have a special meaning in g-code comments.
         pattern = re.compile("|".join(Dremel3D20.escape_characters.keys()))
 
         # Perform the replacement with a regular expression.
         escaped_string = pattern.sub(lambda m: Dremel3D20.escape_characters[re.escape(m.group(0))], json_string)
+
         # Introduce line breaks so that each comment is no longer than 80 characters. Prepend each line with the prefix.
         result = ""
+
         # Lines have 80 characters, so the payload of each line is 80 - prefix.
         for pos in range(0, len(escaped_string), 80 - prefix_length):
             result += prefix + escaped_string[pos: pos + 80 - prefix_length] + "\n"
