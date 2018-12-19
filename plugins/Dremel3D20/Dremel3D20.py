@@ -58,7 +58,7 @@ class Dremel3D20(QObject, MeshWriter, Extension):
     # 1) here
     # 2) plugin.json
     # 3) package.json
-    version = "0.5.3"
+    version = "0.5.4"
 
     ##  Dictionary that defines how characters are escaped when embedded in
     #   g-code.

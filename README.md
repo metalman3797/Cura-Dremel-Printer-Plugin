@@ -6,7 +6,7 @@
 
 https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/
 
-This is a plugin for [Cura version 3.x](https://ultimaker.com/en/products/ultimaker-cura-software) that adds the Dremel Ideabuilder 3D20 printer to Cura and enables Cura to export to the proprietary g3drem file format that the IdeaBuilder 3D20 uses.
+This is a plugin for [Cura version 3.x and onward](https://ultimaker.com/en/products/ultimaker-cura-software) that adds the Dremel Ideabuilder 3D20 printer to Cura and enables Cura to export to the proprietary g3drem file format that the IdeaBuilder 3D20 uses.
 
 # <a name="Table_Of_Contents"></a>Table Of Contents
 - [Introduction](#Introduction)
@@ -34,13 +34,14 @@ The code for this plugin is based upon the [Cura gcode writer plugin](https://gi
 
 This software is released as a plugin for the [Ultimaker Cura](https://ultimaker.com/en/products/ultimaker-cura-software) Software.  The Dremel3D20 plugin contains the necessary printer files to add the Dremel IdeaBuilder 3D20 printer to Cura and enables Cura to export the proprietary g3drem file format that the Dremel 3D20 needs in order to print.
 
-**UPDATE July 12, 2018:** Cura has now included this plugin within the Cura plugin browser.  Users are encouraged to use the built-in Cura toolbox browser to install & update this plugin rather than downloading the plugin directly.  
+**UPDATE July 12, 2018:** Cura has now included this plugin within the Cura plugin browser.  Users are encouraged to use the built-in Cura Marketplace to install & update this plugin rather than downloading the plugin directly.  
 
-**Note:**  The latest version of the Cura-Dremel-3D20-Plugin will not work with Cura versions 3.3.1 or earlier due to changes that Ultimaker implemented in the Cura architecture.  For a version that works with earlier Cura versions see the table below:
+**Note:**  The latest version of the Cura-Dremel-3D20-Plugin will not work with Cura versions 3.4.1 or earlier due to changes that Ultimaker implemented in the Cura architecture.  For a version that works with earlier Cura versions see the table below:
 
 | Cura Version | Last version of the plugin that works with the version of Cura         |
 |--------------|------------------------------------------------------------------------|
-3.5            | [version 0.5.3](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/latest)
+4.0            | [version 0.5.4](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/latest)
+3.5 or 3.6     | [version 0.5.3](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.5.3)
 3.4 or 3.4.1   | [version 0.4.8](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.4.8)
 3.3 or 3.3.1   | [version 0.4.3](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.4.3)
 3.2 or 3.2.1   | [version 0.4.2](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.4.2)
@@ -50,8 +51,6 @@ This software is released as a plugin for the [Ultimaker Cura](https://ultimaker
 # <a name="Installation"></a>Installation
 
 To install the plugins, follow the instructions below:
-
-**Note:** Prior versions of this plugin are incompatible with Cura 3.5  Users upgrading from an older version may experience Cura crashing after upgrading.  A fix for this is outlined below
 
 0.  [Download and install Cura](https://ultimaker.com/en/products/ultimaker-cura-software) on your machine.  This plugin has been tested on Windows 10 Professional 64 bit edition, and MacOS 10.12 (Sierra), but this plugin should work equally well on linux or any other operating system that Cura supports.
 
@@ -76,9 +75,9 @@ To install the plugins, follow the instructions below:
     ![Warn about old installs](./docs/old_install_warning.png)
 
 
-**Users Upgrading from Cura 3.3 or earlier:**
+**Troubleshooting:**
 
-Upon installation Cura attempts to upgrade older versions of plugins and printers to the latest version.  Unfortunately earlier versions of this plugin are incompatible with Cura 3.4 and users may experience a crash when updating.  To fix this users should clear out their cache when prompted to by Cura either by manually clearing out the contents of the settings folder by:
+Upon installation Cura attempts to upgrade older versions of plugins and printers to the latest version.  Unfortunately earlier versions of this plugin are incompatible with newer versions of Cura and users may experience a crash when updating.  To fix this users should clear out their cache when prompted to by Cura either by manually clearing out the contents of the settings folder by:
 
 EITHER:
 ```
@@ -185,7 +184,7 @@ preview image on the Dremel:
 ---
 # <a name="Note"></a>Note
 Please note the following:
-* The plugin has been tested using Cura 3.4 on Windows 10 x64, MacOS Sierra (MacOS 10.12), MacOS El Capitan (10.11), and Ubuntu versions 17.10 and 16.04.  Testing on non-Windows platforms occurs less frequently than on Windows.  If you are using another platform and encounter issues with the plugin, feel free to raise an issue with the ["Issues" section](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/issues/new) of the plugin's website.
+* The plugin has been tested using the latest version of Cura noted in this README on Windows 10 x64, MacOS Sierra (MacOS 10.12), MacOS El Capitan (10.11), and Ubuntu versions 17.10 and 16.04.  Testing on non-Windows platforms occurs much less frequently than on Windows.  If you are using another platform and encounter issues with the plugin, feel free to raise an issue with the ["Issues" section](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/issues/new) of the plugin's website.
 * This plugin has been tested to work in the basic print case, however users may still encounter problems with the print head crashing into your parts if you attempt to print multiple parts on the same print bed one-after-another instead of printing them all-at-once.
 
 ---
