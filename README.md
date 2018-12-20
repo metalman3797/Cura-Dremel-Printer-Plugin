@@ -54,7 +54,7 @@ To install the plugins, follow the instructions below:
 
 0.  [Download and install Cura](https://ultimaker.com/en/products/ultimaker-cura-software) on your machine.  This plugin has been tested on Windows 10 Professional 64 bit edition, and MacOS 10.12 (Sierra), but this plugin should work equally well on linux or any other operating system that Cura supports.
 
-1.  Open Cura, select the Toolbox menu, then select the "Browse Packages" item.  Cura will bring up the package browser.  Find the "Dremel 3D20" package in the list, then click install.
+1.  Open Cura, select the Marketplace menu, then select the "Browse Packages" item.  Cura will bring up the package browser.  Find the "Dremel 3D20" package in the list, then click install.
 
     ![Browse for the new plugin](./docs/DremelPackage.png)
 
@@ -70,47 +70,11 @@ To install the plugins, follow the instructions below:
 
     ![Install Printer Files](./docs/preferences.png)
 
-    **Note:**  If the Dremel3D20 plugin detects an installation in the main Cura application directory, it will pop up warnings telling the user to remove the old files before it installs the new files.  Once the old files in the main cura application directory have been removed the plugin will automatically install new files to the appropriate locations without user intervention.
-
-    ![Warn about old installs](./docs/old_install_warning.png)
-
-
-**Troubleshooting:**
-
-Upon installation Cura attempts to upgrade older versions of plugins and printers to the latest version.  Unfortunately earlier versions of this plugin are incompatible with newer versions of Cura and users may experience a crash when updating.  To fix this users should clear out their cache when prompted to by Cura either by manually clearing out the contents of the settings folder by:
-
-EITHER:
-```
-1. Clicking the "Reset" button on Cura which says "Would you like to reset to factory defaults"
-![Configuration Errors](./docs/configurationerror.png)
-
-2. Relaunch Cura
-
-3. Reinstall the latest version of the plugin using the instructions above
-```
-OR:
-```
-1. Deleting all contents within the following folder (select appropriate OS that you're using below):
-
-Windows:
-  - $USER/AppData/Roaming/cura/3.4/  where $USER is your user's home directory, e.g. C:\Users\user
-
-Mac:
-  - $User/Library/Application\ Support/Cura/3.4/ where USER is your user's home directory, e.g. /Users/user
-
-Linux:
-  - $USER/.local/share/cura/$CURA_VERSION/settings/ where $USER is your user's home directory, e.g. /home/user
-
-2. Relaunch Cura
-
-3. Reinstall the latest version of the plugin using the instructions above
-```
-
 ---
 # <a name="Uninstallation"></a>Uninstallation
 To uninstall the Dremel printer files, open the Extensions menu->Dremel3D20 Printer Plugin->preferences and uncheck the box next to "Dremel 3D Printer File Installed?".  
 
-To uninstall the plugin itself, navigate to Cura's Toolbox menu, select "Browse Packages" then click the installed button.  Then find the "Dremel 3D20" plugin, and click the uninstall button.
+To uninstall the plugin itself, navigate to Cura's Marketplace menu, select "Browse Packages" then click the installed button.  Then find the "Dremel 3D20" plugin, and click the uninstall button.
 ![Uninstall](./docs/uninstall.png)
 
 ---
@@ -123,28 +87,23 @@ Once the plugin has been installed you can use it by following the steps outline
 3. Select a type of PLA filament.  By default the plugin uses the Dremel PLA filament that is included with the plugin.
 ![Select the Dremel pla](./docs/selectpla.png)
 
-4. Set the slicing options that you want.
+4. Set the slicing options that you want from the print settings in the upper right corner of the screen. ![Print Settings](./docs/printsettings.png)
 
-5. <a name="Step5"></a>Zoom in on the part until it fills the screen.  When the plugin saves out the .g3drem file, by default it will grab a screenshot of the main Cura window for use as the preview image that is displayed on the Ideabuilder screen. You can change this behavior as outlined in the [Preview Image Options](#Preview_Image_Options) section below. The area inside the red box shown in the image below will be used in the screenshot (the red box is for illustration purposes only, and will not appear in the Cura window, nor in the screenshot when you use the plugin).  **Please Note:** The preview on the Dremel will be **much** better if you zoom in on the part that you're printing until the part fills the screenshot area.
+5. Press the slice button to tell Cura to slice the object using the selected settings.
+![Slice Button](./docs/slicebutton.png)
 
-For instance:
-![Zoom in on the part](./docs/Zoom_For_Screenshot.PNG)
+6. Click the "save to file" button.  Ensure that .g3drem is chosen as the output file format.
 
-Will show this on the IdeaBuilder 3D20:
-![Ideabuilder Screen](./docs/Ideabuilder_screen.jpg)
+![Save as .g3drem file](./docs/savetofile.png)
 
-**Nifty Feature:** The screenshot will work with the different visualizers, so feel free to try the "xray view" or "layer view" options if you like those visualizations better.
-
-6. Click "File->Save As", or "save to file", selecting .g3drem as the output file format.
-
-![Save as .g3drem file](./docs/saveas.PNG)
+![g3drem output](./docs/g3dremoutput.png)
 
 7. Save this file to a SD card
 8. Insert the SD card into your IdeaBuilder 3D20
 9. Turn on the printer
 10. Select the appropriate file to print.  
     The plugin implements the logic outlined in the [Preview Image Options](#Preview_Image_Options) section below to select a preview image on the Dremel screen.
-11. Click print
+11. Click print on the 3D Printer
 12. Enjoy - if you have any feature suggestions or encounter issues, feel free to raise them in the ["Issues" section](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/issues/new).
 ---
 # <a name="Preview_Image_Options"></a>Preview Image Options
