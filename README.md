@@ -34,9 +34,9 @@ The code for this plugin is based upon the [Cura gcode writer plugin](https://gi
 
 This software is released as a plugin for the [Ultimaker Cura](https://ultimaker.com/en/products/ultimaker-cura-software) Software.  The Dremel3D20 plugin contains the necessary printer files to add the Dremel IdeaBuilder 3D20 printer to Cura and enables Cura to export the proprietary g3drem file format that the Dremel 3D20 needs in order to print.
 
-**UPDATE July 12, 2018:** Cura has now included this plugin within the Cura plugin browser.  Users are encouraged to use the built-in Cura Marketplace to install & update this plugin rather than downloading the plugin directly.  
+This plugin is now available within the Cura marketplace.  Users are encouraged to use the built-in Cura Marketplace to install & update this plugin rather than downloading the plugin directly from the releases page.  
 
-**Note:**  The latest version of the Cura-Dremel-3D20-Plugin will not work with Cura versions 3.4.1 or earlier due to changes that Ultimaker implemented in the Cura architecture.  For a version that works with earlier Cura versions see the table below:
+**Note:**  For older versions of Cura, please read the table below to find the correct version:
 
 | Cura Version | Last version of the plugin that works with the version of Cura         |
 |--------------|------------------------------------------------------------------------|
