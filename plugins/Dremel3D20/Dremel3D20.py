@@ -43,10 +43,12 @@ from UM.PluginRegistry import PluginRegistry
 
 from cura.CuraApplication import CuraApplication
 from cura.Machines.QualityManager import getMachineDefinitionIDForQualitySearch
+from cura.Utils.Threading import call_on_qt_thread
 
 from PyQt5.QtWidgets import QApplication, QFileDialog
 from PyQt5.QtGui import QPixmap, QScreen, QColor, qRgb, QImageReader, QImage, QDesktopServices
 from PyQt5.QtCore import QByteArray, QBuffer, QIODevice, QRect, Qt, QSize, pyqtSlot, QObject, QUrl, pyqtSlot
+from cura.Snapshot import Snapshot
 
 from . import G3DremHeader
 
@@ -58,7 +60,7 @@ class Dremel3D20(QObject, MeshWriter, Extension):
     # 1) here
     # 2) plugin.json
     # 3) package.json
-    version = "0.5.3"
+    version = "0.5.4"
 
     ##  Dictionary that defines how characters are escaped when embedded in
     #   g-code.
@@ -72,7 +74,7 @@ class Dremel3D20(QObject, MeshWriter, Extension):
     }
 
     def __init__(self):
-        super().__init__()
+        super().__init__(add_to_recent_files = False)
         self._application = CuraApplication.getInstance()
         self._setting_keyword = ";SETTING_"
         #self._application.initializationFinished.connect(self._onInitialized)
@@ -90,7 +92,7 @@ class Dremel3D20(QObject, MeshWriter, Extension):
         Logger.log("i", "Dremel3D20 Plugin adding menu item for screenshot toggling")
 
         self._preferences_window = None
-
+        self._snapshot = None
         self.local_meshes_path = None
         self.local_printer_def_path = None
         self.local_materials_path = None
@@ -147,6 +149,11 @@ class Dremel3D20(QObject, MeshWriter, Extension):
         # finally save the cura.cfg file
         self._application.getPreferences().writeToFile(Resources.getStoragePath(Resources.Preferences, self._application.getApplicationName() + ".cfg"))
 
+    def _createSnapshot(self, *args):
+        # must be called from the main thread because of OpenGL
+        Logger.log("d", "Creating thumbnail image...")
+        self._snapshot = Snapshot.snapshot(width = 80, height = 60)
+        Logger.log("d","Thumbnail taken")
     def createPreferencesWindow(self):
         path = os.path.join(PluginRegistry.getInstance().getPluginPath(self.getPluginId()), "Dremel3D20prefs.qml")
         Logger.log("i", "Creating Dremel3D20 preferences UI "+path)
@@ -428,6 +435,10 @@ class Dremel3D20(QObject, MeshWriter, Extension):
         Logger.log("d", "Dremel 3D20 Plugin did not find any appropriate image files  - trying to take screenshot instead")
         return None
 
+    # this might need to be on the main QT Thread, so do it just to be safe
+    # see:
+    # https://github.com/Ultimaker/Cura/blob/master/plugins/UFPWriter/UFPWriter.py
+    @call_on_qt_thread
     def getBitmapBytes(self,stream):
         # get the primary screen
         screen = QApplication.primaryScreen()
@@ -468,83 +479,34 @@ class Dremel3D20(QObject, MeshWriter, Extension):
                     Logger.log("e", "Dremel 3D20 Plugin - Could not read image file - trying to grab screenshot")
             except:
                 Logger.log("e", "Dremel 3D20 Plugin - Could not use pixmap - trying to grab screenshot")
-
-        if screen is not None:
-            bmpError = False
-            # wait for half a second because linux takes a bit of time before
-            # it closes the file selection window, and we don't want that in the
-            # screenshot
-            if platform.system() in ['Linux',"Darwin"]:
-                time.sleep(0.5)
-
-            # get the height of the topbar and width of the left and right sidebar
-            sidebarwidth = self._application.getTheme().getSize("sidebar").width()
-            buttonwidth = self._application.getTheme().getSize("button_icon").width()
-            marginwidth = self._application.getTheme().getSize("sidebar_margin").width()
-            topbarheight = self._application.getTheme().getSize("sidebar_header").height()
-            marginheight = self._application.getTheme().getSize("sidebar_header_mode_toggle").height()
-            buttonright = buttonwidth + marginwidth
-            topbarbottom = topbarheight + marginheight
-
-            # get the main window ID
-            winId = self._application.getMainWindow().winId()
-            if winId is not None:
-                # calculate the appropriate rectangle to grab
-                rectWidth = self._application.getMainWindow().width() - sidebarwidth
-                rectHeight = self._application.getMainWindow().height() - topbarbottom
-                if buttonright < 0 or topbarbottom < 0 or rectWidth < 0 or rectWidth > self._application.getMainWindow().width() or rectHeight < 0 or rectHeight > self._application.getMainWindow().height():
-                    Logger.log("d", "Dremel 3D20 Plugin - error in calculated rectangles for screenshot - using generic cura icon instead")
-                    bmpError = True
-                # grab a screenshot of the main window
-                screenImg = screen.grabWindow(winId, buttonright, topbarbottom, rectWidth, rectHeight)
-                #####################################################
-                # remove this section when done debugging linux issue
-                # test the raw screenshot to see if it is all zeros
-                scrI = screenImg.toImage()
-                if scrI.pixel(20,10) == qRgb(0,0,0) and scrI.pixel(40,10) == qRgb(0,0,0) and scrI.pixel(60,10) == qRgb(0,0,0) and scrI.pixel(40,30) == qRgb(0,0,0) and scrI.pixel(20,50) == qRgb(0,0,0) and scrI.pixel(40,50) == qRgb(0,0,0) and scrI.pixel(60,50) == qRgb(0,0,0):
-                    Logger.log("d", "Dremel 3D20 Plugin - Black screenshot detected - using generic cura icon instead")
-                    bmpError = True
-                # end of remove this section
-                #####################################################
-                pixMpImg = screenImg.scaled(80, 60, Qt.KeepAspectRatioByExpanding).copy(QRect(0,0,80,60))
-                # validate the size of the image since the Dremel firmware uses hardcoded offsets
-                if pixMpImg.width() is not 80 or pixMpImg.height() is not 60:
-                    Logger.log("d", "Dremel 3D20 Plugin - error in size of screenshot - using generic cura icon instead")
-                    bmpError = True
-                # spot check the pixels of the image to see if they're all zeros
-                pmI = pixMpImg.toImage()
-                if pmI.pixel(20,10) == qRgb(0,0,0) and pmI.pixel(40,10) == qRgb(0,0,0) and pmI.pixel(60,10) == qRgb(0,0,0) and pmI.pixel(40,30) == qRgb(0,0,0) and pmI.pixel(20,50) == qRgb(0,0,0) and pmI.pixel(40,50) == qRgb(0,0,0) and pmI.pixel(60,50) == qRgb(0,0,0):
-                    Logger.log("d", "Dremel 3D20 Plugin - Black screenshot detected after scaling - using generic cura icon instead")
-                    bmpError = True
-
-                # now prepare to write the bitmap
-                ba = QByteArray()
-                bmpData = QBuffer(ba)
-                if not bmpData.open(QIODevice.WriteOnly):
-                    Logger.log("d", "Dremel 3D20 Plugin - Could not open qbuffer - using generic cura icon instead")
-                    bmpError = True
-                # copy the raw image data to bitmap image format in memory
-                if not pixMpImg.save(bmpData, "BMP"):
-                    Logger.log("d", "Dremel 3D20 Plugin - Could not save pixmap - using generic cura icon instead")
-                    bmpError = True
-                # finally write the bitmap to the g3drem file
-                if not bmpError and len(ba)>0:
-                    return ba
-
-            else:
-                Logger.log("d", "Dremel 3D20 Plugin - Could not get window id - using generic cura icon instead")
-
         else:
-            Logger.log("d", "Dremel 3D20 Plugin - Could not get screen - using generic cura icon instead")
+            bmpError = False
+            self._createSnapshot()
 
+            # now prepare to write the bitmap
+            ba = QByteArray()
+            bmpData = QBuffer(ba)
+            if not bmpData.open(QIODevice.WriteOnly):
+                Logger.log("d", "Dremel 3D20 Plugin - Could not open qbuffer - using generic cura icon instead")
+                bmpError = True
+            # copy the raw image data to bitmap image format in memory
+            if not self._snapshot.save(bmpData, "BMP"):
+                Logger.log("d", "Dremel 3D20 Plugin - Could not save pixmap - using generic cura icon instead")
+                bmpError = True
+            # finally write the bitmap to the g3drem file
+            if not bmpError and len(ba)>0:
+                return ba
+
+        # if there was an error, then use the generic icon
+        Logger.log("d", "Dremel 3D20 Plugin - Could not get screen - using generic cura icon instead")
 
         # if an error ocurred when grabbing a screenshot write the generic cura icon instead
         bmpBytes = struct.pack("{}B".format(len(self.curaIconBmpData)), *self.curaIconBmpData)
         return bmpBytes
 
-        ##  Performs the writing of the dremel header and gcode - for a technical
-        ##  breakdown of the dremel g3drem file format see the following page:
-        ##  https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/blob/master/README.md#technical-details-of-the-g3drem-file-format
+    ##  Performs the writing of the dremel header and gcode - for a technical
+    ##  breakdown of the dremel g3drem file format see the following page:
+    ##  https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/blob/master/README.md#technical-details-of-the-g3drem-file-format
     def write(self, stream, nodes, mode = MeshWriter.OutputMode.BinaryMode):
         try:
             if mode != MeshWriter.OutputMode.BinaryMode:
@@ -576,6 +538,12 @@ class Dremel3D20(QObject, MeshWriter, Extension):
 
             # set the thumbnail
             g3dremHeader.setThumbnailBitmap(self.getBitmapBytes(stream))
+
+            # debugging: write bmp image out to the same directory
+            #savepth, savefname = os.path.split(os.path.realpath(stream.name))
+            #with open(savepth+'CapturedImage.bmp','wb') as f:
+            #    f.write(self.getBitmapBytes(stream).data())
+            #    f.close();
 
             # finally, write the header
             if not g3dremHeader.writeHeader(stream):
