@@ -4,7 +4,7 @@
     "inherits": "fdmprinter",
     "metadata": {
         "visible": true,
-        "author": "Dremel",
+        "author": "Tim Schoenmackers",
         "manufacturer": "Dremel",
         "category": "Dremel",
         "file_formats": "application/x-g3drem",
@@ -51,8 +51,6 @@
         "machine_depth": { "default_value": 150 },
         "machine_width": { "default_value": 230 },
         "retraction_speed": {"default_value":25},
-        "cool_fan_speed_min": {"default_value": 0},
-        "cool_fan_speed_max": {"default_value": 100},
         "adhesion_type": { "default_value": "skirt" },
         "machine_head_with_fans_polygon": {
             "default_value": [

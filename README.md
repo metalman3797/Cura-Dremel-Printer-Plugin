@@ -40,7 +40,7 @@ This plugin is now available within the Cura marketplace.  Users are encouraged 
 
 | Cura Version | Last version of the plugin that works with the version of Cura         |
 |--------------|------------------------------------------------------------------------|
-4.0            | [version 0.5.4](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/latest)
+4.0            | [version 0.5.5](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/latest)
 3.5 or 3.6     | [version 0.5.3](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.5.3)
 3.4 or 3.4.1   | [version 0.4.8](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.4.8)
 3.3 or 3.3.1   | [version 0.4.3](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.4.3)
@@ -80,16 +80,17 @@ To uninstall the plugin itself, navigate to Cura's Marketplace menu, select "Bro
 ---
 # <a name="Using_the_Plugin"></a>Using the Plugin
 Once the plugin has been installed you can use it by following the steps outlined below:
-1. Open Cura
-2. Select the Dremel 3D20 as your printer (cura->preferences->printers->add)
+1. Open Cura & load an object that you want to print
+
+2. Select the Dremel 3D20 as your printer (preferences->configure cura->printers->add)
 ![Select the Dremel 3D20](./docs/addprinter.png)
 
-3. Select a type of PLA filament.  By default the plugin uses the Dremel PLA filament that is included with the plugin.
+3. Select a type of PLA filament.  By default the plugin uses the Dremel PLA filament that is included and installed with the plugin.
 ![Select the Dremel pla](./docs/selectpla.png)
 
 4. Set the slicing options that you want from the print settings in the upper right corner of the screen. ![Print Settings](./docs/printsettings.png)
 
-5. Press the slice button to tell Cura to slice the object using the selected settings.
+5. Press the slice button in the lower-right corner to tell Cura to slice the object using the selected settings.
 ![Slice Button](./docs/slicebutton.png)
 
 6. Click the "save to file" button.  Ensure that .g3drem is chosen as the output file format.
@@ -98,11 +99,12 @@ Once the plugin has been installed you can use it by following the steps outline
 
 ![g3drem output](./docs/g3dremoutput.png)
 
+The plugin implements the logic outlined in the [Preview Image Options](#Preview_Image_Options) section below to select a preview image on the Dremel screen.
+
 7. Save this file to a SD card
 8. Insert the SD card into your IdeaBuilder 3D20
 9. Turn on the printer
 10. Select the appropriate file to print.  
-    The plugin implements the logic outlined in the [Preview Image Options](#Preview_Image_Options) section below to select a preview image on the Dremel screen.
 11. Click print on the 3D Printer
 12. Enjoy - if you have any feature suggestions or encounter issues, feel free to raise them in the ["Issues" section](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/issues/new).
 ---
@@ -143,7 +145,7 @@ preview image on the Dremel:
 ---
 # <a name="Note"></a>Note
 Please note the following:
-* The plugin has been tested using the latest version of Cura noted in this README on Windows 10 x64, MacOS Sierra (MacOS 10.12), MacOS El Capitan (10.11), and Ubuntu versions 17.10 and 16.04.  Testing on non-Windows platforms occurs much less frequently than on Windows.  If you are using another platform and encounter issues with the plugin, feel free to raise an issue with the ["Issues" section](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/issues/new) of the plugin's website.
+* The plugin has been tested using the latest version of Cura noted in this README on Windows 10 x64.  Prior versions have been tested on MacOS Sierra (MacOS 10.12), MacOS El Capitan (10.11), and Ubuntu versions 17.10 and 16.04.  Testing on non-Windows platforms occurs much less frequently than on Windows.  If you are using another platform and encounter issues with the plugin, feel free to raise an issue with the ["Issues" section](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/issues/new) of the plugin's website.
 * This plugin has been tested to work in the basic print case, however users may still encounter problems with the print head crashing into your parts if you attempt to print multiple parts on the same print bed one-after-another instead of printing them all-at-once.
 
 ---
@@ -202,6 +204,7 @@ Many thanks belong to the following users, who have spent their time and energy 
 * [Ghostkeeper](https://github.com/Ghostkeeper)
 * [LipuFei](https://github.com/LipuFei)
 * The rest of the engineering team at [Ultimaker](https://ultimaker.com/)
+* Tijs Kooij
 
 ---
 # <a name="License"></a>License
