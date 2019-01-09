@@ -203,8 +203,9 @@ Many thanks belong to the following users, who have spent their time and energy 
 * [Appesteijn](https://github.com/Appesteijn)
 * [Ghostkeeper](https://github.com/Ghostkeeper)
 * [LipuFei](https://github.com/LipuFei)
-* The rest of the engineering team at [Ultimaker](https://ultimaker.com/)
 * Tijs Kooij
+* [diegopradogesto](https://github.com/diegopradogesto)
+* The rest of the engineering team at [Ultimaker](https://ultimaker.com/)
 
 ---
 # <a name="License"></a>License
