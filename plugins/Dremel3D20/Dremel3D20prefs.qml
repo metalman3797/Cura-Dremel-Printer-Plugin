@@ -11,9 +11,9 @@ UM.Dialog
     id: base
     property string installStatusText
 
-    minimumWidth: Math.max(380 * screenScaleFactor,360)
-    minimumHeight: Math.max(200 * screenScaleFactor,180)
-    title: catalog.i18nc("@label", "Dremel 3D20 Plugin Preferences")
+    minimumWidth: Math.floor(UM.Theme.getSize("toolbox_action_button").width * 2.5+3*UM.Theme.getSize("default_margin").width)
+    minimumHeight: Math.floor(Math.max(120 * screenScaleFactor,120))
+    title: "Dremel 3D20 Plugin Preferences"
 
     function checkBooleanVals(val) {
         if(val == "True") {
@@ -37,77 +37,47 @@ UM.Dialog
 
 
     ColumnLayout {
-      id: col1
-      anchors.fill: parent
-      anchors.margins: margin
+        id: colLayout
+        anchors.fill: parent
+        anchors.margins: margin
 
-        ColumnLayout {
-          id: rowLayout
-          Layout.fillWidth: true
-
-          width: Math.round(parent.width)
-          height: Math.round(parent.height)
-          CheckBox {
-              id: screenshotCB
-              property int renderType: Text.NativeRendering
-              text: "Select Screenshot Manually"
-              checked: checkBooleanVals(UM.Preferences.getValue("Dremel3D20/select_screenshot"))
-              onClicked: manager.setSelectScreenshot(checked)
-              ToolTip.timeout: 5000
-              ToolTip.visible: hovered
-              ToolTip.text: "Check this box to allow you when saving a g3drem file to\nmanually select a screenshot from an image stored on your\nhard drive"
-          } //end CheckBox
-
-          CheckBox {
-            id: installCB
-            property int renderType: Text.NativeRendering
-            text: "Are Dremel 3D20 Printer File Installed? "
+        CheckBox {
+            id: screenshotCB
+            height: UM.Theme.getSize("checkbox").height
+            width: UM.Theme.getSize("checkbox").width
+            text: "Select Screenshot Manually"
+            checked: checkBooleanVals(UM.Preferences.getValue("Dremel3D20/select_screenshot"))
+            onClicked: manager.setSelectScreenshot(checked)
             ToolTip.timeout: 5000
             ToolTip.visible: hovered
-            ToolTip.text: "Uncheck this checkbox to uninstall the Dremel 3D20 printer files\nCheck it to install the files."
-            checked: checkInstallStatus(UM.Preferences.getValue("Dremel3D20/install_status"))
-            onClicked: manager.changePluginInstallStatus(checked)
-          } //end CheckBox
-        } // end columnlayout
+            ToolTip.text: "Check this box to allow you when saving a\ng3drem file to manually select a screenshot\nfrom an image stored on your hard drive"
+        } //end CheckBox
 
-        RowLayout {
+        Row {
             id: buttonRow
+            spacing: UM.Theme.getSize("default_margin").width
             width: Math.round(parent.width)
-            anchors.bottom: parent.bottom
+
             Button
             {
                 id: button1
+                width: Math.floor(UM.Theme.getSize("toolbox_action_button").width * 1.25)
                 property int renderType: Text.NativeRendering
-                text: qsTr("Open plugin website")
+                text: "Open plugin website"
                 onClicked: manager.openPluginWebsite()
-            }
-
-            Button
-            {
-                id: button
-                UM.I18nCatalog
-                {
-                    id: catalog1
-                    name: "cura"
-                }
-                property int renderType: Text.NativeRendering
-                text: catalog1.i18nc("@action:button", "Report Issue")
-                onClicked: manager.reportIssue()
-            }
+            } // end Button
 
             Button
             {
                 id: helpButton
-                UM.I18nCatalog
-                {
-                    id: catalog
-                    name: "cura"
-                }
+                width: Math.floor(UM.Theme.getSize("toolbox_action_button").width * 1.25)
                 property int renderType: Text.NativeRendering
-                text: catalog.i18nc("@action:button", "Help")
+                text: "Help"
+                ToolTip.timeout: 1000
+                ToolTip.visible: hovered
+                ToolTip.text: "Open documentation"
                 onClicked: manager.showHelp()
-            }
-        } // end RowLayout
-
+            } // end Button
+        } // end Row
     } // end ColumnLayout
-}
+} // end UM.Dialog

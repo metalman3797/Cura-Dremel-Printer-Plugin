@@ -60,7 +60,7 @@ class Dremel3D20(QObject, MeshWriter, Extension):
     # 1) here
     # 2) plugin.json
     # 3) package.json
-    version = "0.5.5"
+    version = "0.5.6"
 
     ##  Dictionary that defines how characters are escaped when embedded in
     #   g-code.
@@ -274,7 +274,7 @@ class Dremel3D20(QObject, MeshWriter, Extension):
             self.uninstallPluginFiles()
 
 
-    # Install the plugin files.
+    # Install the plugin files from the included zip file.
     def installPluginFiles(self):
         Logger.log("i", "Dremel 3D20 Plugin installing printer files")
 
