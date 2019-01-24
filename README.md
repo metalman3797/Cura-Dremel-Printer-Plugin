@@ -11,7 +11,6 @@ This is a plugin for [Cura version 3.x and onward](https://ultimaker.com/en/prod
 # <a name="Table_Of_Contents"></a>Table Of Contents
 - [Introduction](#Introduction)
 - [Installation Instructions](#Installation)
-- [Uninstallation Instructions](#Uninstallation)
 - [Using the Plugin](#Using_the_Plugin)
 - [Preview Image Options](#Preview_Image_Options)
 - [Note](#Note)
@@ -40,8 +39,8 @@ This plugin is now available within the Cura marketplace.  Users are encouraged 
 
 | Cura Version | Last version of the plugin that works with the version of Cura         |
 |--------------|------------------------------------------------------------------------|
-4.0            | [version 0.5.5](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/latest)
-3.5 or 3.6     | [version 0.5.3](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.5.3)
+4.0            | [version 0.5.6](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/latest)
+3.5 or 3.6     | [version 0.5.6](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.5.6)
 3.4 or 3.4.1   | [version 0.4.8](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.4.8)
 3.3 or 3.3.1   | [version 0.4.3](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.4.3)
 3.2 or 3.2.1   | [version 0.4.2](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.4.2)
@@ -65,17 +64,6 @@ To install the plugins, follow the instructions below:
 3.  Close the Cura application
 
 4.  Upon restart you should have an option to add a Dremel3D20 printer (see "Using the Plugin" section below) - Congratulations, the plugin is now installed!
-
-    **Note:** If any errors occurred the Dremel printer files contained within the plugin can be uninstalled and re-installed by going to the Extensions menu->Dremel3D20 Printer Plugin->preferences and uchecking and/or checking the checkbox next to "Dremel 3D Printer File Installed?" text
-
-    ![Install Printer Files](./docs/preferences.png)
-
----
-# <a name="Uninstallation"></a>Uninstallation
-To uninstall the Dremel printer files, open the Extensions menu->Dremel3D20 Printer Plugin->preferences and uncheck the box next to "Dremel 3D Printer File Installed?".  
-
-To uninstall the plugin itself, navigate to Cura's Marketplace menu, select "Browse Packages" then click the installed button.  Then find the "Dremel 3D20" plugin, and click the uninstall button.
-![Uninstall](./docs/uninstall.png)
 
 ---
 # <a name="Using_the_Plugin"></a>Using the Plugin
@@ -203,8 +191,9 @@ Many thanks belong to the following users, who have spent their time and energy 
 * [Appesteijn](https://github.com/Appesteijn)
 * [Ghostkeeper](https://github.com/Ghostkeeper)
 * [LipuFei](https://github.com/LipuFei)
-* The rest of the engineering team at [Ultimaker](https://ultimaker.com/)
 * Tijs Kooij
+* [diegopradogesto](https://github.com/diegopradogesto)
+* The rest of the engineering team at [Ultimaker](https://ultimaker.com/)
 
 ---
 # <a name="License"></a>License
