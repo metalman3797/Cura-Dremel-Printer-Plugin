@@ -60,7 +60,7 @@ class Dremel3D20(QObject, MeshWriter, Extension):
     # 1) here
     # 2) plugin.json
     # 3) package.json
-    version = "0.5.6"
+    version = "0.5.7"
 
     ##  Dictionary that defines how characters are escaped when embedded in
     #   g-code.
@@ -534,7 +534,7 @@ class Dremel3D20(QObject, MeshWriter, Extension):
 
             # get the estimated number of seconds that the print will take
             seconds = int(print_information.currentPrintTime.getDisplayString(DurationFormat.Format.Seconds))
-            g3dremHeader.setEstimatedTime(length)
+            g3dremHeader.setEstimatedTime(seconds)
 
             # set the thumbnail
             g3dremHeader.setThumbnailBitmap(self.getBitmapBytes(stream))
