@@ -81,9 +81,9 @@ class Dremel3D20(QObject, MeshWriter, Extension):
 
         #def _onInitialized(self):
         self.this_plugin_path=os.path.join(Resources.getStoragePath(Resources.Resources), "plugins","Dremel3D20","Dremel3D20")
-        if not self._application.getPluginRegistry().isActivePlugin("Dremel3D20"):
-            Logger.log("i", "Dremel3D20 Plugin is disabled")
-            return #Plug-in is disabled.
+        #if not self._application.getPluginRegistry().isActivePlugin("Dremel3D20"):
+        #    Logger.log("i", "Dremel3D20 Plugin is disabled")
+        #    return #Plug-in is disabled.
         if self._application.getPreferences().getValue("Dremel3D20/select_screenshot") is None:
             self._application.getPreferences().addPreference("Dremel3D20/select_screenshot", False)
 
@@ -117,6 +117,7 @@ class Dremel3D20(QObject, MeshWriter, Extension):
 
         # if something got messed up, force installation
         if not self.isInstalled() and self._application.getPreferences().getValue("Dremel3D20/install_status") is "installed":
+            Logger.log("i","Dremel 3D20 Plugin detected that plugin should be installed but isn't")
             self._application.getPreferences().setValue("Dremel3D20/install_status", "unknown")
 
         # if it's installed, and it's listed as uninstalled, then change that to reflect the truth
@@ -125,12 +126,14 @@ class Dremel3D20(QObject, MeshWriter, Extension):
 
         # if the version isn't the same, then force installation
         if self.isInstalled() and not self.versionsMatch():
+            Logger.log("i","Dremel 3D20 Plugin detected that plugin needs to be upgraded")
             self._application.getPreferences().setValue("Dremel3D20/install_status", "unknown")
 
         # Check the preferences to see if the user uninstalled the files -
         # if so don't automatically install them
         if self._application.getPreferences().getValue("Dremel3D20/install_status") is "unknown":
             # if the user never installed the files, then automatically install it
+            Logger.log("i","Dremel 3D20 Plugin now calling install function")			
             self.installPluginFiles()
 
         # check to see that the install succeeded - if so change the menu item options
@@ -282,6 +285,7 @@ class Dremel3D20(QObject, MeshWriter, Extension):
             restartRequired = False
             zipdata = os.path.join(self.this_plugin_path,"Dremel3D20.zip")
             #zipdata = os.path.join(self._application.getPluginRegistry().getPluginPath(self.getPluginId()), "Dremel3D20.zip")
+            Logger.log("i", "Dremel 3D20 Plugin: found zipfile: " + zipdata)
             with zipfile.ZipFile(zipdata, "r") as zip_ref:
                 for info in zip_ref.infolist():
                     Logger.log("i", "Dremel 3D20 Plugin: found in zipfile: " + info.filename )
