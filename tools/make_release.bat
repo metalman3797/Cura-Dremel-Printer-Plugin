@@ -1,3 +1,15 @@
+:::::::::::::::::::::::::::::::::
+:: Required Tools in order to use
+:: this script to make a
+:: .curapackage
+:::::::::::::::::::::::::::::::::
+:: 7-zip "standalone console version"
+::      - copy 7za.exe, 7za.dll, 7zxa.dll into the tools folder where this batch file is
+:: wkhtmltopdf tool (64 bit), from: https://wkhtmltopdf.org/downloads.html
+:: Python 3 and the grip package (pip install grip)
+::::::::::::::::::::::::::::::::::
+
+
 ::::::::::::::::::::::::::::::::::
 :: Step 1
 :: cleanup & make directories
@@ -15,9 +27,12 @@ set PLUGIN_DIR=%RELEASE_DIR%\files\plugins\Dremel3D20
 if EXIST %PLUGIN_DIR%\Dremel3D20.zip (del %PLUGIN_DIR%\Dremel3D20.zip)
 if EXIST .\Cura-Dremel-3D20.curapackage (del .\Cura-Dremel-3D20.curapackage)
 
+
 ::::::::::::::::::::::::::::::::::
 :: Step 2
-:: copy the dremel printer definitions, the materials, and the quality files
+:: copy the dremel printer definitions,
+:: materials, the platform stl file,
+:: and the quality files
 ::::::::::::::::::::::::::::::::::
 xcopy ..\resources\definitions\Dremel3D20.def.json %PLUGIN_DIR%
 xcopy ..\resources\extruders\dremel_3d20_extruder_0.def.json %PLUGIN_DIR%
@@ -26,11 +41,13 @@ xcopy ..\resources\meshes\dremel_3D20_platform.stl %PLUGIN_DIR%
 mkdir %PLUGIN_DIR%\dremel_3d20
 xcopy ..\resources\quality\dremel_3d20 %PLUGIN_DIR%\dremel_3d20 /E
 
+
 ::::::::::::::::::::::::::::::::::
 :: Step 3
 :: zip the files copied above
 ::::::::::::::::::::::::::::::::::
 7za.exe a %PLUGIN_DIR%\Dremel3D20.zip %PLUGIN_DIR%\Dremel3D20.def.json %PLUGIN_DIR%\dremel_pla.xml.fdm_material %PLUGIN_DIR%\dremel_3d20 %PLUGIN_DIR%\dremel_3d20_extruder_0.def.json %PLUGIN_DIR%\dremel_3D20_platform.stl
+
 
 ::::::::::::::::::::::::::::::::::
 :: Step 4
@@ -43,9 +60,11 @@ del /f /s /q %PLUGIN_DIR%\dremel_3D20_platform.stl
 del /f /s /q %PLUGIN_DIR%\dremel_3d20
 rmdir %PLUGIN_DIR%\dremel_3d20
 
+
 ::::::::::::::::::::::::::::::::::
 :: Step 5
-:: Create the Readme pdf file
+:: Create the README.pdf file from
+:: the markdown
 ::::::::::::::::::::::::::::::::::
 cd ..
 if EXIST README.html (del README.html)
@@ -72,20 +91,15 @@ xcopy ..\resources\package.json %RELEASE_DIR%
 
 
 ::::::::::::::::::::::::::::::::::
-:: Step 8 - TODO: Work with cura team to get this integrated
-:: Copy the platform mesh over
-::::::::::::::::::::::::::::::::::
-:: xcopy ..\resources\meshes\dremel_3D20_platform.stl .\Cura-Dremel-3D20-Plugin
-
-::::::::::::::::::::::::::::::::::
-:: Step 9
+:: Step 8
 :: Zip up the plugin for release
 ::::::::::::::::::::::::::::::::::
 7za.exe a .\Cura-Dremel-3D20.zip %RELEASE_DIR%\*
 move .\Cura-Dremel-3D20.zip .\Cura-Dremel-3D20.curapackage
 
+
 ::::::::::::::::::::::::::::::::::
-:: Step 10
+:: Step 9
 :: Cleanup the files and directories
 ::::::::::::::::::::::::::::::::::
 del /f /s /q %PLUGIN_DIR%\*.*
