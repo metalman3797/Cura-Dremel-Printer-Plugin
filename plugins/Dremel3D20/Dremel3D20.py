@@ -41,8 +41,10 @@ from UM.Qt.Duration import DurationFormat
 from UM.Qt.Bindings.Theme import Theme
 from UM.PluginRegistry import PluginRegistry
 
-from cura.CuraApplication import CuraApplication
-from cura.Machines.QualityManager import getMachineDefinitionIDForQualitySearch
+from UM.Application import Application
+from UM.Settings.InstanceContainer import InstanceContainer
+from cura.Machines.ContainerTree import ContainerTree
+
 from cura.Utils.Threading import call_on_qt_thread
 
 from PyQt5.QtWidgets import QApplication, QFileDialog
@@ -60,7 +62,7 @@ class Dremel3D20(QObject, MeshWriter, Extension):
     # 1) here
     # 2) plugin.json
     # 3) package.json
-    version = "0.5.8"
+    version = "0.6.0"
 
     ##  Dictionary that defines how characters are escaped when embedded in
     #   g-code.
@@ -73,17 +75,14 @@ class Dremel3D20(QObject, MeshWriter, Extension):
         re.escape("\r"): "\\r"    # Carriage return. Windows users may need this for visualisation in their editors.
     }
 
+    _setting_keyword = ";SETTING_"
+
     def __init__(self):
         super().__init__(add_to_recent_files = False)
-        self._application = CuraApplication.getInstance()
-        self._setting_keyword = ";SETTING_"
-        #self._application.initializationFinished.connect(self._onInitialized)
+        self._application = Application.getInstance()
 
-        #def _onInitialized(self):
         self.this_plugin_path=os.path.join(Resources.getStoragePath(Resources.Resources), "plugins","Dremel3D20","Dremel3D20")
-        #if not self._application.getPluginRegistry().isActivePlugin("Dremel3D20"):
-        #    Logger.log("i", "Dremel3D20 Plugin is disabled")
-        #    return #Plug-in is disabled.
+
         if self._application.getPreferences().getValue("Dremel3D20/select_screenshot") is None:
             self._application.getPreferences().addPreference("Dremel3D20/select_screenshot", False)
 
@@ -98,22 +97,20 @@ class Dremel3D20(QObject, MeshWriter, Extension):
         self.local_materials_path = None
         self.local_quality_path = None
         self.local_extruder_path = None
+
         Logger.log("i", "Dremel 3D20 Plugin setting up")
         self.local_meshes_path = os.path.join(Resources.getStoragePathForType(Resources.Resources), "meshes")
         self.local_printer_def_path = Resources.getStoragePath(Resources.DefinitionContainers)
         self.local_materials_path = os.path.join(Resources.getStoragePath(Resources.Resources), "materials")
         self.local_quality_path = os.path.join(Resources.getStoragePath(Resources.Resources), "quality")
         self.local_extruder_path = os.path.join(Resources.getStoragePath(Resources.Resources),"extruders")
-        # Check to see if the user had installed the plugin in the main directory
-        for fil in self.oldVersionInstalled():
-            Logger.log("i", "Dremel 3D20 Plugin found files from previous install: " + fil)
-            message = Message(catalog.i18nc("@info:status", "Old Dremel IdeaBuilder 3D20 files detected.  Please delete "+ fil))
-            message.show()
-            return False
 
         # if the plugin was never installed, then force installation
         if self._application.getPreferences().getValue("Dremel3D20/install_status") is None:
+            Logger.log("i","Dremel 3D20 Plugin can't find the install_status preference")
             self._application.getPreferences().addPreference("Dremel3D20/install_status", "unknown")
+        else:
+            Logger.log("i","Dremel 3D20 Plugin install_status="+str(self._application.getPreferences().getValue("Dremel3D20/install_status")))
 
         # if something got messed up, force installation
         if not self.isInstalled() and self._application.getPreferences().getValue("Dremel3D20/install_status") is "installed":
@@ -133,7 +130,7 @@ class Dremel3D20(QObject, MeshWriter, Extension):
         # if so don't automatically install them
         if self._application.getPreferences().getValue("Dremel3D20/install_status") is "unknown":
             # if the user never installed the files, then automatically install it
-            Logger.log("i","Dremel 3D20 Plugin now calling install function")			
+            Logger.log("i","Dremel 3D20 Plugin now calling install function")
             self.installPluginFiles()
 
         # check to see that the install succeeded - if so change the menu item options
@@ -204,27 +201,6 @@ class Dremel3D20(QObject, MeshWriter, Extension):
             message = Message(catalog.i18nc("@info:status", "Dremel 3D20 plugin could not open https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/issues/new please navigate to the page and report an issue"))
             message.show()
         return
-
-
-    def oldVersionInstalled(self):
-        cura_dir=os.path.dirname(os.path.realpath(sys.argv[0]))
-        dremelDefinitionFile=os.path.join(cura_dir,"resources","definitions","Dremel3D20.def.json")
-        dremelExtruderFile=os.path.join(cura_dir,"resources","definitions","dremel_3d20_extruder_0.def.json")
-        oldPluginPath=os.path.join(cura_dir,"resources","plugins","DremelGCodeWriter")
-        dremelMaterialFile=os.path.join(cura_dir,"resources","materials","dremel_pla.xml.fdm_material")
-        dremelQualityFolder=os.path.join(cura_dir,"resources","quality","dremel_3d20")
-        ret = []
-        if os.path.isfile(dremelDefinitionFile):
-            ret.append(dremelDefinitionFile)
-        if os.path.isfile(dremelExtruderFile):
-            ret.append(dremelExtruderFile)
-        if os.path.isfile(dremelMaterialFile):
-            ret.append(dremelMaterialFile)
-        if os.path.isdir(dremelQualityFolder):
-            ret.append(dremelQualityFolder)
-        if os.path.isdir(oldPluginPath):
-            ret.append(oldPluginPath)
-        return ret
 
     # returns true if the versions match and false if they don't
     def versionsMatch(self):
@@ -557,10 +533,13 @@ class Dremel3D20(QObject, MeshWriter, Extension):
             # now that the header is written, write the ascii encoded gcode
             Logger.log("i", "Finished Writing Dremel Header.")
             active_build_plate = self._application.getMultiBuildPlateModel().activeBuildPlate
-            scene = self._application.getController().getScene()
-            gcode_dict = getattr(scene, "gcode_dict")
-            if not gcode_dict:
+            active_build_plate = Application.getInstance().getMultiBuildPlateModel().activeBuildPlate
+            scene = Application.getInstance().getController().getScene()
+            if not hasattr(scene, "gcode_dict"):
+                self.setInformation(catalog.i18nc("@warning:status", "Please prepare G-code before exporting."))
                 return False
+
+            gcode_dict = getattr(scene, "gcode_dict")
             gcode_list = gcode_dict.get(active_build_plate, None)
             Logger.log("i", "Got active build plate")
             if gcode_list is not None:
@@ -582,6 +561,7 @@ class Dremel3D20(QObject, MeshWriter, Extension):
                 except Exception as e:
                     Logger.log("i", "Exception caught while serializing settings.")
                     Logger.log("d",sys.exc_info()[:2])
+            self.setInformation(catalog.i18nc("@warning:status", "Please prepare G-code before exporting."))
             return False
         except Exception as e:
             Logger.log("i", "Exception caught while writing gcode.")
@@ -617,17 +597,24 @@ class Dremel3D20(QObject, MeshWriter, Extension):
     #   \return A serialised string of the settings.
     def _serialiseSettings(self, stack):
         container_registry = self._application.getContainerRegistry()
-        quality_manager = self._application.getQualityManager()
 
         prefix = self._setting_keyword + str(Dremel3D20.version) + " "  # The prefix to put before each line.
         prefix_length = len(prefix)
 
         quality_type = stack.quality.getMetaDataEntry("quality_type")
         container_with_profile = stack.qualityChanges
+        machine_definition_id_for_quality = ContainerTree.getInstance().machines[stack.definition.getId()].quality_definition
         if container_with_profile.getId() == "empty_quality_changes":
             # If the global quality changes is empty, create a new one
             quality_name = container_registry.uniqueName(stack.quality.getName())
-            container_with_profile = quality_manager._createQualityChanges(quality_type, quality_name, stack, None)
+            quality_id = container_registry.uniqueName((stack.definition.getId() + "_" + quality_name).lower().replace(" ", "_"))
+            container_with_profile = InstanceContainer(quality_id)
+            container_with_profile.setName(quality_name)
+            container_with_profile.setMetaDataEntry("type", "quality_changes")
+            container_with_profile.setMetaDataEntry("quality_type", quality_type)
+            if stack.getMetaDataEntry("position") is not None:  # For extruder stacks, the quality changes should include an intent category.
+                container_with_profile.setMetaDataEntry("intent_category", stack.intent.getMetaDataEntry("intent_category", "default"))
+            container_with_profile.setDefinition(machine_definition_id_for_quality)
 
         flat_global_container = self._createFlattenedContainerInstance(stack.userChanges, container_with_profile)
         # If the quality changes is not set, we need to set type manually
@@ -639,7 +626,6 @@ class Dremel3D20(QObject, MeshWriter, Extension):
             flat_global_container.setMetaDataEntry("quality_type", stack.quality.getMetaDataEntry("quality_type", "normal"))
 
         # Get the machine definition ID for quality profiles
-        machine_definition_id_for_quality = getMachineDefinitionIDForQualitySearch(stack.definition)
         flat_global_container.setMetaDataEntry("definition", machine_definition_id_for_quality)
 
         serialized = flat_global_container.serialize()
@@ -651,7 +637,12 @@ class Dremel3D20(QObject, MeshWriter, Extension):
             if extruder_quality.getId() == "empty_quality_changes":
                 # Same story, if quality changes is empty, create a new one
                 quality_name = container_registry.uniqueName(stack.quality.getName())
-                extruder_quality = quality_manager._createQualityChanges(quality_type, quality_name, stack, None)
+                quality_id = container_registry.uniqueName((stack.definition.getId() + "_" + quality_name).lower().replace(" ", "_"))
+                extruder_quality = InstanceContainer(quality_id)
+                extruder_quality.setName(quality_name)
+                extruder_quality.setMetaDataEntry("type", "quality_changes")
+                extruder_quality.setMetaDataEntry("quality_type", quality_type)
+                extruder_quality.setDefinition(machine_definition_id_for_quality)
 
             flat_extruder_quality = self._createFlattenedContainerInstance(extruder.userChanges, extruder_quality)
             # If the quality changes is not set, we need to set type manually
@@ -682,10 +673,10 @@ class Dremel3D20(QObject, MeshWriter, Extension):
         json_string = json.dumps(data)
 
         # Escape characters that have a special meaning in g-code comments.
-        pattern = re.compile("|".join(Dremel3D20.escape_characters.keys()))
+        pattern = re.compile("|".join(GCodeWriter.escape_characters.keys()))
 
         # Perform the replacement with a regular expression.
-        escaped_string = pattern.sub(lambda m: Dremel3D20.escape_characters[re.escape(m.group(0))], json_string)
+        escaped_string = pattern.sub(lambda m: GCodeWriter.escape_characters[re.escape(m.group(0))], json_string)
 
         # Introduce line breaks so that each comment is no longer than 80 characters. Prepend each line with the prefix.
         result = ""

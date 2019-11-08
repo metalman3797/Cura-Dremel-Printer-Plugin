@@ -39,7 +39,8 @@ This plugin is now available within the Cura marketplace.  Users are encouraged 
 
 | Cura Version | Last version of the plugin that works with the version of Cura         |
 |--------------|------------------------------------------------------------------------|
-4.2, 4.1, 4.0  | [version 0.5.9](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/download/0.5.9/Cura-4.0-Dremel-3D20-0.5.9.curapackage)
+4.4 | [version 0.6.0](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/download/0.6.0/Cura-4.0-Dremel-3D20-0.6.0.curapackage)
+4.3, 4.2, 4.1, 4.0  | [version 0.5.9](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/download/0.5.9/Cura-4.0-Dremel-3D20-0.5.9.curapackage)
 3.5 or 3.6     | [version 0.5.9](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/download/0.5.9/Cura-4.0-Dremel-3D20-0.5.9.curapackage)
 3.4 or 3.4.1   | [version 0.4.8](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.4.8)
 3.3 or 3.3.1   | [version 0.4.3](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.4.3)
@@ -58,8 +59,7 @@ To install the plugins, follow the instructions below:
     ![Browse for the new plugin](./docs/DremelPackage.png)
 
 2. Cura will display a message window telling you to restart Cura.
-
-    ![Install new plugin](./docs/restart.png)
+    ![Install new plugin](./docs/quit.png)
 
 3.  Close the Cura application
 
@@ -71,14 +71,18 @@ Once the plugin has been installed you can use it by following the steps outline
 1. Open Cura & load an object that you want to print
 
 2. Select the Dremel 3D20 as your printer (preferences->configure cura->printers->add)
+
 ![Select the Dremel 3D20](./docs/addprinter.png)
 
 3. Select a type of PLA filament.  By default the plugin uses the Dremel PLA filament that is included and installed with the plugin.
 ![Select the Dremel pla](./docs/selectpla.png)
 
-4. Set the slicing options that you want from the print settings in the upper right corner of the screen. ![Print Settings](./docs/printsettings.png)
+4. Set the slicing options that you want from the print settings in the upper right corner of the screen.
+
+![Print Settings](./docs/printsettings.png)
 
 5. Press the slice button in the lower-right corner to tell Cura to slice the object using the selected settings.
+
 ![Slice Button](./docs/slicebutton.png)
 
 6. Click the "save to file" button.  Ensure that .g3drem is chosen as the output file format.
