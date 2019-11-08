@@ -69,7 +69,7 @@ rmdir %PLUGIN_DIR%\dremel_3d20
 cd ..
 if EXIST README.html (del README.html)
 if EXIST README.pdf (del README.pdf)
-grip README.md --export README.html
+python -m grip README.md --export README.html
 "c:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe" README.html README.pdf
 cd tools
 xcopy ..\README.pdf %PLUGIN_DIR%\
