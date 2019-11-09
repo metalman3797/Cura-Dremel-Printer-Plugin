@@ -62,7 +62,7 @@ class Dremel3D20(QObject, MeshWriter, Extension):
     # 1) here
     # 2) plugin.json
     # 3) package.json
-    version = "0.6.0"
+    version = "0.6.1"
 
     ##  Dictionary that defines how characters are escaped when embedded in
     #   g-code.
@@ -673,10 +673,10 @@ class Dremel3D20(QObject, MeshWriter, Extension):
         json_string = json.dumps(data)
 
         # Escape characters that have a special meaning in g-code comments.
-        pattern = re.compile("|".join(GCodeWriter.escape_characters.keys()))
+        pattern = re.compile("|".join(Dremel3D20.escape_characters.keys()))
 
         # Perform the replacement with a regular expression.
-        escaped_string = pattern.sub(lambda m: GCodeWriter.escape_characters[re.escape(m.group(0))], json_string)
+        escaped_string = pattern.sub(lambda m: Dremel3D20.escape_characters[re.escape(m.group(0))], json_string)
 
         # Introduce line breaks so that each comment is no longer than 80 characters. Prepend each line with the prefix.
         result = ""
