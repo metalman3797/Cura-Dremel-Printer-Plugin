@@ -14,6 +14,7 @@ This is a plugin for [Cura version 3.x and onward](https://ultimaker.com/en/prod
 - [Using the Plugin](#Using_the_Plugin)
 - [Preview Image Options](#Preview_Image_Options)
 - [Note](#Note)
+- [Frequently Asked Questions](#FAQ)
 - [Wishlist](#Wishlist)
 - [Technical Details of the .g3drem File Format](#Technical_Details)
 - [Contributors](#Contributors)
@@ -138,6 +139,14 @@ preview image on the Dremel:
 Please note the following:
 * The plugin has been tested using the latest version of Cura noted in this README on Windows 10 x64.  Prior versions have been tested on MacOS Sierra (MacOS 10.12), MacOS El Capitan (10.11), and Ubuntu versions 17.10 and 16.04.  Testing on non-Windows platforms occurs much less frequently than on Windows.  If you are using another platform and encounter issues with the plugin, feel free to raise an issue with the ["Issues" section](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/issues/new) of the plugin's website.
 * This plugin has been tested to work in the basic print case, however users may still encounter problems with the print head crashing into your parts if you attempt to print multiple parts on the same print bed one-after-another instead of printing them all-at-once.
+
+---
+# <a name="FAQ"></a>Frequently Asked Questions
+1. **Question:** *Does/Can this plugin support the Dremel 3D40/Dremel 3D45?*
+   **Answer:** With some work *maybe* - see ["Issue #20"](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/issues/20) for a more complete answer.  The author doesn't own and doesn't have access to a 3D40/3D45, and cannot commit to supporting any machine that they don't have direct access to.  Some users have been successful at getting the machine working with a modified version of this plugin, however it will require some work.  If any developer with access to a 3D40/3D45 wants to fork this plugin, the source code is released under a GPLv3 license.  Please credit this plugin as well as the [Cura gcode writer plugin](https://github.com/Ultimaker/Cura/tree/master/plugins/GCodeWriter) upon which this plugin is based.
+
+2. **Question:** *I cannot find the plugin for an older version of Cura in the Ultimaker Cura marketplace*
+   **Answer:** Unfortunately the marketplace only allows one version of the plugin to exist at the time.  As Ultimaker updates Cura they occasionally break compatibiltiy with older versions of plugins.  Users are encouraged to [update to the latest version of Cura](https://ultimaker.com/software/ultimaker-cura) and download the latest version of the plugin from the marketplace.  If a user is tied to a specific version of Cura then they can download & manually install older releases of the plugin [here](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases)
 
 ---
 # <a name="Wishlist"></a>Wishlist
