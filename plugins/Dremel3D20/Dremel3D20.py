@@ -154,6 +154,7 @@ class Dremel3D20(QObject, MeshWriter, Extension):
         Logger.log("d", "Creating thumbnail image...")
         self._snapshot = Snapshot.snapshot(width = 80, height = 60)
         Logger.log("d","Thumbnail taken")
+
     def createPreferencesWindow(self):
         path = os.path.join(PluginRegistry.getInstance().getPluginPath(self.getPluginId()), "Dremel3D20prefs.qml")
         Logger.log("i", "Creating Dremel3D20 preferences UI "+path)
@@ -472,7 +473,7 @@ class Dremel3D20(QObject, MeshWriter, Extension):
             if not bmpData.open(QIODevice.WriteOnly):
                 Logger.log("d", "Dremel 3D20 Plugin - Could not open qbuffer - using generic cura icon instead")
                 bmpError = True
-            if bmpData is None:
+            if bmpData is None or self._snapshot is None:
                 Logger.log("d", "Dremel 3D20 Plugin - could not copy bmp data into buffer - using generic cura icon instead")
                 bmpError = True
             # copy the raw image data to bitmap image format in memory
