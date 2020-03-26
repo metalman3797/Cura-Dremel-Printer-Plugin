@@ -62,7 +62,7 @@ class Dremel3D20(QObject, MeshWriter, Extension):
     # 1) here
     # 2) plugin.json
     # 3) package.json
-    version = "0.6.1"
+    version = "0.6.2"
 
     ##  Dictionary that defines how characters are escaped when embedded in
     #   g-code.
@@ -448,8 +448,11 @@ class Dremel3D20(QObject, MeshWriter, Extension):
                     if not bmpData.open(QIODevice.WriteOnly):
                         Logger.log("d", "Dremel 3D20 Plugin - Could not open qbuffer - using generic cura icon instead")
                         bmpError = True
+                    if bmpData is None:
+                        Logger.log("d", "Dremel 3D20 Plugin - could not copy image data into buffer - using generic cura icon instead")
+                        bmpError = True
                     # copy the raw image data to bitmap image format in memory
-                    if not pixMpImg.save(bmpData, "BMP"):
+                    if not bmpError and not pixMpImg.save(bmpData, "BMP"):
                         Logger.log("d", "Dremel 3D20 Plugin - Could not save pixmap - trying to take screenshot instead")
                         bmpError = True
                     # finally write the bitmap to the g3drem file
@@ -469,8 +472,11 @@ class Dremel3D20(QObject, MeshWriter, Extension):
             if not bmpData.open(QIODevice.WriteOnly):
                 Logger.log("d", "Dremel 3D20 Plugin - Could not open qbuffer - using generic cura icon instead")
                 bmpError = True
+            if bmpData is None:
+                Logger.log("d", "Dremel 3D20 Plugin - could not copy bmp data into buffer - using generic cura icon instead")
+                bmpError = True
             # copy the raw image data to bitmap image format in memory
-            if not self._snapshot.save(bmpData, "BMP"):
+            if not bmpError and not self._snapshot.save(bmpData, "BMP"):
                 Logger.log("d", "Dremel 3D20 Plugin - Could not save pixmap - using generic cura icon instead")
                 bmpError = True
             # finally write the bitmap to the g3drem file
@@ -478,7 +484,7 @@ class Dremel3D20(QObject, MeshWriter, Extension):
                 return ba
 
         # if there was an error, then use the generic icon
-        Logger.log("d", "Dremel 3D20 Plugin - Could not get screen - using generic cura icon instead")
+        Logger.log("d", "Dremel 3D20 Plugin - using generic cura icon")
 
         # if an error ocurred when grabbing a screenshot write the generic cura icon instead
         bmpBytes = struct.pack("{}B".format(len(self.curaIconBmpData)), *self.curaIconBmpData)
