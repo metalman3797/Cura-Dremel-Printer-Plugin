@@ -40,7 +40,7 @@ This plugin is now available within the Cura marketplace.  Users are encouraged 
 
 | Cura Version | Last version of the plugin that works with the version of Cura         |
 |--------------|------------------------------------------------------------------------|
-4.4 through 4.5 | [version 0.6.2](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.6.2)
+4.4 through 4.6.1 | [version 0.6.2](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.6.2)
 3.5 through 4.3  | [version 0.5.9](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.5.9)
 3.4 or 3.4.1   | [version 0.4.8](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.4.8)
 3.3 or 3.3.1   | [version 0.4.3](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.4.3)
@@ -52,18 +52,18 @@ This plugin is now available within the Cura marketplace.  Users are encouraged 
 
 To install the plugins, follow the instructions below:
 
-0.  [Download and install Cura](https://ultimaker.com/en/products/ultimaker-cura-software) on your machine.  This plugin has been tested on Windows 10 Professional 64 bit edition, and MacOS 10.12 (Sierra), but this plugin should work equally well on linux or any other operating system that Cura supports.
+1.  [Download and install Cura](https://ultimaker.com/en/products/ultimaker-cura-software) on your machine.  This plugin has been tested on Windows 10 Professional 64 bit edition, and MacOS 10.12 (Sierra), and Ubuntu 18.04 LTS, but this plugin should work equally well on any other operating system that Cura supports.
 
-1.  Open Cura, select the Marketplace menu, then select the "Browse Packages" item.  Cura will bring up the package browser.  Find the "Dremel 3D20" package in the list, then click install.
+2.  Open Cura, select the Marketplace menu, then select the "Browse Packages" item.  Cura will bring up the package browser.  Find the "Dremel 3D20" package in the list, then click install.
 
     ![Browse for the new plugin](./docs/DremelPackage.png)
 
-2. Cura will display a message window telling you to restart Cura.
+3. Cura will display a message window telling you to restart Cura.
     ![Install new plugin](./docs/quit.png)
 
-3.  Close the Cura application
+4.  Close the Cura application
 
-4.  Upon restart you should have an option to add a Dremel3D20 printer (see "Using the Plugin" section below) - Congratulations, the plugin is now installed!
+5.  Upon restart you should have an option to add a Dremel3D20 printer (see "Using the Plugin" section below) - Congratulations, the plugin is now installed!
 
 ---
 # <a name="Using_the_Plugin"></a>Using the Plugin
