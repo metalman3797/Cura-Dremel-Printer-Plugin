@@ -40,7 +40,7 @@ This plugin is now available within the Cura marketplace.  Users are encouraged 
 
 | Cura Version | Last version of the plugin that works with the version of Cura         |
 |--------------|------------------------------------------------------------------------|
-4.4 through 4.6.1 | [version 0.6.2](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.6.2)
+4.4 through 4.8 | [version 0.6.3](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.6.3)
 3.5 through 4.3  | [version 0.5.9](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.5.9)
 3.4 or 3.4.1   | [version 0.4.8](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.4.8)
 3.3 or 3.3.1   | [version 0.4.3](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.4.3)
