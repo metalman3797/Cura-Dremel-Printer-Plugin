@@ -40,7 +40,7 @@ This plugin is now available within the Cura marketplace.  Users are encouraged 
 
 | Cura Version | Last version of the plugin that works with the version of Cura         |
 |--------------|------------------------------------------------------------------------|
-4.4 through 4.6.1 | [version 0.6.2](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.6.2)
+4.4 through 4.8 | [version 0.6.3](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.6.3)
 3.5 through 4.3  | [version 0.5.9](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.5.9)
 3.4 or 3.4.1   | [version 0.4.8](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.4.8)
 3.3 or 3.3.1   | [version 0.4.3](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.4.3)
@@ -52,7 +52,7 @@ This plugin is now available within the Cura marketplace.  Users are encouraged 
 
 To install the plugins, follow the instructions below:
 
-1.  [Download and install Cura](https://ultimaker.com/en/products/ultimaker-cura-software) on your machine.  This plugin has been tested on Windows 10 Professional 64 bit edition, and MacOS 10.12 (Sierra), and Ubuntu 18.04 LTS, but this plugin should work equally well on any other operating system that Cura supports.
+1.  [Download and install Cura](https://ultimaker.com/en/products/ultimaker-cura-software) on your machine.  This plugin has been tested on Windows 10 Professional 64 bit edition, MacOS 10.12 (Sierra), and Ubuntu 20.04 LTS, but this plugin should work equally well on any other operating system that Cura supports.
 
 2.  Open Cura, select the Marketplace menu, then select the "Browse Packages" item.  Cura will bring up the package browser.  Find the "Dremel 3D20" package in the list, then click install.
 
@@ -148,6 +148,8 @@ Please note the following:
 2. **Question:** *I cannot find the plugin for an older version of Cura in the Ultimaker Cura marketplace*
    **Answer:** Unfortunately the marketplace only allows one version of the plugin to exist at the time.  As Ultimaker updates Cura they occasionally break compatibiltiy with older versions of plugins.  Users are encouraged to [update to the latest version of Cura](https://ultimaker.com/software/ultimaker-cura) and download the latest version of the plugin from the marketplace.  If a user is tied to a specific version of Cura then they can download & manually install older releases of the plugin [here](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases)
 
+3. **Question:** *Does this plugin support USB-connected printing/Do I need an SD card*
+   **Answer:** The plugin only supports creating .g3drem files and using an SD card to get the files into the printer.  It does not support direct USB communication with the printer.  Maybe if the author gets *really bored* one day, but it's unlikely
 ---
 # <a name="Wishlist"></a>Wishlist
 
