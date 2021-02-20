@@ -62,7 +62,7 @@ class Dremel3D20(QObject, MeshWriter, Extension):
     # 1) here
     # 2) plugin.json
     # 3) package.json
-    version = "0.6.3"
+    version = "0.6.4"
 
     ##  Dictionary that defines how characters are escaped when embedded in
     #   g-code.
@@ -622,6 +622,7 @@ class Dremel3D20(QObject, MeshWriter, Extension):
             if stack.getMetaDataEntry("position") is not None:  # For extruder stacks, the quality changes should include an intent category.
                 container_with_profile.setMetaDataEntry("intent_category", stack.intent.getMetaDataEntry("intent_category", "default"))
             container_with_profile.setDefinition(machine_definition_id_for_quality)
+            container_with_profile.setMetaDataEntry("setting_version", stack.quality.getMetaDataEntry("setting_version"))
 
         flat_global_container = self._createFlattenedContainerInstance(stack.userChanges, container_with_profile)
         # If the quality changes is not set, we need to set type manually
@@ -639,7 +640,7 @@ class Dremel3D20(QObject, MeshWriter, Extension):
         data = {"global_quality": serialized}
 
         all_setting_keys = flat_global_container.getAllKeys()
-        for extruder in sorted(stack.extruders.values(), key = lambda k: int(k.getMetaDataEntry("position"))):
+        for extruder in stack.extruderList:
             extruder_quality = extruder.qualityChanges
             if extruder_quality.getId() == "empty_quality_changes":
                 # Same story, if quality changes is empty, create a new one
@@ -650,6 +651,7 @@ class Dremel3D20(QObject, MeshWriter, Extension):
                 extruder_quality.setMetaDataEntry("type", "quality_changes")
                 extruder_quality.setMetaDataEntry("quality_type", quality_type)
                 extruder_quality.setDefinition(machine_definition_id_for_quality)
+                extruder_quality.setMetaDataEntry("setting_version", stack.quality.getMetaDataEntry("setting_version"))
 
             flat_extruder_quality = self._createFlattenedContainerInstance(extruder.userChanges, extruder_quality)
             # If the quality changes is not set, we need to set type manually
