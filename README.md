@@ -132,7 +132,7 @@ preview image on the Dremel:
 
 3.   If a screenshot has not been found after steps 1 and 2, then the plugin attempts to take a screenshot of the main Cura window and save it to the file.  This is the default behavior of the plugin, and is what will happen normally if the user doesn't perform the actions listed in Steps 1 and 2.
 
-4.  If the screenshot fails for some reason then a generic Cura icon will be selected as the preview image.
+4.  If the screenshot fails for some reason then the plugin's icon will be selected as the preview image.
 
 ---
 # <a name="Note"></a>Note
