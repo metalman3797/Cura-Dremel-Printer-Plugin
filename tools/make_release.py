@@ -154,6 +154,8 @@ for root, dirs, files in os.walk(RELEASE_DIR):
 ## Step 9
 ## Make the ultimaker zip file for upload to contribute.ultimaker.com
 ################################
+shutil.copy2(os.path.abspath('../LICENSE'), PLUGIN_DIR)
+
 z = zipfile.ZipFile(ULTIMAKER_ZIP,'w', zipfile.ZIP_DEFLATED)
 for root, dirs, files in os.walk(PLUGIN_DIR):
     for file in files:
