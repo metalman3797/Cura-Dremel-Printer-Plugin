@@ -540,7 +540,7 @@ class Dremel3D20(QObject, MeshWriter, Extension):
             # now that the header is written, write the ascii encoded gcode
             Logger.log("i", "Finished Writing Dremel Header.")
             active_build_plate = self._application.getMultiBuildPlateModel().activeBuildPlate
-            active_build_plate = Application.getInstance().getMultiBuildPlateModel().activeBuildPlate
+
             scene = Application.getInstance().getController().getScene()
             if not hasattr(scene, "gcode_dict"):
                 self.setInformation(catalog.i18nc("@warning:status", "Please prepare G-code before exporting."))
