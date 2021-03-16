@@ -113,12 +113,12 @@ class Dremel3D20(QObject, MeshWriter, Extension):
             Logger.log("i","Dremel 3D20 Plugin install_status="+str(self._application.getPreferences().getValue("Dremel3D20/install_status")))
 
         # if something got messed up, force installation
-        if not self.isInstalled() and self._application.getPreferences().getValue("Dremel3D20/install_status") is "installed":
+        if not self.isInstalled() and self._application.getPreferences().getValue("Dremel3D20/install_status") == "installed":
             Logger.log("i","Dremel 3D20 Plugin detected that plugin should be installed but isn't")
             self._application.getPreferences().setValue("Dremel3D20/install_status", "unknown")
 
         # if it's installed, and it's listed as uninstalled, then change that to reflect the truth
-        if self.isInstalled() and self._application.getPreferences().getValue("Dremel3D20/install_status") is "uninstalled":
+        if self.isInstalled() and self._application.getPreferences().getValue("Dremel3D20/install_status") == "uninstalled":
             self._application.getPreferences().setValue("Dremel3D20/install_status", "installed")
 
         # if the version isn't the same, then force installation
@@ -128,7 +128,7 @@ class Dremel3D20(QObject, MeshWriter, Extension):
 
         # Check the preferences to see if the user uninstalled the files -
         # if so don't automatically install them
-        if self._application.getPreferences().getValue("Dremel3D20/install_status") is "unknown":
+        if self._application.getPreferences().getValue("Dremel3D20/install_status") == "unknown":
             # if the user never installed the files, then automatically install it
             Logger.log("i","Dremel 3D20 Plugin now calling install function")
             self.installPluginFiles()
