@@ -151,7 +151,7 @@ Please note the following:
    **Answer:** Unfortunately the marketplace only allows one version of the plugin to exist at the time.  As Ultimaker updates Cura they occasionally break compatibiltiy with older versions of plugins.  Users are encouraged to [update to the latest version of Cura](https://ultimaker.com/software/ultimaker-cura) and download the latest version of the plugin from the marketplace.  If a user is tied to a specific version of Cura then they can download & manually install older releases of the plugin [here](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases)
 
 3. **Question:** *Does this plugin support USB-connected printing/Do I need an SD card*
-   **Answer:** The plugin only supports creating .g3drem files and using an SD card to get the files into the printer.  It does not support direct USB communication with the printer.  Maybe if the author gets *really bored* one day, but it's unlikely
+   **Answer:** The plugin only supports creating .g3drem files and using an SD card to get the files into the printer.  It does not support direct USB communication with the printer.  Maybe if the author gets *really bored* one day, but it's unlikely.  For advanced users with technical knowledge, octoprint can be enabled by following [these instructions](docs/octoprint/README.md), however this configuration is unsupported - modify the printer definition file at your own risk.
 ---
 # <a name="Wishlist"></a>Wishlist
 
