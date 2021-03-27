@@ -1,8 +1,8 @@
-#How to Enable Octoprint for the Dremel 3D20
+# How to Enable Octoprint for the Dremel 3D20
 
 This page will walk you through how to set up an Octoprint enabled Dremel 3D20.
 
-***Note*** this is for advanced users who know what they're doing.  This configuration is not officially supported by the Dremel 3D20 plugin author.  If you break your machine by modifying the plugin files then ***Do NOT*** try to upgrade the firmware on the printer using the button in Cura. You may ***permanently damage*** your printer if you do so.  As always - remain by your printer while it's printing.  
+***Note*** this is for advanced users who know what they're doing.  This configuration is not officially supported by the Dremel 3D20 plugin author.  The author is not responsible if you break your machine by following these instructions.  If damage to persons or property occurs then the responsibility is solely on you.  ***Do NOT*** try to upgrade the firmware on the printer using the button in Cura. You may ***permanently damage*** your printer if you do so.  As always - remain by your printer while it's printing.
 
 # Requirements
 1.  Raspberry Pi
@@ -33,7 +33,7 @@ This page will walk you through how to set up an Octoprint enabled Dremel 3D20.
 14.  Save & close the Dremel3D20.def.json
 15.  Open Cura again
 16.  Add a Dremel 3D20 printer to Cura - now you should see a button to "connect octoprint"  press it.
-17.  Follow the [instructions here](https://all3dp.com/2/cura-octoprint-plugin-connection/) to get the API key 7 connect cura to Octoprint
+17.  Follow the [instructions here](https://all3dp.com/2/cura-octoprint-plugin-connection/) to get the API key & connect cura to Octoprint
 18.  Enjoy
 
 ***Note*** When Dremel plugin updates are installed, the update will overwrite the modified printer definition & you will have to re-modify the definition file after installing the update.
