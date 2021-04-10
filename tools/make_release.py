@@ -23,9 +23,14 @@
 import os
 import shutil
 import zipfile
+import json
+
+with open('../plugins/Dremel3D20/plugin.json') as json_file:
+    plugin_json = json.load(json_file)
+    json_file.close()
 
 RELEASE_DIR = os.path.abspath('../RELEASE/Dremel_3D20')
-CURA_PACKAGE_FILE = os.path.abspath('../RELEASE/Cura-Dremel-3D20.curapackage')
+CURA_PACKAGE_FILE = os.path.abspath('../RELEASE/Cura-Dremel-3D20-'+str(plugin_json["version"])+'.curapackage')
 ULTIMAKER_ZIP = os.path.abspath('../RELEASE/Dremel3D20.zip')
 PLUGIN_DIR = os.path.join(RELEASE_DIR,'files/plugins/Dremel3D20')
 
