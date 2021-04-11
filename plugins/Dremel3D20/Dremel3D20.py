@@ -241,6 +241,7 @@ class Dremel3D20(QObject, MeshWriter, Extension):
         dremel3D20DefFile = os.path.join(self.local_printer_def_path,"Dremel3D20.def.json")
         dremelExtruderDefFile = os.path.join(self.local_extruder_path,"dremel_3d20_extruder_0.def.json")
         dremelPLAfile = os.path.join(self.local_materials_path,"dremel_pla.xml.fdm_material")
+        dremeloldPLAfile = os.path.join(self.local_materials_path,"dremel_pla_0.5kg.xml.fdm_material")
         dremelQualityDir = os.path.join(self.local_quality_path,"dremel_3d20")
 
         # if some files are missing then return that this plugin as not installed
@@ -252,6 +253,9 @@ class Dremel3D20(QObject, MeshWriter, Extension):
             return False
         if not os.path.isfile(dremelPLAfile):
             Logger.log("i", "Dremel 3D20 Plugin dremel PLA file is NOT installed ")
+            return False
+        if not os.path.isfile(dremeloldPLAfile):
+            Logger.log("i", "Dremel 3D20 Plugin dremel 0.5kg PLA file is NOT installed ")
             return False
         if not os.path.isdir(dremelQualityDir):
             Logger.log("i", "Dremel 3D20 Plugin dremel quality files are NOT installed ")

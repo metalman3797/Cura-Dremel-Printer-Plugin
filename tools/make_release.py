@@ -76,6 +76,7 @@ for item in dirs:
 copyList = ['../resources/definitions/Dremel3D20.def.json',
            '../resources/extruders/dremel_3d20_extruder_0.def.json',
            '../resources/materials/dremel_pla.xml.fdm_material',
+           '../resources/materials/dremel_pla_0.5kg.xml.fdm_material',
            '../resources/meshes/dremel_3D20_platform.stl']
 for item in copyList:
     shutil.copy2(os.path.abspath(item),PLUGIN_DIR)
@@ -92,6 +93,7 @@ z = zipfile.ZipFile(internal_zip_file_name,'w', zipfile.ZIP_DEFLATED)
 zipList = [os.path.join(PLUGIN_DIR,'Dremel3D20.def.json'),
            os.path.join(PLUGIN_DIR,'dremel_3d20_extruder_0.def.json'),
            os.path.join(PLUGIN_DIR,'dremel_pla.xml.fdm_material'),
+           os.path.join(PLUGIN_DIR,'dremel_pla_0.5kg.xml.fdm_material'),
            os.path.join(PLUGIN_DIR,'dremel_3D20_platform.stl')]
 for item in zipList:
     z.write(item,os.path.basename(item));
@@ -119,7 +121,7 @@ shutil.rmtree(os.path.join(PLUGIN_DIR,'dremel_3d20'))
 currDir = os.getcwd()
 os.chdir('..')
 os.system('python -m grip README.md --export README.html')
-os.system('"{0}" {1} {2}'.format(WKHTMLTOPDF_DIR,'README.html', os.path.join(PLUGIN_DIR,'README.pdf')))
+os.system('"{0}" {1} {2} {3}'.format(WKHTMLTOPDF_DIR,'--enable-local-file-access','README.html', os.path.join(PLUGIN_DIR,'README.pdf')))
 shutil.copy2(os.path.join(PLUGIN_DIR,'README.pdf'), '.')
 os.chdir(currDir)
 
