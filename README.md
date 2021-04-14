@@ -40,7 +40,7 @@ This plugin is now available within the Cura marketplace.  Users are encouraged 
 
 | Cura Version | Last version of the plugin that works with the version of Cura         |
 |--------------|------------------------------------------------------------------------|
-4.4 through 4.8 | [version 0.6.4](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.6.4)
+4.4 through 4.9 | [version 0.6.5](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.6.5)
 3.5 through 4.3  | [version 0.5.9](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.5.9)
 3.4 or 3.4.1   | [version 0.4.8](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.4.8)
 3.3 or 3.3.1   | [version 0.4.3](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.4.3)
@@ -74,7 +74,8 @@ Once the plugin has been installed you can use it by following the steps outline
 
 ![Select the Dremel 3D20](./docs/addprinter.png)
 
-3. Select a type of PLA filament.  By default the plugin uses the Dremel PLA filament that is included and installed with the plugin.
+3. Select a type of PLA filament.  This plugin installs two Dremel PLA materials. It includes the old formulation that came in a 0.5kg spool, and the new fomulation that comes in a 0.75kg spool. By default the plugin uses the new Dremel PLA filament that comes in the 0.7kg spool.
+
 ![Select the Dremel pla](./docs/selectpla.png)
 
 4. Set the slicing options that you want from the print settings in the upper right corner of the screen.
