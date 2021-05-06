@@ -4,6 +4,8 @@
         "author": "Tim Schoenmackers",
         "category": "Dremel",
         "exclude_materials": [
+            "bestfilament_abs_skyblue",
+            "bestfilament_petg_orange",
             "Vertex_Delta_ABS",
             "Vertex_Delta_PET",
             "Vertex_Delta_TPU",
