@@ -35,6 +35,7 @@ This page will walk you through how to set up an Octoprint enabled Dremel 3D20.
 16.  Add a Dremel 3D20 printer to Cura - now you should see a button to "connect octoprint"  press it.
 17.  Follow the [instructions here](https://all3dp.com/2/cura-octoprint-plugin-connection/) to get the API key & connect cura to Octoprint
 18.  Enjoy
+19.  If you find the dremel functionality in octoprint useful, please go give thanks to [Mrnt](https://github.com/Mrnt/OctoPrint-FlashForge/blob/master/README.md)
 
 ***Note*** When Dremel plugin updates are installed, the update will overwrite the modified printer definition & you will have to re-modify the definition file after installing the update.
 

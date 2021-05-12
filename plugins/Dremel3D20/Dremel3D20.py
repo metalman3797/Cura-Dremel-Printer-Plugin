@@ -16,12 +16,12 @@
 
 import os # for listdir
 import platform # for platform.system
-import os.path # for isfile and join and path
+import os.path  # for isfile and join and path
 import sys
-import zipfile
-import shutil  # For deleting plugin directories;
-import stat    # For setting file permissions correctly;
-import re #For escaping characters in the settings.
+import zipfile  # For unzipping the printer files
+import shutil   # For deleting plugin directories
+import stat     # For setting file permissions correctly
+import re       # For escaping characters in the settings.
 import json
 import copy
 import struct
@@ -62,13 +62,15 @@ class Dremel3D20(QObject, MeshWriter, Extension):
     # 1) here
     # 2) plugin.json
     # 3) package.json
-    version = "0.6.4"
+    version = "0.6.5"
 
+    ######################################################################
     ##  Dictionary that defines how characters are escaped when embedded in
     #   g-code.
     #
     #   Note that the keys of this dictionary are regex strings. The values are
     #   not.
+    ######################################################################
     escape_characters = {
         re.escape("\\"): "\\\\",  # The escape character.
         re.escape("\n"): "\\n",   # Newlines. They break off the comment.
@@ -80,6 +82,9 @@ class Dremel3D20(QObject, MeshWriter, Extension):
     def __init__(self):
         super().__init__(add_to_recent_files = False)
         self._application = Application.getInstance()
+
+        if self._application.getPreferences().getValue("Dremel3D20/curr_version") is None:
+            self._application.getPreferences().addPreference("Dremel3D20/curr_version","0.0.0")
 
         self.this_plugin_path=os.path.join(Resources.getStoragePath(Resources.Resources), "plugins","Dremel3D20","Dremel3D20")
 
@@ -133,14 +138,6 @@ class Dremel3D20(QObject, MeshWriter, Extension):
             Logger.log("i","Dremel 3D20 Plugin now calling install function")
             self.installPluginFiles()
 
-        # check to see that the install succeeded - if so change the menu item options
-        #if os.path.isfile(os.path.join(self.local_printer_def_path,"Dremel3D20.def.json")):
-        #    Logger.log("i", "Dremel 3D20 Plugin adding menu item for uninstallation")
-        #    self.addMenuItem(catalog.i18nc("@item:inmenu", "Uninstall Dremel3D20 Printer Files"), self.uninstallPluginFiles)
-        #else:
-        #    Logger.log("i", "Dremel 3D20 Plugin adding menu item for installation")
-        #    self.addMenuItem(catalog.i18nc("@item:inmenu", "Install Dremel3D20 Printer"), self.installPluginFiles)
-
         self.addMenuItem(catalog.i18nc("@item:inmenu", "Preferences"), self.showPreferences)
         self.addMenuItem(catalog.i18nc("@item:inmenu", "Report Issue"), self.reportIssue)
         self.addMenuItem(catalog.i18nc("@item:inmenu", "Help "), self.showHelp)
@@ -149,10 +146,16 @@ class Dremel3D20(QObject, MeshWriter, Extension):
         # finally save the cura.cfg file
         self._application.getPreferences().writeToFile(Resources.getStoragePath(Resources.Preferences, self._application.getApplicationName() + ".cfg"))
 
-    def _createSnapshot(self, *args):
+    ######################################################################
+    ## Taking snapshot needs to be called on QT thread
+    ## see this function for more info
+    ## https://github.com/Ultimaker/Cura/blob/bcf180985d8503245822d420b420f826d0b2de72/plugins/CuraEngineBackend/CuraEngineBackend.py#L250-L261
+    ######################################################################
+    @call_on_qt_thread
+    def _createSnapshot(self, w=80, h=60):
         # must be called from the main thread because of OpenGL
-        Logger.log("d", "Creating thumbnail image...")
-        self._snapshot = Snapshot.snapshot(width = 80, height = 60)
+        Logger.log("d", "Creating thumbnail image with size (",w,",",h,")")
+        self._snapshot = Snapshot.snapshot(width = w, height = h)
         Logger.log("d","Thumbnail taken")
 
     def createPreferencesWindow(self):
@@ -169,7 +172,9 @@ class Dremel3D20(QObject, MeshWriter, Extension):
         if self._preferences_window is not None:
             self._preferences_window.hide()
 
-    # function so that the preferences menu can open website the version
+    ######################################################################
+    ##  function so that the preferences menu can open website
+    ######################################################################
     @pyqtSlot()
     def openPluginWebsite(self):
         url = QUrl('https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases', QUrl.TolerantMode)
@@ -178,6 +183,9 @@ class Dremel3D20(QObject, MeshWriter, Extension):
             message.show()
         return
 
+    ######################################################################
+    ##  Show the help
+    ######################################################################
     @pyqtSlot()
     def showHelp(self):
         url = os.path.join(PluginRegistry.getInstance().getPluginPath(self.getPluginId()), "README.pdf")
@@ -191,6 +199,9 @@ class Dremel3D20(QObject, MeshWriter, Extension):
             message.show()
         return
 
+    ######################################################################
+    ##  Open up the Github Issues Page
+    ######################################################################
     @pyqtSlot()
     def reportIssue(self):
         Logger.log("i", "Dremel 3D20 Plugin opening issue page: https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/issues/new")
@@ -203,7 +214,9 @@ class Dremel3D20(QObject, MeshWriter, Extension):
             message.show()
         return
 
-    # returns true if the versions match and false if they don't
+    ######################################################################
+    ## returns true if the versions match and false if they don't
+    ######################################################################
     def versionsMatch(self):
         # get the currently installed plugin version number
         if self._application.getPreferences().getValue("Dremel3D20/curr_version") is None:
@@ -220,11 +233,15 @@ class Dremel3D20(QObject, MeshWriter, Extension):
             return False
 
 
-    # check to see if the plugin files are all installed
+    ######################################################################
+    ## Check to see if the plugin files are all installed
+    ## Return True if all files are installed, false if they are not
+    ######################################################################
     def isInstalled(self):
         dremel3D20DefFile = os.path.join(self.local_printer_def_path,"Dremel3D20.def.json")
         dremelExtruderDefFile = os.path.join(self.local_extruder_path,"dremel_3d20_extruder_0.def.json")
         dremelPLAfile = os.path.join(self.local_materials_path,"dremel_pla.xml.fdm_material")
+        dremeloldPLAfile = os.path.join(self.local_materials_path,"dremel_pla_0.5kg.xml.fdm_material")
         dremelQualityDir = os.path.join(self.local_quality_path,"dremel_3d20")
 
         # if some files are missing then return that this plugin as not installed
@@ -236,6 +253,9 @@ class Dremel3D20(QObject, MeshWriter, Extension):
             return False
         if not os.path.isfile(dremelPLAfile):
             Logger.log("i", "Dremel 3D20 Plugin dremel PLA file is NOT installed ")
+            return False
+        if not os.path.isfile(dremeloldPLAfile):
+            Logger.log("i", "Dremel 3D20 Plugin dremel 0.5kg PLA file is NOT installed ")
             return False
         if not os.path.isdir(dremelQualityDir):
             Logger.log("i", "Dremel 3D20 Plugin dremel quality files are NOT installed ")
@@ -254,7 +274,9 @@ class Dremel3D20(QObject, MeshWriter, Extension):
             self.uninstallPluginFiles()
 
 
-    # Install the plugin files from the included zip file.
+    ######################################################################
+    ## Install the plugin files from the included zip file.
+    ######################################################################
     def installPluginFiles(self):
         Logger.log("i", "Dremel 3D20 Plugin installing printer files")
 
@@ -277,9 +299,11 @@ class Dremel3D20(QObject, MeshWriter, Extension):
                         folder = self.local_quality_path
                     elif info.filename.endswith(".stl"):
                         folder = self.local_meshes_path
-                        if not os.path.exists(folder): #Cura doesn't create this by itself. We may have to.
+                        # Cura didn't always create the meshes folder by itself.
+                        # We may have to manually create it if it doesn't exist
+                        if not os.path.exists(folder):
                             os.mkdir(folder)
-
+                    # now that we know where this file goes, extract it to the proper directory
                     if folder is not None:
                         extracted_path = zip_ref.extract(info.filename, path = folder)
                         permissions = os.stat(extracted_path).st_mode
@@ -377,6 +401,9 @@ class Dremel3D20(QObject, MeshWriter, Extension):
             message = Message(catalog.i18nc("@info:status", "Dremel 3D20 files have been uninstalled.  Please restart Cura to complete uninstallation"))
             message.show()
 
+    ######################################################################
+    ##  Updates the saved setting in the cura settings folder when the user checks the box
+    ######################################################################
     @pyqtSlot(bool)
     def setSelectScreenshot(self,bManualSelectEnabled):
         if not bManualSelectEnabled:
@@ -391,9 +418,11 @@ class Dremel3D20(QObject, MeshWriter, Extension):
             message.show()
         self._application.getPreferences().writeToFile(Resources.getStoragePath(Resources.Preferences, self._application.getApplicationName() + ".cfg"))
 
-    #  find_images_with_name tries to find an image file with the same name in the same direcory where the
-    #  user is writing out the g3drem file.  If it finds an image then it reuturns the filename so that the
-    #  image can be used for a preview
+    ######################################################################
+    ##  find_images_with_name tries to find an image file with the same name in the same direcory where the
+    ##  user is writing out the g3drem file.  If it finds an image then it reuturns the filename so that the
+    ##  image can be used for a preview
+    ######################################################################
     def find_images_with_name(self, gcodefilename):
         # get the path where the user requested the .g3drem file save to go
         savepth, savefname = os.path.split(os.path.realpath(gcodefilename))
@@ -421,15 +450,14 @@ class Dremel3D20(QObject, MeshWriter, Extension):
     # https://github.com/Ultimaker/Cura/blob/master/plugins/UFPWriter/UFPWriter.py
     @call_on_qt_thread
     def getBitmapBytes(self,stream):
-        # get the primary screen
-        screen = QApplication.primaryScreen()
+
         bmpError = False
         image_with_same_name = None
         if self._application.getPreferences().getValue("Dremel3D20/select_screenshot"):
             image_with_same_name, _ = QFileDialog.getOpenFileName(None, 'Select Preview Image', self._application.getPreferences().getValue("Dremel3D20/last_screenshot_folder"),"Image files (*png *.jpg *.gif *.bmp *.jpeg)")
             Logger.log("d", "Dremel 3D20 Plugin using image for screenshot: " + image_with_same_name)
             self._application.getPreferences().setValue("Dremel3D20/last_screenshot_folder",str(os.path.dirname(image_with_same_name)))
-            # nee to test this when cancel button is clicked
+            # need to test this when cancel button is clicked
             if image_with_same_name == "":
                 image_with_same_name = None
         else:
@@ -491,9 +519,11 @@ class Dremel3D20(QObject, MeshWriter, Extension):
         bmpBytes = struct.pack("{}B".format(len(self.dremel3D20IconBmpData)), *self.dremel3D20IconBmpData)
         return bmpBytes
 
+    ######################################################################
     ##  Performs the writing of the dremel header and gcode - for a technical
     ##  breakdown of the dremel g3drem file format see the following page:
     ##  https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/blob/master/README.md#technical-details-of-the-g3drem-file-format
+    ######################################################################
     def write(self, stream, nodes, mode = MeshWriter.OutputMode.BinaryMode):
         try:
             if mode != MeshWriter.OutputMode.BinaryMode:
@@ -505,6 +535,9 @@ class Dremel3D20(QObject, MeshWriter, Extension):
 
             g3dremHeader = G3DremHeader.G3DremHeader()
 
+            active_printer = self._application.getGlobalContainerStack().definition.getName()
+            Logger.log("i", "Dremel Plugin - Active Printer is " + active_printer)
+
             global_container_stack = self._application.getGlobalContainerStack()
             print_information = self._application.getPrintInformation()
             extruders = [global_container_stack]
@@ -513,15 +546,68 @@ class Dremel3D20(QObject, MeshWriter, Extension):
             length = int(print_information.materialLengths[int(extruder.getMetaDataEntry("position", "0"))]*1000)
             g3dremHeader.setMaterialLen(length)
 
-            # get infill percentage
-            g3dremHeader.setInfillPct(int(global_container_stack.getProperty("infill_sparse_density", "value")))
+            materialName = "PLA"
+            #TODO: currently this gets the values set in the quality profile, however
+            # it does not account for user quality changes
+            active_machine_stack = self._application.getMachineManager().activeMachine
+            if len(active_machine_stack.extruderList)>0:
+                currExtruder = active_machine_stack.extruderList[0]
 
-            # set print temperature in header
-            g3dremHeader.setExtruderTemp(int(extruder.getProperty("material_print_temperature", "value")))
+                # set the material
+                material = currExtruder.material
+                materialName = material.getName()
+                Logger.log("i","Dremel Plugin - active material is: "+str(materialName))
+                if "ABS" in materialName:
+                    g3dremHeader.setMaterialType(G3DremHeader.MaterialType.ABS)
+
+                # set num shell layers
+                numShells = currExtruder.getProperty("wall_line_count","value")
+                Logger.log("i","Dremel Plugin - num walls is: "+str(numShells))
+                if numShells is  None:
+                    numShells = 3
+                g3dremHeader.setNumShells(int(numShells))
+
+                currQuality = currExtruder.quality
+
+                # set print print speed
+                printSpeed = currQuality.getProperty("speed_print","value")
+                Logger.log("i","Dremel3D20 Plugin - print speed is: "+str(printSpeed))
+                if printSpeed is  None:
+                    printSpeed = 50
+                g3dremHeader.setPrintSpeed(int(printSpeed))
+
+                # set print temperature in header
+                extruderTemp = currQuality.getProperty("default_material_print_temperature","value")
+                Logger.log("i","Dremel3D20 Plugin - extruder temperature is: "+str(extruderTemp))
+                if extruderTemp is  None:
+                    extruderTemp = 50
+                g3dremHeader.setExtruderTemp(int(extruderTemp))
+
+                # get infill percentage
+                infillPct = currQuality.getProperty("infill_sparse_density","value")
+                Logger.log("i","Dremel3D20 Plugin - infill percentage is: "+str(infillPct))
+                if infillPct is  None:
+                    infillPct = 20
+                g3dremHeader.setInfillPct(int(infillPct))
+
+                # set the bed temperature
+                bedTemp = currQuality.getProperty("material_bed_temperature", "value")
+                if bedTemp is None:
+                    bedTemp = 60
+                g3dremHeader.setBedTemperature(int(bedTemp))
+
+            bHeatedBed = False
+            bSupportEnabled = active_machine_stack.getProperty("support_enable", "value")
+
+            # set the information flag bits
+            g3dremHeader.setFlags(leftExtruderExists=False,heatedBed=bHeatedBed,supportEnabled=bSupportEnabled)
 
             # get the estimated number of seconds that the print will take
             seconds = int(print_information.currentPrintTime.getDisplayString(DurationFormat.Format.Seconds))
             g3dremHeader.setEstimatedTime(seconds)
+
+            # set layer height
+            g3dremHeader.setLayerHeight(int(global_container_stack.getProperty("layer_height", "value")*1000))
 
             # set the thumbnail
             g3dremHeader.setThumbnailBitmap(self.getBitmapBytes(stream))
@@ -532,23 +618,31 @@ class Dremel3D20(QObject, MeshWriter, Extension):
             #    f.write(self.getBitmapBytes(stream).data())
             #    f.close();
 
-            # finally, write the header
+            # finally, write the header to the file
             if not g3dremHeader.writeHeader(stream):
-                Logger.log("e", "Error Writing Dremel Header.")
+                Logger.log("e", "Dremel3D20 Plugin - Error Writing Dremel Header.")
                 return False
+            Logger.log("i", "Dremel3D20 Plugin - Finished Writing Dremel Header.")
 
             # now that the header is written, write the ascii encoded gcode
-            Logger.log("i", "Finished Writing Dremel Header.")
-            active_build_plate = self._application.getMultiBuildPlateModel().activeBuildPlate
 
-            scene = Application.getInstance().getController().getScene()
+            # write a comment in the gcode with  the Plugin name, version number, printer, and quality name to the g3drem file
+            quality_name = global_container_stack.quality.getName()
+            if quality_name is None:
+                quality_name="unknown"
+
+            stream.write("\n;Cura-Dremel-Plugin version {}\n;Printing on: {}\n;Using material: \"{}\"\n;Quality: \"{}\"\n".format(Dremel3D20.version,active_printer,materialName,quality_name).encode())
+
+            # after the plugin info - write the gcode from Cura
+            active_build_plate = self._application.getMultiBuildPlateModel().activeBuildPlate
+            scene = self._application.getController().getScene()
             if not hasattr(scene, "gcode_dict"):
                 self.setInformation(catalog.i18nc("@warning:status", "Please prepare G-code before exporting."))
                 return False
 
             gcode_dict = getattr(scene, "gcode_dict")
             gcode_list = gcode_dict.get(active_build_plate, None)
-            Logger.log("i", "Got active build plate")
+            #Logger.log("i", "Got active build plate")
             if gcode_list is not None:
                 has_settings = False
                 for gcode in gcode_list:
@@ -594,6 +688,7 @@ class Dremel3D20(QObject, MeshWriter, Extension):
         return flat_container
 
 
+    ######################################################################
     ##  Serialises a container stack to prepare it for writing at the end of the
     #   g-code.
     #
@@ -602,6 +697,7 @@ class Dremel3D20(QObject, MeshWriter, Extension):
     #
     #   \param settings A container stack to serialise.
     #   \return A serialised string of the settings.
+    ######################################################################
     def _serialiseSettings(self, stack):
         container_registry = self._application.getContainerRegistry()
 
