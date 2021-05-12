@@ -1,4 +1,5 @@
 {
+    "id": "Dremel3D40",
     "inherits": "fdmprinter",
     "metadata": {
         "author": "Tim Schoenmackers",
@@ -109,25 +110,30 @@
             "zyyx_pro_flex"
         ],
         "file_formats": "application/x-g3drem",
+        "has_machine_materials": true,
         "has_machine_quality": true,
         "has_materials": true,
+        "has_variant_materials": true,
         "machine_extruder_trains": {
-            "0": "dremel_3d20_extruder_0"
+            "0": "Dremel_3D40_extruder_0"
         },
         "manufacturer": "Dremel",
-        "platform": "dremel_3D20_platform.stl",
+        "platform": "Dremel_3D40_platform.stl",
         "preferred_material": "dremel_pla",
         "preferred_quality": "normal",
         "supports_usb_connection": false,
         "visible": true
     },
-    "name": "Dremel3D20",
+    "name": "Dremel3D40",
     "overrides": {
-        "acceleration_enabled": {
-            "default_value": true
-        },
         "adhesion_type": {
-            "default_value": "skirt"
+            "default_value": "none"
+        },
+        "cool_fan_speed_max": {
+            "default_value": 70
+        },
+        "cool_fan_speed_min": {
+            "default_value": 20
         },
         "gantry_height": {
             "default_value": 30
@@ -136,19 +142,23 @@
             "default_value": 20
         },
         "infill_sparse_thickness": {
-            "maximum_value_warning": 0.32
+            "maximum_value_warning": 0.34
         },
         "layer_height": {
-            "default_value": 0.2
+            "default_value": 0.2,
+            "maximum_value_warning": 0.34
         },
         "machine_center_is_zero": {
             "default_value": true
         },
         "machine_depth": {
-            "default_value": 150
+            "default_value": 155
         },
         "machine_end_gcode": {
-            "default_value": "M104 S0 T0\nG1 Z140 F3300\nG28 X0 Y0\nM132 X Y Z A\nG91\nM18\n"
+            "default_value": "M104 S0\nM140 S0\nG92 E1\nG1 E-1 F300\nG162 Z F600\nG162 X Y F2000\nM84\n"
+        },
+        "machine_extruder_count": {
+            "default_value": 1
         },
         "machine_gcode_flavor": {
             "default_value": "Marlin"
@@ -177,38 +187,40 @@
             "default_value": false
         },
         "machine_height": {
-            "default_value": 140
+            "default_value": 170
         },
         "machine_name": {
-            "default_value": "Dremel3D20"
+            "default_value": "Dremel3D40"
         },
         "machine_nozzle_size": {
             "default_value": 0.4
         },
         "machine_start_gcode": {
-            "default_value": "G90\nG28\nM132 X Y Z A\nG1 Z100 F3300\nG1 X-110.5 Y-74 F6000\nM6 T0\nM907 X100 Y100 Z60 A100\nG1 Z0.6 F3300\nG4 P2000\nM108 T0\n"
+            "default_value": "G28\nG1 Z50.00 F400\nG92 E0\nG1 F200 E3\nG92 E0\nM132 X Y Z A\nM907 X100 Y100 Z50 A100"
         },
         "machine_width": {
-            "default_value": 230
+            "default_value": 255
         },
         "material_diameter": {
             "default_value": 1.75
         },
+        "material_initial_print_temperature": {
+             "maximum_value_warning": "1.05 * material_print_temperature"
+        },
+        "material_final_print_temperature": {
+             "maximum_value_warning": "1.05 * material_print_temperature"
+        },
         "prime_tower_size": {
             "default_value": 8.660254037844387
         },
-        "print_sequence": {
-            "default_value": "all_at_once",
-            "enabled": false
-        },
         "retraction_speed": {
-            "default_value": 25
+            "default_value": 100
         },
         "speed_infill": {
-            "default_value": 48
+            "default_value": 60
         },
         "speed_print": {
-            "default_value": 60
+            "default_value": 50
         },
         "speed_topbottom": {
             "default_value": 35
@@ -221,6 +233,9 @@
         },
         "speed_wall_x": {
             "default_value": 45
+        },
+        "support_infill_sparse_thickness": {
+            "maximum_value_warning": 0.34
         }
     },
     "version": 2
