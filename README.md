@@ -37,7 +37,7 @@ This plugin is available within the Cura marketplace.  Users are encouraged to u
 
 | Cura Version | Last version of the 3D20 plugin that works with the version of Cura         | Supported Printers |
 |--------------|------------------------------------------------------------------------|-----|
-4.4 through 4.8 | [version 0.7.0](https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/releases/tag/0.7.0) | 3D20, 3D40<sup>[*FAQ1](#FAQ)</sup>, 3D45|
+4.4 through 4.10 | [version 0.7.0](https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/releases/tag/0.7.0) | 3D20, 3D40<sup>[*FAQ1](#FAQ)</sup>, 3D45|
 3.5 through 4.3  | [version 0.5.9](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.5.9) | 3D20 |
 3.4 or 3.4.1   | [version 0.4.8](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.4.8) | 3D20 |
 3.3 or 3.3.1   | [version 0.4.3](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.4.3) | 3D20 |
@@ -142,15 +142,20 @@ Please note the following:
 * This plugin has been tested to work in the basic print case, however users may still encounter problems with the print head crashing into your parts if you attempt to print multiple parts on the same print bed one-after-another instead of printing them all-at-once.
 
 ---
+# <a name="OtherRepos"></a>Other Interesting Repositories for Dremel 3D Printer Users
+1.  [Dremel3D Upload Plugin](https://github.com/lwerner-lshigh/Dremel3D-CuraPrintr) - Enables uploading Cura generated gcode directly to the 3D40 & 3D45
+2.  [Flashforge marlin firmware](https://github.com/moonglow/FlashForge_Marlin) - Enables the user to update the 3D20 to Marlin firmware
+
+---
 # <a name="FAQ"></a>Frequently Asked Questions
 1. **Question:** *Does this plugin support USB-connected printing/Octoprint/Cloud Printing?  Do I need an SD card?*
-   **Answer:** The plugin only supports creating .g3drem files and using a removable drive (SD Card/USB drive) to get the files into the printer.  It does not support direct USB or WiFi/Cloud communication with the printer (Maybe if the author gets *really bored* one day, but it's unlikely).  For advanced users who own a 3D20 Octoprint can be enabled by following [these instructions](docs/octoprint/README.md).
+   **Answer:** The plugin only supports creating .g3drem files and using a removable drive (SD Card/USB drive) to get the files into the printer.  It does not currently support direct USB or WiFi/Cloud communication with the printer.  For advanced users who own a 3D20 Octoprint can be enabled by following [these instructions](docs/octoprint/README.md).  For 3D40/3D45 users, the [Dremel3D Upload Plugin](https://github.com/lwerner-lshigh/Dremel3D-CuraPrintr) works to upload .gcode files to the machine given an IP address.
 
 2. **Question:** *I'm using an older version of Cura and I can not find the plugin in the Ultimaker Cura marketplace*
    **Answer:** Unfortunately the marketplace only allows one version of the plugin to exist at the time.  As Ultimaker updates Cura they occasionally break compatibility with older versions of plugins.  Users are encouraged to [update to the latest version of Cura](https://ultimaker.com/software/ultimaker-cura) and download the latest version of the plugin from the marketplace.  If a user is tied to a specific version of Cura then they can download & manually install older releases of the plugin [here](https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/releases)
 
 3. **Question:** *I have a problem with this plugin and my Dremel 3D40*
-   **Answer:**   The author doesn't own and doesn't have access to a 3D40 - the 3D40 is included with this plugin in a mostly untested state, and should be considered experimental (hence the asterisks).  Feel free to raise an issue in the ["Issues" section](https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/issues/new), but without access to a 3D40 support for it will be somewhat limited.  Feedback for improvements to the default settings for the 3D40 would be welcome.
+   **Answer:**   The author doesn't own and doesn't have access to a 3D40 - the 3D40 is included with this plugin in an untested state, and should be considered experimental (hence the asterisks).  Feel free to raise an issue in the ["Issues" section](https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/issues/new), but without access to a 3D40 support for it will be somewhat limited.  Feedback for improvements to the default settings for the 3D40 would be most welcome.
 
 ---
 # <a name="Technical_Details"></a>Technical Details of the .g3drem File Format
