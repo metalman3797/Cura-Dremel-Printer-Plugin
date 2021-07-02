@@ -199,7 +199,6 @@ A description of the current understanding of this file format is below:
 ---
 # <a name="Contributors"></a>Contributors
 Many thanks to the following users, who have helped to make the plugin better:
-* [Dremel's Digilab Team](https://digilab.dremel.com/)
 * [metalman3797](https://github.com/metalman3797)
 * Jean-Pierre
 * [Rally037](https://github.com/Rally037)
