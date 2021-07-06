@@ -148,14 +148,15 @@ Please note the following:
 
 ---
 # <a name="FAQ"></a>Frequently Asked Questions
-1. **Question:** *Does this plugin support USB-connected printing/Octoprint/Cloud Printing?  Do I need an SD card?*
-   **Answer:** The plugin only supports creating .g3drem files and using a removable drive (SD Card/USB drive) to get the files into the printer.  It does not currently support direct USB or WiFi/Cloud communication with the printer.  For advanced users who own a 3D20 Octoprint can be enabled by following [these instructions](docs/octoprint/README.md).  For 3D40/3D45 users, the [Dremel3D Upload Plugin](https://github.com/lwerner-lshigh/Dremel3D-CuraPrintr) works to upload .gcode files to the machine given an IP address.
+1. **Question:** *I have a problem with this plugin and my Dremel 3D40*
+   **Answer:**   The author doesn't own and doesn't have access to a 3D40 - the 3D40 is included with this plugin in an untested state, and should be considered experimental (hence the asterisks).  Feel free to raise an issue in the ["Issues" section](https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/issues/new), but without access to a 3D40 support for it will be somewhat limited.  Feedback for improvements to the default settings for the 3D40 would be most welcome.
 
-2. **Question:** *I'm using an older version of Cura and I can not find the plugin in the Ultimaker Cura marketplace*
+2. **Question:** *Does this plugin support USB-connected printing/Octoprint/Cloud Printing?  Do I need an SD card/USB thumb drive?*
+   **Answer:** The plugin only supports creating .g3drem files and using a removable drive (SD Card/USB drive) to get the files into the printer.  It does not currently support direct USB or WiFi/Cloud communication with the printer.  For 3D40/3D45 users, the [Dremel3D Upload Plugin](https://github.com/lwerner-lshigh/Dremel3D-CuraPrintr) works to upload .gcode (not .g3drem) files to the machine given an IP address.  For advanced users who own a 3D20 Octoprint can be enabled by following [these instructions](docs/octoprint/README.md).
+
+3. **Question:** *I'm using an older version of Cura and I can not find the plugin in the Ultimaker Cura marketplace*
    **Answer:** Unfortunately the marketplace only allows one version of the plugin to exist at the time.  As Ultimaker updates Cura they occasionally break compatibility with older versions of plugins.  Users are encouraged to [update to the latest version of Cura](https://ultimaker.com/software/ultimaker-cura) and download the latest version of the plugin from the marketplace.  If a user is tied to a specific version of Cura then they can download & manually install older releases of the plugin [here](https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/releases)
 
-3. **Question:** *I have a problem with this plugin and my Dremel 3D40*
-   **Answer:**   The author doesn't own and doesn't have access to a 3D40 - the 3D40 is included with this plugin in an untested state, and should be considered experimental (hence the asterisks).  Feel free to raise an issue in the ["Issues" section](https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/issues/new), but without access to a 3D40 support for it will be somewhat limited.  Feedback for improvements to the default settings for the 3D40 would be most welcome.
 
 ---
 # <a name="Technical_Details"></a>Technical Details of the .g3drem File Format
