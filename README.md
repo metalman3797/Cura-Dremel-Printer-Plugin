@@ -157,6 +157,9 @@ Please note the following:
 3. **Question:** *I'm using an older version of Cura and I can not find the plugin in the Ultimaker Cura marketplace*
    **Answer:** Unfortunately the marketplace only allows one version of the plugin to exist at the time.  As Ultimaker updates Cura they occasionally break compatibility with older versions of plugins.  Users are encouraged to [update to the latest version of Cura](https://ultimaker.com/software/ultimaker-cura) and download the latest version of the plugin from the marketplace.  If a user is tied to a specific version of Cura then they can download & manually install older releases of the plugin [here](https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/releases)
 
+4. **Question:** *The default settings for this plugin don't work with my printer*
+  **Answer:**  The author has tested the settings for the Dremel materials (Dremel PLA, Dremel Nylon, Dremel PETG, Dremel Eco-ABS) and they work reasonably well on the 3D20 and 3D45 printer that he has access to.  If you have suggestions for an improvement to settings please submit a Github issue or Pull Request and the changes will get tested.
+
 
 ---
 # <a name="Technical_Details"></a>Technical Details of the .g3drem File Format
