@@ -392,7 +392,7 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
         # currently this will prompt the user to uninstall the Dremel3D20 plugin, but not actually uninstall anything
          dremel3D20PluginDir = os.path.join(Resources.getStoragePath(Resources.Resources), "plugins","Dremel3D20")
          if os.path.isdir(dremel3D20PluginDir):
-            message = Message(catalog.i18nc("@warning:status", "Please uninstall the Dremel 3D20 plugin.\n\t• The Dremel Plugin replaces the older Dremel3D20 plugin.\n\t• Currently both are installed. "))
+            message = Message(catalog.i18nc("@warning:status", "Please uninstall the Dremel 3D20 plugin.\n\t• The Dremel Printer Plugin replaces the older Dremel3D20 plugin.\n\t• Currently both are installed. "))
             message.show()
 
     ######################################################################
@@ -649,6 +649,12 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
             quality_name = global_container_stack.quality.getName()
             if quality_name is None:
                 quality_name="unknown"
+
+            # warn the user if they save out a PETG file at ultra quality
+            if ("Ultra" in quality_name) and ("PETG" in materialName) and ("3D45" in active_printer):
+                message = Message(catalog.i18nc("@warning:status", "WARNING: Printing Ultra quality with Dremel PETG is currently unreliable"))
+                message.show()
+
             stream.write("\n;Cura-Dremel-Printer-Plugin version {}\n;Printing on: {}\n;Using material: \"{}\"\n;Quality: \"{}\"\n".format(DremelPrinterPlugin.version,active_printer,materialName,quality_name).encode())
 
             # after the plugin info - write the gcode from Cura
