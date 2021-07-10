@@ -17,11 +17,11 @@
     <diameter>1.75</diameter>
   </properties>
   <settings>
-    <setting key="print temperature">230</setting>
+    <setting key="print temperature">205</setting>
     <setting key="print cooling">100.0</setting>
     <setting key="retraction speed">60.0</setting>
     <setting key="heated bed temperature">60</setting>
-    <setting key="standby temperature">210</setting>
+    <setting key="standby temperature">175</setting>
     <machine>
       <machine_identifier manufacturer="Dremel" product="Dremel3D45"/>
       <setting key="hardware compatible">yes</setting>

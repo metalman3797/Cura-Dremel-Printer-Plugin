@@ -23,7 +23,7 @@
     <setting key="print cooling">50.0</setting>
     <setting key="heated bed temperature">80.0</setting>
     <setting key="standby temperature">175</setting>
-    <setting key="print temperature">255.0</setting>
+    <setting key="print temperature">240</setting>
     <machine>
         <machine_identifier manufacturer="Dremel" product="Dremel3D45"/>
         <setting key="hardware compatible">yes</setting>
