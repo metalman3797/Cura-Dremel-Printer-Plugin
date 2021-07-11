@@ -151,7 +151,7 @@ Currently the medium quality (0.2mm layer height) produces the following prints 
 
 *Note* - Printing with PETG at ultra quality has a low likelihood of success.  The Plugin will warn the user if they choose to save a .g3drem file when the Dremel PETG material is selected and "Ultra" quality is chosen.
 
-![PETGwarning.png](./docs/PrintsAtCurrentSettings/PETGwarning.png)
+![PETGwarning.png](./docs/PETGwarning.png)
 
 
 ---
