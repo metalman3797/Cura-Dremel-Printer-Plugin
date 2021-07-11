@@ -139,7 +139,7 @@ preview image on the Dremel:
 
 ---
 # <a name="MaterialSettings"></a>Current State of the Settings
-Currently the medium quality (0.2mm layer height) produces the following prints with the 3D Benchy.  There is clearly still room for improvement (especially with nylon). Suggestions for updates to the settings would be welcome.
+Currently the medium quality (0.2mm layer height) produces the following prints with the 3D Benchy.  There is still room for improvement (especially retraction settings with nylon) and work is being done to improve them. Suggestions for updates to the settings would be welcome.
 
 | Material  | Printer | Image of print at "Medium" quality|
 | ------------- | ------------- | ------------- |
@@ -149,6 +149,7 @@ Currently the medium quality (0.2mm layer height) produces the following prints 
 | Dremel Nylon | 3D45 | ![NYLON.jpg](./docs/PrintsAtCurrentSettings/NYLON.jpg)  |
 | Dremel PETG | 3D45 | ![PETG.jpg](./docs/PrintsAtCurrentSettings/PETG.jpg)  |
 
+*Note* - Printing with PETG at ultra quality
 ---
 # <a name="Note"></a>Note
 Please note the following:
