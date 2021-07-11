@@ -149,7 +149,11 @@ Currently the medium quality (0.2mm layer height) produces the following prints 
 | Dremel Nylon | 3D45 | ![NYLON.jpg](./docs/PrintsAtCurrentSettings/NYLON.jpg)  |
 | Dremel PETG | 3D45 | ![PETG.jpg](./docs/PrintsAtCurrentSettings/PETG.jpg)  |
 
-*Note* - Printing with PETG at ultra quality
+*Note* - Printing with PETG at ultra quality has a low likelihood of success.  The Plugin will warn the user if they choose to save a .g3drem file when the Dremel PETG material is selected and "Ultra" quality is chosen.
+
+![PETGwarning.png](./docs/PrintsAtCurrentSettings/PETGwarning.png)
+
+
 ---
 # <a name="Note"></a>Note
 Please note the following:
