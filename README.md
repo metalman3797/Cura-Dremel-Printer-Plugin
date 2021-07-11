@@ -13,6 +13,7 @@ This is a plugin for [Cura version 4.4 and onward](https://ultimaker.com/en/prod
 - [Installation Instructions](#Installation)
 - [Using the Plugin](#Using_the_Plugin)
 - [Preview Image Options](#Preview_Image_Options)
+- [Current State of the Settings](#MaterialSettings)
 - [Note](#Note)
 - [Frequently Asked Questions (FAQ)](#FAQ)
 - [Technical Details of the .g3drem File Format](#Technical_Details)
@@ -135,10 +136,23 @@ preview image on the Dremel:
 
 4.  If the screenshot fails for some reason then the plugin's icon will be selected as the preview image.
 
+
+---
+# <a name="MaterialSettings"></a>Current State of the Settings
+Currently the medium quality (0.2mm layer height) produces the following prints with the 3D Benchy.  There is clearly still room for improvement (especially with nylon). Suggestions for updates to the settings would be welcome.
+
+| Material  | Printer | Image of print at "Medium" quality|
+| ------------- | ------------- |
+| Dremel PLA (0.75kg spool) | 3D45 | ![PLA075.jpg](./docs/PrintsAtCurrentSettings/PLA075.jpg)  |
+| Dremel PLA (0.5kg spool) | 3D45 | ![PLA050.jpg](./docs/PrintsAtCurrentSettings/PLA050.jpg)  |
+| Dremel ECO ABS | 3D45 | ![ECOABS.jpg](./docs/PrintsAtCurrentSettings/ECOABS.jpg)  |
+| Dremel Nylon | 3D45 | ![NYLON.jpg](./docs/PrintsAtCurrentSettings/NYLON.jpg)  |
+| Dremel PETG | 3D45 | ![PETG.jpg](./docs/PrintsAtCurrentSettings/PETG.jpg)  |
+
 ---
 # <a name="Note"></a>Note
 Please note the following:
-* The plugin has been tested using the latest version of Cura noted in this README on Windows 10 x64.  Prior versions have been tested on MacOS Sierra (MacOS 10.12), MacOS El Capitan (10.11), and Ubuntu versions 17.10 and 16.04.  Testing on non-Windows platforms occurs much less frequently than on Windows.  If you are using another platform and encounter issues with the plugin, feel free to [raise an issue](https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/issues/new).
+* The plugin has been tested using the latest version of Cura noted in this README on Windows 10 x64.  Prior versions have been tested on MacOS Sierra (MacOS 10.12), MacOS El Capitan (10.11), and Ubuntu versions 21.04.  Testing on non-Windows platforms occurs much less frequently than on Windows.  If you are using another platform and encounter issues with the plugin, feel free to [raise an issue](https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/issues/new).
 * This plugin has been tested to work in the basic print case, however users may still encounter problems with the print head crashing into your parts if you attempt to print multiple parts on the same print bed one-after-another instead of printing them all-at-once.
 
 ---
@@ -149,7 +163,7 @@ Please note the following:
 ---
 # <a name="FAQ"></a>Frequently Asked Questions
 1. **Question:** *I have a problem with this plugin and my Dremel 3D40*
-   **Answer:**   The author doesn't own and doesn't have access to a 3D40 - the 3D40 is included with this plugin in an untested state, and should be considered experimental (hence the asterisks).  Feel free to raise an issue in the ["Issues" section](https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/issues/new), but without access to a 3D40 support for it will be somewhat limited.  Feedback for improvements to the default settings for the 3D40 would be most welcome.
+   **Answer:**   The author doesn't own and doesn't have access to a 3D40 - the 3D40 is included with this plugin in an untested state, and should be considered experimental (hence the asterisks).  Feel free to raise an issue in the ["Issues" section](https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/issues/new), but without access to a 3D40 support for it will be somewhat limited.  Feedback or pull requests to improve the default settings for the 3D40 (or any of the printers) would be most welcome.
 
 2. **Question:** *Does this plugin support USB-connected printing/Octoprint/Cloud Printing?  Do I need an SD card/USB thumb drive?*
    **Answer:** The plugin only supports creating .g3drem files and using a removable drive (SD Card/USB drive) to get the files into the printer.  It does not currently support direct USB or WiFi/Cloud communication with the printer.  For 3D40/3D45 users, the [Dremel3D Upload Plugin](https://github.com/lwerner-lshigh/Dremel3D-CuraPrintr) works to upload .gcode (not .g3drem) files to the machine given an IP address.  For advanced users who own a 3D20 Octoprint can be enabled by following [these instructions](docs/octoprint/README.md).
@@ -158,7 +172,7 @@ Please note the following:
    **Answer:** Unfortunately the marketplace only allows one version of the plugin to exist at the time.  As Ultimaker updates Cura they occasionally break compatibility with older versions of plugins.  Users are encouraged to [update to the latest version of Cura](https://ultimaker.com/software/ultimaker-cura) and download the latest version of the plugin from the marketplace.  If a user is tied to a specific version of Cura then they can download & manually install older releases of the plugin [here](https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/releases)
 
 4. **Question:** *The default settings for this plugin don't work with my printer*
-  **Answer:**  The author has tested the settings for the Dremel materials (Dremel PLA, Dremel Nylon, Dremel PETG, Dremel Eco-ABS) and the settings work reasonably well on the 3D20 and 3D45 printers (notable exception - PETG on Ultra quality doesn't work)  If you have suggestions for an improvement to settings please submit a Github issue or Pull Request and the changes will get tested.
+  **Answer:**  The author has tested the settings for the Dremel materials (Dremel PLA, Dremel Nylon, Dremel PETG, Dremel Eco-ABS) and the settings work reasonably well on the 3D20 and 3D45 printers (notable exception - printing with Dremel PETG on Ultra quality doesn't work)  If you have any suggested improvements to the settings please submit a Github issue or Pull Request and the changes will get tested.
 
 
 ---
@@ -202,7 +216,7 @@ A description of the current understanding of this file format is below:
 
 ---
 # <a name="Contributors"></a>Contributors
-Many thanks to the following users, who have helped to make the plugin better:
+Many thanks to the following users, who have contributed to the plugin in various ways:
 * [metalman3797](https://github.com/metalman3797)
 * Jean-Pierre
 * [Rally037](https://github.com/Rally037)
