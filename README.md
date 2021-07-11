@@ -142,7 +142,7 @@ preview image on the Dremel:
 Currently the medium quality (0.2mm layer height) produces the following prints with the 3D Benchy.  There is clearly still room for improvement (especially with nylon). Suggestions for updates to the settings would be welcome.
 
 | Material  | Printer | Image of print at "Medium" quality|
-| ------------- | ------------- |
+| ------------- | ------------- | ------------- |
 | Dremel PLA (0.75kg spool) | 3D45 | ![PLA075.jpg](./docs/PrintsAtCurrentSettings/PLA075.jpg)  |
 | Dremel PLA (0.5kg spool) | 3D45 | ![PLA050.jpg](./docs/PrintsAtCurrentSettings/PLA050.jpg)  |
 | Dremel ECO ABS | 3D45 | ![ECOABS.jpg](./docs/PrintsAtCurrentSettings/ECOABS.jpg)  |
