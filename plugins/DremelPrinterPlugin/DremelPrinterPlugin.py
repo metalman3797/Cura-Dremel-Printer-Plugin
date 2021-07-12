@@ -383,8 +383,8 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
                     Logger.log("e", "Dremel Plugin could not set curr_version preference ")
 
         except: # Installing a new plugin should never crash the application so catch any random errors and show a message.
-            Logger.logException("d", "An exception occurred in Dremel Plugin while installing the files")
-            message = Message(catalog.i18nc("@warning:status", "Dremel Plugin experienced an error installing the necessary files"))
+            Logger.logException("w", "An exception occurred in Dremel Printer Plugin while installing the files")
+            message = Message(catalog.i18nc("@warning:status", "Dremel Printer Plugin experienced an error installing the necessary files"))
             message.show()
 
     ######################################################################
@@ -499,7 +499,7 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
                 else:
                     Logger.log("e", "Dremel Plugin - Could not read image file - trying to grab screenshot")
             except:
-                Logger.log("e", "Dremel Plugin - Could not use pixmap - trying to grab screenshot")
+                Logger.logException("w", "Dremel Plugin - Could not use pixmap - trying to grab screenshot")
         else:
             bmpError = False
             self._createSnapshot(imageW,imageH)
@@ -680,7 +680,7 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
                              has_settings = True
                         stream.write(gcode.encode())
                     except:
-                        Logger.log("e", "Dremel Plugin - Error writing gcode to file.")
+                        Logger.logException("w", "Dremel Plugin - Error writing gcode to file.")
                         return False
                 try:
                     ## Serialise the current container stack and put it at the end of the file.
@@ -690,13 +690,13 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
                     Logger.log("i", "Done writing settings - write complete")
                     return True
                 except Exception as e:
-                    Logger.log("i", "Exception caught while serializing settings.")
+                    Logger.logException("w", "Exception caught while serializing settings.")
                     Logger.log("d",sys.exc_info()[:2])
             message = Message(catalog.i18nc("@warning:status", "Please prepare G-code before exporting."))
             message.show()
             return False
         except Exception as e:
-            Logger.log("i", "Exception caught while writing gcode.")
+            Logger.logException("w", "Exception caught while writing gcode.")
             Logger.log("d",sys.exc_info()[:2])
             return False
 
