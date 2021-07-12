@@ -46,7 +46,7 @@ UM.Dialog
             height: UM.Theme.getSize("checkbox").height
             width: UM.Theme.getSize("checkbox").width
             text: "Select Screenshot Manually"
-            checked: checkBooleanVals(UM.Preferences.getValue("DremelPlugin/select_screenshot"))
+            checked: checkBooleanVals(UM.Preferences.getValue("DremelPrinterPlugin/select_screenshot"))
             onClicked: manager.setSelectScreenshot(checked)
             ToolTip.timeout: 5000
             ToolTip.visible: hovered

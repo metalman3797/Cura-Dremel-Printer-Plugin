@@ -154,7 +154,7 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
 
         # finally save the cura.cfg file
         Logger.log("i","Dremel Plugin - Writing to "+str(Resources.getStoragePath(Resources.Preferences, self._application.getApplicationName() + ".cfg")))
-        self._application.getPreferences().writeToFile(Resources.getStoragePath(Resources.Preferences, self._application.getApplicationName() + ".cfg"))
+        #self._application.getPreferences().writeToFile(Resources.getStoragePath(Resources.Preferences, self._application.getApplicationName() + ".cfg"))
 
     ######################################################################
     ## Taking snapshot needs to be called on QT thread
@@ -324,6 +324,8 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
     ## Sets a value to be stored in Cura's preferences file
     ######################################################################
     def setPreferenceValue(self, preferenceName, preferenceValue):
+        if preferenceValue is None:
+            return False
         name = "DremelPrinterPlugin/"+str(preferenceName)
         Logger.log("i", "Dremel Plugin: setting preference "+name+" to "+str(preferenceValue))
         if self.getPreferenceValue(preferenceName) is None:
@@ -410,7 +412,7 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
             Logger.log("i", "Dremel Plugin manual screenshot selection enabled")
             message = Message(catalog.i18nc("@info:status", "Manual screenshot selection is enabled when exporting g3drem files"))
             message.show()
-        self._application.getPreferences().writeToFile(Resources.getStoragePath(Resources.Preferences, self._application.getApplicationName() + ".cfg"))
+        #self._application.getPreferences().writeToFile(Resources.getStoragePath(Resources.Preferences, self._application.getApplicationName() + ".cfg"))
 
     ######################################################################
     ##  find_images_with_name tries to find an image file with the same name in the same direcory where the
@@ -446,6 +448,7 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
     ##    2) Grab an image file with the same name (i.e. llama.g3drem will search for llama.[bmp,gif,jpg,jpeg])
     ##    3) Return a generic image of the printer
     ######################################################################
+    @call_on_qt_thread
     def getBitmapBytes(self,stream):
         # get the active printer - We may want to scale the image size based on which printer is selected
         active_printer = self._application.getGlobalContainerStack().definition.getName()
@@ -461,10 +464,11 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
         if self.getPreferenceValue("select_screenshot"):
             image_with_same_name, _ = QFileDialog.getOpenFileName(None, 'Select Preview Image', self.getPreferenceValue("last_screenshot_folder"),"Image files (*png *.jpg *.gif *.bmp *.jpeg)")
             Logger.log("d", "Dremel Plugin using image for screenshot: " + image_with_same_name)
-            self.setPreferenceValue("last_screenshot_folder",str(os.path.dirname(image_with_same_name)))
-            # need to test this when cancel button is clicked
             if image_with_same_name == "":
                 image_with_same_name = None
+            if image_with_same_name is not None:
+                self.setPreferenceValue("last_screenshot_folder",str(os.path.dirname(image_with_same_name)))
+
         else:
             image_with_same_name = self.find_images_with_name(stream.name)
 
@@ -661,7 +665,8 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
             active_build_plate = self._application.getMultiBuildPlateModel().activeBuildPlate
             scene = self._application.getController().getScene()
             if not hasattr(scene, "gcode_dict"):
-                self.setInformation(catalog.i18nc("@warning:status", "Please prepare G-code before exporting."))
+                message = Message(catalog.i18nc("@warning:status", "Please prepare G-code before exporting."))
+                message.show()
                 return False
 
             gcode_dict = getattr(scene, "gcode_dict")
@@ -682,11 +687,13 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
                     if not has_settings:
                         settings = self._serialiseSettings(global_container_stack)
                         stream.write(settings.encode())
+                    Logger.log("i", "Done writing settings - write complete")
                     return True
                 except Exception as e:
                     Logger.log("i", "Exception caught while serializing settings.")
                     Logger.log("d",sys.exc_info()[:2])
-            self.setInformation(catalog.i18nc("@warning:status", "Please prepare G-code before exporting."))
+            message = Message(catalog.i18nc("@warning:status", "Please prepare G-code before exporting."))
+            message.show()
             return False
         except Exception as e:
             Logger.log("i", "Exception caught while writing gcode.")
