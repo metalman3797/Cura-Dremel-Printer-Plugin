@@ -148,6 +148,8 @@ Currently the medium quality (0.2mm layer height) produces the following prints 
 | Dremel ECO ABS | 3D45 | ![ECOABS.jpg](./docs/PrintsAtCurrentSettings/ECOABS.jpg)  |
 | Dremel Nylon | 3D45 | ![NYLON.jpg](./docs/PrintsAtCurrentSettings/NYLON.jpg)  |
 | Dremel PETG | 3D45 | ![PETG.jpg](./docs/PrintsAtCurrentSettings/PETG.jpg)  |
+| Dremel PLA (0.75kg spool) | 3D20 | ![PLA075_3D20.jpg](./docs/PrintsAtCurrentSettings/PLA075_3D20.jpg) |
+| Dremel PLA (0.75kg spool) | 3D20 | ![PLA050_3D20.jpg](./docs/PrintsAtCurrentSettings/PLA050_3D20.jpg) |
 
 *Note* - Printing with PETG at ultra quality has a low likelihood of success.  The Plugin will warn the user if they choose to save a .g3drem file when the Dremel PETG material is selected and "Ultra" quality is chosen.
 
