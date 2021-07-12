@@ -169,7 +169,7 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
         Logger.log("d","Thumbnail taken")
 
     def createPreferencesWindow(self):
-        path = os.path.join(PluginRegistry.getInstance().getPluginPath(self.getPluginId()), "DremelPrinterPluginprefs.qml")
+        path = os.path.join(PluginRegistry.getInstance().getPluginPath(self.getPluginId()), "DremelPluginprefs.qml")
         Logger.log("i", "Creating DremelPrinterPlugin preferences UI "+path)
         self._preferences_window = self._application.createQmlComponent(path, {"manager": self})
 
