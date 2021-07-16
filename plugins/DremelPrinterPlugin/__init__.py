@@ -1,7 +1,7 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Cura is released under the terms of the LGPLv3 or higher.
 
-from . import Dremel3D20
+from . import DremelPrinterPlugin
 
 from UM.i18n import i18nCatalog
 catalog = i18nCatalog("cura")
@@ -13,12 +13,12 @@ def getMetaData():
                 "extension": "g3drem",
                 "description": catalog.i18nc("@item:inlistbox", "g3drem File"),
                 "mime_type": "application/x-g3drem",
-                "mode": Dremel3D20.Dremel3D20.OutputMode.BinaryMode
+                "mode": DremelPrinterPlugin.DremelPrinterPlugin.OutputMode.BinaryMode
             }]
         }
     }
 
 def register(app):
-    plugin = Dremel3D20.Dremel3D20()
+    plugin = DremelPrinterPlugin.DremelPrinterPlugin()
     return { "mesh_writer": plugin,
              "extension": plugin}

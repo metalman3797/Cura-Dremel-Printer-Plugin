@@ -23,11 +23,16 @@
 import os
 import shutil
 import zipfile
+import json
 
-RELEASE_DIR = os.path.abspath('../RELEASE/Dremel_3D20')
-CURA_PACKAGE_FILE = os.path.abspath('../RELEASE/Cura-Dremel-3D20.curapackage')
-ULTIMAKER_ZIP = os.path.abspath('../RELEASE/Dremel3D20.zip')
-PLUGIN_DIR = os.path.join(RELEASE_DIR,'files/plugins/Dremel3D20')
+with open('../plugins/DremelPrinterPlugin/plugin.json') as json_file:
+    plugin_json = json.load(json_file)
+    json_file.close()
+
+RELEASE_DIR = os.path.abspath('../RELEASE/DremelPrinterPlugin')
+CURA_PACKAGE_FILE = os.path.abspath('../RELEASE/Cura-Dremel-Plugin-'+str(plugin_json["version"])+'.curapackage')
+ULTIMAKER_ZIP = os.path.abspath('../RELEASE/DremelPrinterPlugin.zip')
+PLUGIN_DIR = os.path.join(RELEASE_DIR,'files/plugins/DremelPrinterPlugin')
 
 WKHTMLTOPDF_DIR = "c:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe"
 
@@ -42,7 +47,7 @@ if(os.path.exists(RELEASE_DIR)):
 # delete existing files
 for item in ['../README.html',
             '../README.pdf',
-            os.path.join(RELEASE_DIR,'files/plugins/Dremel3D20/Dremel3D20.zip'),
+            os.path.join(RELEASE_DIR,'files/plugins/DremelPrinterPlugin/DremelPrinterPlugin.zip'),
             CURA_PACKAGE_FILE]:
     print('Checking '+ os.path.abspath(item))
     if os.path.exists(os.path.abspath(item)):
@@ -56,7 +61,7 @@ if not os.path.exists(RELEASE_DIR):
 dirs = [RELEASE_DIR,
         os.path.join(RELEASE_DIR,'files'),
         os.path.join(RELEASE_DIR,'files/plugins'),
-        os.path.join(RELEASE_DIR,'files/plugins/Dremel3D20')
+        os.path.join(RELEASE_DIR,'files/plugins/DremelPrinterPlugin')
         ]
 for item in dirs:
     if not os.path.exists(item):
@@ -69,32 +74,65 @@ for item in dirs:
 ## and the quality files
 ################################
 copyList = ['../resources/definitions/Dremel3D20.def.json',
+           '../resources/definitions/Dremel3D40.def.json',
+           '../resources/definitions/Dremel3D45.def.json',
            '../resources/extruders/dremel_3d20_extruder_0.def.json',
+           '../resources/extruders/Dremel_3D40_extruder_0.def.json',
+           '../resources/extruders/Dremel_3D45_extruder_0.def.json',
            '../resources/materials/dremel_pla.xml.fdm_material',
-           '../resources/meshes/dremel_3D20_platform.stl']
+           '../resources/materials/dremel_pla_0.5kg.xml.fdm_material',
+           '../resources/meshes/dremel_3D20_platform.stl',
+           '../resources/meshes/Dremel_3D40_platform.stl',
+           '../resources/meshes/Dremel_3D45_platform.stl',
+           '../resources/materials/dremel_eco_abs.xml.fdm_material',
+           '../resources/materials/dremel_nylon.xml.fdm_material',
+           '../resources/materials/dremel_petg.xml.fdm_material']
 for item in copyList:
     shutil.copy2(os.path.abspath(item),PLUGIN_DIR)
 
 shutil.copytree(os.path.abspath('../resources/quality/dremel_3d20'),
                 os.path.join(PLUGIN_DIR,'dremel_3d20'))
 
+shutil.copytree(os.path.abspath('../resources/quality/Dremel3D40'),
+                os.path.join(PLUGIN_DIR,'Dremel3D40'))
+
+shutil.copytree(os.path.abspath('../resources/quality/Dremel3D45'),
+                os.path.join(PLUGIN_DIR,'Dremel3D45'))
+
 ################################
 ## Step 3
 ## zip the files copied above
 ################################
-internal_zip_file_name = os.path.join(PLUGIN_DIR,'Dremel3D20.zip')
+internal_zip_file_name = os.path.join(PLUGIN_DIR,'DremelPrinterPlugin.zip')
 z = zipfile.ZipFile(internal_zip_file_name,'w', zipfile.ZIP_DEFLATED)
 zipList = [os.path.join(PLUGIN_DIR,'Dremel3D20.def.json'),
            os.path.join(PLUGIN_DIR,'dremel_3d20_extruder_0.def.json'),
            os.path.join(PLUGIN_DIR,'dremel_pla.xml.fdm_material'),
-           os.path.join(PLUGIN_DIR,'dremel_3D20_platform.stl')]
+           os.path.join(PLUGIN_DIR,'dremel_pla_0.5kg.xml.fdm_material'),
+           os.path.join(PLUGIN_DIR,'dremel_3D20_platform.stl'),
+           os.path.join(PLUGIN_DIR,'Dremel3D40.def.json'),
+           os.path.join(PLUGIN_DIR,'Dremel_3D40_extruder_0.def.json'),
+           os.path.join(PLUGIN_DIR,'Dremel_3D40_platform.stl'),
+           os.path.join(PLUGIN_DIR,'Dremel3D45.def.json'),
+           os.path.join(PLUGIN_DIR,'Dremel_3D45_extruder_0.def.json'),
+           os.path.join(PLUGIN_DIR,'dremel_eco_abs.xml.fdm_material'),
+           os.path.join(PLUGIN_DIR,'dremel_nylon.xml.fdm_material'),
+           os.path.join(PLUGIN_DIR,'dremel_petg.xml.fdm_material'),
+           os.path.join(PLUGIN_DIR,'Dremel_3D45_platform.stl')]
 for item in zipList:
     z.write(item,os.path.basename(item));
 path = os.path.join(PLUGIN_DIR,'dremel_3d20')
 for root, dirs, files in os.walk(path):
     for file in files:
         z.write(os.path.join(PLUGIN_DIR,'dremel_3d20', file),os.path.join('dremel_3d20',file))
-
+path = os.path.join(PLUGIN_DIR,'Dremel3D40')
+for root, dirs, files in os.walk(path):
+    for file in files:
+        z.write(os.path.join(PLUGIN_DIR,'Dremel3D40', file),os.path.join('Dremel3D40',file))
+path = os.path.join(PLUGIN_DIR,'Dremel3D45')
+for root, dirs, files in os.walk(path):
+    for file in files:
+        z.write(os.path.join(PLUGIN_DIR,'Dremel3D45', file),os.path.join('Dremel3D45',file))
 ################################
 ## Step 4
 ## now delete the files that were copied in Step 2
@@ -105,7 +143,8 @@ for item in zipList:
         os.remove(os.path.abspath(item))
 
 shutil.rmtree(os.path.join(PLUGIN_DIR,'dremel_3d20'))
-
+shutil.rmtree(os.path.join(PLUGIN_DIR,'Dremel3D40'))
+shutil.rmtree(os.path.join(PLUGIN_DIR,'Dremel3D45'))
 ################################
 ## Step 5
 ## Create the README.pdf file from
@@ -114,7 +153,7 @@ shutil.rmtree(os.path.join(PLUGIN_DIR,'dremel_3d20'))
 currDir = os.getcwd()
 os.chdir('..')
 os.system('python -m grip README.md --export README.html')
-os.system('"{0}" {1} {2}'.format(WKHTMLTOPDF_DIR,'README.html', os.path.join(PLUGIN_DIR,'README.pdf')))
+os.system('"{0}" {1} {2} {3}'.format(WKHTMLTOPDF_DIR,'--enable-local-file-access','README.html', os.path.join(PLUGIN_DIR,'README.pdf')))
 shutil.copy2(os.path.join(PLUGIN_DIR,'README.pdf'), '.')
 os.chdir(currDir)
 
@@ -122,7 +161,7 @@ os.chdir(currDir)
 ## Step 6
 ## Copy the remaining plugin files
 ################################
-src_dir=os.path.abspath('../plugins/Dremel3D20')
+src_dir=os.path.abspath('../plugins/DremelPrinterPlugin')
 src_files = os.listdir(src_dir)
 for file_name in src_files:
     full_file_name = os.path.join(src_dir, file_name)
@@ -160,7 +199,7 @@ z = zipfile.ZipFile(ULTIMAKER_ZIP,'w', zipfile.ZIP_DEFLATED)
 for root, dirs, files in os.walk(PLUGIN_DIR):
     for file in files:
         print(os.path.join(root,file))
-        z.write(os.path.join(root,file),os.path.join(root,file).replace(PLUGIN_DIR, "Dremel3D20"))
+        z.write(os.path.join(root,file),os.path.join(root,file).replace(PLUGIN_DIR, "DremelPrinterPlugin"))
 
 
 ################################

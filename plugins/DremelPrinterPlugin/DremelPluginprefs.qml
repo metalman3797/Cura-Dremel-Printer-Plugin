@@ -13,7 +13,7 @@ UM.Dialog
 
     minimumWidth: Math.floor(UM.Theme.getSize("toolbox_action_button").width * 2.5+3*UM.Theme.getSize("default_margin").width)
     minimumHeight: Math.floor(Math.max(120 * screenScaleFactor,120))
-    title: "Dremel 3D20 Plugin Preferences"
+    title: "Dremel Plugin Preferences"
 
     function checkBooleanVals(val) {
         if(val == "True") {
@@ -46,7 +46,7 @@ UM.Dialog
             height: UM.Theme.getSize("checkbox").height
             width: UM.Theme.getSize("checkbox").width
             text: "Select Screenshot Manually"
-            checked: checkBooleanVals(UM.Preferences.getValue("Dremel3D20/select_screenshot"))
+            checked: checkBooleanVals(UM.Preferences.getValue("DremelPrinterPlugin/select_screenshot"))
             onClicked: manager.setSelectScreenshot(checked)
             ToolTip.timeout: 5000
             ToolTip.visible: hovered

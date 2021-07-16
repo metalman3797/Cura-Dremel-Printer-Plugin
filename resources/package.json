@@ -3,21 +3,25 @@
         "author_id": "timmehtimmeh",
         "display_name": "Tim Schoenmackers",
         "email": "timmehtimmeh@gmail.com",
-        "website": "https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin"
+        "website": "https://github.com/timmehtimmeh/Cura-Dremel-Plugin"
     },
-    "description": "Enables the user to add the Dremel Ideabuilder 3D20 printer to Cura and export the proprietary .g3drem files.",
-    "display_name": "Dremel 3D20",
-    "package_id": "Dremel3D20",
+    "description": "Enables the user to add the Dremel Ideabuilder 3D20, 3D40, and 3D45 printers to Cura and export the proprietary .g3drem files.",
+    "display_name": "Dremel Printer Plugin",
+    "package_id": "DremelPrinterPlugin",
     "package_type": "plugin",
-    "package_version": "0.6.4",
+    "package_version": "0.7.0",
     "sdk_version": 5,
     "tags": [
         "Dremel",
         "plugin",
         "3D20",
+        "3D40",
+        "3D45",
         "IdeaBuilder",
         "extension",
-        "Dremel3D20"
+        "Dremel3D20",
+        "Dremel3D40",
+        "Dremel3D45"
     ],
-    "website": "https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin"
+    "website": "https://github.com/timmehtimmeh/Cura-Dremel-Plugin"
 }
