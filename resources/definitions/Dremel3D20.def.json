@@ -148,19 +148,40 @@
     "name": "Dremel3D20",
     "overrides": {
         "acceleration_enabled": {
-            "default_value": false
+            "value": false
+        },
+        "acceleration_print": {
+            "value": 200
+        },
+        "acceleration_travel": {
+            "value": 1000
+        },
+        "acceleration_travel_layer_0": {
+            "value": "acceleration_travel"
         },
         "adhesion_type": {
-            "default_value": "skirt"
+            "value": "skirt"
         },
         "gantry_height": {
-            "default_value": 30
+            "value": 30
         },
         "infill_sparse_density": {
             "default_value": 20
         },
         "infill_sparse_thickness": {
             "maximum_value_warning": 0.32
+        },
+        "jerk_enabled": {
+            "value": false
+        },
+        "jerk_print": {
+            "value": 5.0
+        },
+        "jerk_travel": {
+            "value": "jerk_print"
+        },
+        "jerk_travel_layer_0": {
+            "value": "jerk_travel"
         },
         "layer_height": {
             "default_value": 0.2
