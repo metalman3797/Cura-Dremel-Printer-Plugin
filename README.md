@@ -233,7 +233,6 @@ Many thanks to the following users, who have contributed to the plugin in variou
 * [blablaaddi](https://github.com/blablaaddi)
 * [Swizzler121](https://github.com/Swizzler121)
 * [Appesteijn](https://github.com/Appesteijn)
-
 * [LipuFei](https://github.com/LipuFei)
 * [diegopradogesto](https://github.com/diegopradogesto)
 * Tijs Kooij
