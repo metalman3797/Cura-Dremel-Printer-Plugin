@@ -162,7 +162,7 @@
     "name": "Dremel3D20",
     "overrides": {
         "acceleration_enabled": {
-            "value": false
+            "value": true
         },
         "acceleration_print": {
             "value": 200
@@ -186,7 +186,7 @@
             "maximum_value_warning": 0.32
         },
         "jerk_enabled": {
-            "value": false
+            "value": true
         },
         "jerk_print": {
             "value": 5.0
