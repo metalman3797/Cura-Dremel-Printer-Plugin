@@ -66,7 +66,7 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
     ##    2) .\plugin.json
     ##    3) ..\..\resources\package.json
     ######################################################################
-    version = "0.7.0"
+    version = "0.7.1"
 
     ######################################################################
     ##  Dictionary that defines how characters are escaped when embedded in
@@ -154,7 +154,7 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
 
         # finally save the cura.cfg file
         Logger.log("i","Dremel Plugin - Writing to "+str(Resources.getStoragePath(Resources.Preferences, self._application.getApplicationName() + ".cfg")))
-        #self._application.getPreferences().writeToFile(Resources.getStoragePath(Resources.Preferences, self._application.getApplicationName() + ".cfg"))
+        self._application.getPreferences().writeToFile(Resources.getStoragePath(Resources.Preferences, self._application.getApplicationName() + ".cfg"))
 
     ######################################################################
     ## Taking snapshot needs to be called on QT thread

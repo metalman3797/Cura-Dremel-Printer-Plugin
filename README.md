@@ -38,7 +38,7 @@ This plugin is available within the Cura marketplace.  Users are encouraged to u
 
 | Cura Version | Last version of the 3D20 plugin that works with the version of Cura         | Supported Printers |
 |--------------|------------------------------------------------------------------------|-----|
-4.4 through 4.10 | [version 0.7.0](https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/releases/tag/0.7.0) | 3D20, 3D40<sup>[*FAQ1](#FAQ)</sup>, 3D45|
+4.4 through 4.11 | [version 0.7.1](https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/releases/tag/0.7.0) | 3D20, 3D40<sup>[*FAQ1](#FAQ)</sup>, 3D45|
 3.5 through 4.3  | [version 0.5.9](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.5.9) | 3D20 |
 3.4 or 3.4.1   | [version 0.4.8](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.4.8) | 3D20 |
 3.3 or 3.3.1   | [version 0.4.3](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.4.3) | 3D20 |
@@ -225,14 +225,14 @@ A description of the current understanding of this file format is below:
 # <a name="Contributors"></a>Contributors
 Many thanks to the following users, who have contributed to the plugin in various ways:
 * [metalman3797](https://github.com/metalman3797)
-* Jean-Pierre
 * [Rally037](https://github.com/Rally037)
+* [Ghostkeeper](https://github.com/Ghostkeeper)
+* [eduncan911](https://github.com/eduncan911)
 * [WeavingColors](https://github.com/WeavingColors)
 * [SwapFaceL](https://github.com/SwapFaceL)
 * [blablaaddi](https://github.com/blablaaddi)
 * [Swizzler121](https://github.com/Swizzler121)
 * [Appesteijn](https://github.com/Appesteijn)
-* [Ghostkeeper](https://github.com/Ghostkeeper)
 * [LipuFei](https://github.com/LipuFei)
 * [diegopradogesto](https://github.com/diegopradogesto)
 * Tijs Kooij

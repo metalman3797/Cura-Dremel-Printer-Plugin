@@ -21,6 +21,18 @@
     },
     "name": "Dremel3D45",
     "overrides": {
+        "acceleration_enabled": {
+            "value": true
+        },
+        "acceleration_print": {
+            "value": 800
+        },
+        "acceleration_travel": {
+            "value": 1200
+        },
+        "acceleration_travel_layer_0": {
+            "value": "acceleration_travel"
+        },
         "adhesion_type": {
             "default_value": "none"
         },
@@ -38,6 +50,18 @@
         },
         "infill_sparse_thickness": {
             "maximum_value_warning": 0.34
+        },
+        "jerk_enabled": {
+            "value": true
+        },
+        "jerk_print": {
+            "value": 8.0
+        },
+        "jerk_travel": {
+            "value": "jerk_print"
+        },
+        "jerk_travel_layer_0": {
+            "value": "jerk_travel"
         },
         "layer_height": {
             "default_value": 0.2,
