@@ -37,10 +37,11 @@ jobs:
         uses: thedoctor0/zip-release@master
         with:
           type: 'zip'
-          filename: 'artifact/Cura-Robox-Plugin-${{ steps.get_version.outputs.VERSION }}.curapackage'
+          filename: 'Cura-Robox-Plugin-${{ steps.get_version.outputs.VERSION }}.curapackage'
           directory: RELEASE
       - uses: actions/upload-artifact@v2
         with:
           name: Cura-Robox-Plugin-${{ steps.get_version.outputs.VERSION }}
-          path: artifact
+          path: .
+          retention-days: 7
   
