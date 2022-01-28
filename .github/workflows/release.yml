@@ -31,12 +31,13 @@ jobs:
           value: ${{ steps.get_version.outputs.VERSION }}   
       - name: embed version into python code
         run: echo "__version__ = '${{ steps.get_version.outputs.VERSION }}'" > RELEASE/files/plugins/RoboxPrinterPlugin/_version.py
-      - uses: montudor/action-zip@v1
+      - name: Archive Release
+        uses: thedoctor0/zip-release@master
         with:
-          args: zip -qq -r Cura-Robox-Plugin-test.curapackage ./
-          working-directory: RELEASE
+          filename: 'Cura-Robox-Plugin-${{ steps.get_version.outputs.VERSION }}.curapackage'
+          path: RELEASE
       - uses: actions/upload-artifact@v2
         with:
-          name: Cura-Robox-Plugin-test.curapackage
-          path: RELEASE/Cura-Robox-Plugin-test.curapackage
+          name: Cura-Robox-Plugin-${{ steps.get_version.outputs.VERSION }}.curapackage
+          path: RELEASE/Cura-Robox-Plugin-${{ steps.get_version.outputs.VERSION }}.curapackage
   
