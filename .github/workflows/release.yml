@@ -40,6 +40,6 @@ jobs:
         run: find . | sed -e "s/[^-][^\/]*\// |/g" -e "s/|\([^ ]\)/|-\1/"
       - uses: actions/upload-artifact@v2
         with:
-          name: Cura-Robox-Plugin-${{ steps.get_version.outputs.VERSION }}.curapackage
+          name: Cura-Robox-Plugin-${{ steps.get_version.outputs.VERSION }}
           path: Cura-Robox-Plugin-${{ steps.get_version.outputs.VERSION }}.curapackage
   
