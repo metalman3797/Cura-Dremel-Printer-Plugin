@@ -1,27 +1,23 @@
 {
     "author": {
-        "author_id": "timmehtimmeh",
-        "display_name": "Tim Schoenmackers",
-        "email": "timmehtimmeh@gmail.com",
-        "website": "https://github.com/timmehtimmeh/Cura-Dremel-Plugin"
+        "author_id": "Automaker-Unofficial",
+        "display_name": "Automaker-Unofficial",
+        "email": "automak@gmail.com",
+        "website": "https://github.com/Automaker-Unofficial/Cura-Robox-Printer-Plugin"
     },
-    "description": "Enables the user to add the Dremel Ideabuilder 3D20, 3D40, and 3D45 printers to Cura and export the proprietary .g3drem files.",
-    "display_name": "Dremel Printer Plugin",
-    "package_id": "DremelPrinterPlugin",
+    "description": "Enables the user to add the CEL Romox printers to Cura and export the proprietary .gcode files.",
+    "display_name": "Robox Printer Plugin",
+    "package_id": "RoboxPrinterPlugin",
     "package_type": "plugin",
-    "package_version": "0.7.1",
+    "package_version": "0.1.0",
     "sdk_version": 5,
     "tags": [
-        "Dremel",
+        "CEL",
         "plugin",
-        "3D20",
-        "3D40",
+        "Robox",
+        "automaker",
         "3D45",
-        "IdeaBuilder",
-        "extension",
-        "Dremel3D20",
-        "Dremel3D40",
-        "Dremel3D45"
+        "extension"
     ],
-    "website": "https://github.com/timmehtimmeh/Cura-Dremel-Plugin"
+    "website": "https://github.com/Automaker-Unofficial/Cura-Robox-Printer-Plugin"
 }

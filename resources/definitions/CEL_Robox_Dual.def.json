@@ -1,0 +1,74 @@
+{
+    "version": 2,
+    "name": "CEL Robox",
+    "inherits": "fdmprinter",
+    "metadata": {
+        "visible": true,
+        "author": "C Jackson & M Crane",
+        "manufacturer": "CEL",
+        "file_formats": "text/x-gcode",
+        "icon": "icon_ultimaker2",
+        "platform": "Robox.stl",
+        "platform_offset": [0, -3, 0],
+        "machine_extruder_trains": {
+            "0": "CEL_Robox_Extruder_1",
+            "1": "CEL_Robox_Extruder_2"
+        }
+    },
+    "overrides": {
+        "machine_name": { "default_value": "CEL Robox" },
+        "machine_heated_bed": {
+            "default_value": true
+        },
+        "material_bed_temperature": {
+            "default_value": 0
+        },
+        "material_bed_temperature_layer_0": {
+            "default_value": 0
+        },
+        "machine_width": {
+            "default_value": 210
+        },
+        "machine_height": {
+            "default_value": 98
+        },
+        "machine_depth": {
+            "default_value": 150
+        },
+        "material_diameter": {
+            "default_value": 1.75
+        },
+        "machine_disallowed_areas": { "default_value": [
+            [[-100,75],[100,75],[-100,70],[100,70]]
+        ]},
+        "machine_center_is_zero": {
+            "default_value": false
+        },
+        "machine_use_extruder_offset_to_offset_coords": {
+            "default_value": true
+        },
+        "machine_head_polygon": {
+            "default_value": [
+                [-60, -18],
+                [-60, 40],
+                [18, 40],
+                [18, -18]
+            ]
+        },
+        "gantry_height": {
+            "default_value": 55
+        },
+        "machine_extruder_count": {
+            "default_value": 2
+        },
+        "machine_gcode_flavor": {
+            "default_value": "RepRap (Volumetric)"
+        },
+        "machine_start_gcode": {
+            "default_value": "T0 ; Select First tool - ensures post processing scripts function correctly.  \nM83 ;Set Extruder to Relative moves  \nG90 ;Use X Y Z Absolute positioning - Home All Axes  \nM104 S150 ; Set nozzle to temp so any ooze is squished on bed probe in subsquent levelling macros  \nM140 S{material_bed_temperature} ; Start warming Bed  \nM109 ; Wait for Nozzle to get to extruder temp.  \nG0 ; Go to Zero position  \nG0 Z5 ;Move up 5mm if homed  \nG28 Y ;Home Y  \nG0 Y115 ;Position Y  \nG39 ;Clear the bed levelling points  \nG28 Z ;Home Z  \nG0 Z10 ;Move up 10mm if homed  \nG28 X ;Home X - End Home_all_Axis_in_sequence Macro  \n  \nM190 S{material_bed_temperature} ; Wait for Bed to get to temp.  \nM104 S{material_print_temperature_layer_0} ; Double check to ensure nozzle temp  \nM104 T{material_print_temperature_layer_0} ; Double check to ensure nozzle temp  \nM109 ; Wait for Nozzle to get to extruder temp.  \nM170 S40 ; Set Ambient temp (40°C PLA higher for plastics that warp e.g. 70° for ABS  \n  \nM128 ; Head light off to warn before move - Start of LED flash alert macro  \nG4 P300 ; Hold for 300 milliseconds  \nM129 ; Headlight on  \nG4 P600 ; Hold light on for 600 msecs  \nM128 ; Head light off  \nG4 P300 ; Pause for 300 miliiseconds  \nM129 ; Headlight on  \nG4 P600 ; Hold light on for 600 msecs  \nM128 ; Head light off  \nG4 P300 ; Pause for 300 miliiseconds  \nM129 ; Head light on  \nG0 Y2 X105 ; Move to front - Remove leftover ooze macro  \nM129 ; Head LED on - to see better  \nG0 Z10 ; Lift head 10mm to make it easier to remove ooze with tweezers  \nG4 P7000 ; Hold for 7000 milliseconds to remove old ooze  \nM128 ; Head light off to warn before move - Start of LED flash alert macro  \nG4 P300 ; Hold for 300 milliseconds  \nM129 ; Headlight on  \nG4 P600 ; Hold light on for 600 msecs  \nM128 ; Head light off  \nG4 P300 ; Pause for 300 miliiseconds  \nM129 ; Headlight on  \nG4 P600 ; Hold light on for 600 msecs  \nM128 ; Head light off  \nG4 P300 ; Pause for 300 miliiseconds  \nM129 ; Head light on  \n  \n;Ensure the Gantry is Level  \nG0 X20 Y75 ;Level Gantry Position 1  \nG28 Z ;Home Z  \nG0 Z4 ;Move up 4mm  \nG0 X180 Y75 ;Level Gantry Position 2  \nG28 Z ;Home Z  \nG0 Z4 ;Move up 4mm  \nG38 ;Level gantry   \n  \n; 7 point Bed probing  \nG0 Y20  \nG28 Z  \nG0 Z2  \nG0 X105  \nG28 Z  \nG0 Z2  \nG0 X20  \nG28 Z  \nG0 Z2  \nG0 Y130  \nG28 Z  \nG0 Z2  \nG0 X105  \nG28 Z  \nG0 Z2  \nG0 X180  \nG28 Z  \nG0 Z2  \nG0 X105 Y75  \nG28 Z  \nG0 Z2  \nG39 S0.5 ;set washout over the first 2mm   \n  \n; Purge Nozzles   \n; Purge T1(Dual Material)  \nG0 X180 Y2 Z0.4; 0.4mm before drag printhead into extrusion to pull off surplus  \nT1  \nG0 B1  \nG1 E5 F500 ; UnRetract the retract from retract at end of previous print  \nG36 E100 F1200;   \nG1 E100 X145 F250  \nG0 Z1  \nG0 B0  \n  \n  \n;Purge T0 (Dual Material)  \nG0 X70 Y2 Z0.4; 0.4mm before drag printhead into extrusion to pull off surplus  \nT0  \nG0 B1  \nG1 D5 F500 ; UnRetract the retract from retract at end of previous print  \nG36 D100 F1200;   \nG1 D100 X110 F250  \nG0 Z1  \nG0 B0  \n; End of Start gcode  \nT{extruder_nr}  \n"
+        },
+        "machine_end_gcode": {
+            "default_value": "M104 S0 ;extruder heater off\nM140 S0 ;heated bed heater off (if you have it)\nG91 ;relative positioning\nG1 E-1 F300  ;retract the filament a bit before lifting the nozzle, to release some of the pressure\nG1 Z+0.5 E-5 X-20 Y-20 F9000 ;move Z up a bit and retract filament even more\nG28 X0 Y0 ;move X/Y to min endstops, so the head is out of the way\nM128; Head light off \nG37 ;Unlock Door \nM84 ;steppers off\nG90 ;absolute positioning"
+        }
+    }
+}

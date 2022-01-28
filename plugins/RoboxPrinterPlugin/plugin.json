@@ -1,0 +1,8 @@
+{
+    "name": "Robox Printer Plugin",
+    "author": "Automaker-Unofficial",
+    "version": "0.1.0",
+    "description": "Enables the user to add the CEL Romox printers to Cura and export the proprietary .gcode files.",
+    "supported_sdk_versions": ["7.0.0","7.1.0","7.2.0","7.3.0","7.4.0", "7.5.0", "7.6.0"],
+    "i18n-catalog": "cura"
+}

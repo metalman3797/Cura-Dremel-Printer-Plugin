@@ -1,0 +1,27 @@
+ame: Pack Plugin
+on:
+  push:
+  pull_request:
+jobs:
+  composer-install:
+    runs-on: ubuntu-latest
+    env:
+      RELEASE_DIR: RELEASE
+    steps:
+      - uses: actions/checkout@v1
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+      - run: |
+          mkdr -p ${RELEASE_DIR}/files/plugins/RoboxPrinterPlugin
+      
+      # - name: Set version in plugin.json
+      #   run: // todo run the scrip that sets version to ${{ steps.get_version.outputs.VERSION }}
+      - run: composer install --ansi --no-progress --no-interaction --prefer-dist
+      - uses: montudor/action-zip@v1
+        with:
+          args: zip -qq -r plugin.zip vendor
+      # - uses: actions/upload-artifact@v2
+      #   with:
+      #     name: vendor.zip
+  
