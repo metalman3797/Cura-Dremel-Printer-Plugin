@@ -33,8 +33,8 @@ jobs:
         run: echo "__version__ = '${{ steps.get_version.outputs.VERSION }}'" > RELEASE/files/plugins/RoboxPrinterPlugin/_version.py
       - uses: montudor/action-zip@v1
         with:
-          args: zip -qq -r Cura-Robox-Plugin-test.curapackage .
-        working-directory: RELEASE
+          args: zip -qq -r Cura-Robox-Plugin-test.curapackage ./
+          working-directory: RELEASE
       - uses: actions/upload-artifact@v2
         with:
           name: Cura-Robox-Plugin-test.curapackage
