@@ -34,14 +34,12 @@ jobs:
       - name: embed version into python code
         run: mkdir -p artifact
       - name: Archive Release
-        uses: thedoctor0/zip-release@master
+        uses: montudor/action-zip@v1
         with:
-          type: 'zip'
-          filename: 'Cura-Robox-Plugin-${{ steps.get_version.outputs.VERSION }}.curapackage'
-          directory: RELEASE
+          args: zip -qq -r artifact/Cura-Robox-Plugin-${{ steps.get_version.outputs.VERSION }}.curapackage RELEASE/*
       - uses: actions/upload-artifact@v2
         with:
           name: Cura-Robox-Plugin-${{ steps.get_version.outputs.VERSION }}
-          path: .
+          path: artifact
           retention-days: 7
   
