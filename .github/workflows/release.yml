@@ -31,6 +31,8 @@ jobs:
           value: ${{ steps.get_version.outputs.VERSION }}   
       - name: embed version into python code
         run: echo "__version__ = '${{ steps.get_version.outputs.VERSION }}'" > RELEASE/files/plugins/RoboxPrinterPlugin/_version.py
+      - name: embed version into python code
+        run: mkdir -p artifact
       - name: Archive Release
         uses: thedoctor0/zip-release@master
         with:
