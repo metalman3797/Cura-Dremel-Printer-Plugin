@@ -27,7 +27,7 @@ import copy
 import struct
 import time
 
-import _version
+from . import _version
 
 from distutils.version import StrictVersion  # for upgrade installations
 
@@ -250,18 +250,19 @@ class RoboxPrinterPlugin(QObject, MeshWriter, Extension):
     ## Return True if all files are installed, false if they are not
     ######################################################################
     def isInstalled(self):
-        roboxDualDefFile = os.path.join(self.local_printer_def_path, "CEL_Robox_Dual.def.json")
-        roboxDualExtruder1 = os.path.join(self.local_extruder_path, "CEL_Robox_Dual_Extruder_1.def.json")
-        roboxDualExtruder2 = os.path.join(self.local_extruder_path, "CEL_Robox_Dual_Extruder_2.def.json")
+
+        robox_dual_def_file = os.path.join( Resources.getStoragePathForType(Resources.Resources), "definitions", "CEL_Robox_Dual.def.json")
+        robox_dual_extruder1 = os.path.join(Resources.getStoragePathForType(Resources.Resources), "extruders", "CEL_Robox_Dual_Extruder_1.def.json")
+        robox_dual_extruder2 = os.path.join(Resources.getStoragePathForType(Resources.Resources), "extruders", "CEL_Robox_Dual_Extruder_2.def.json")
 
         # if some files are missing then return that this plugin as not installed
-        if not os.path.isfile(roboxDualDefFile):
+        if not os.path.isfile(robox_dual_def_file):
             Logger.log("i", "Robox Plugin - Robox Dual definition file is NOT installed ")
             return False
-        if not os.path.isfile(roboxDualExtruder1):
+        if not os.path.isfile(robox_dual_extruder1):
             Logger.log("i", "Robox Plugin - Robox Dual extruder 1 file is NOT installed ")
             return False
-        if not os.path.isfile(roboxDualExtruder2):
+        if not os.path.isfile(robox_dual_extruder2):
             Logger.log("i", "Robox Plugin - Robox Dual extruder 2 file is NOT installed ")
             return False
 
@@ -299,7 +300,7 @@ class RoboxPrinterPlugin(QObject, MeshWriter, Extension):
         try:
             restartRequired = False
             resourcesPath = os.path.join(self.this_plugin_path, "resources")
-            resourcesDestinationPath = Resources.getStoragePathForType(Resources.Resources)
+            resourcesDestinationPath =
             Logger.log("i", "Robox Plugin installing " + resourcesPath + " to " + resourcesDestinationPath)
             shutil.copy(resourcesPath, resourcesDestinationPath)
             restartRequired = True

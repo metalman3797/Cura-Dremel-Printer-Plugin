@@ -1,6 +1,6 @@
 {
     "version": 2,
-    "name": "CEL Robox",
+    "name": "CEL Robox Dual",
     "inherits": "fdmprinter",
     "metadata": {
         "visible": true,
@@ -16,7 +16,7 @@
         }
     },
     "overrides": {
-        "machine_name": { "default_value": "CEL Robox" },
+        "machine_name": { "default_value": "CEL Robox Dual" },
         "machine_heated_bed": {
             "default_value": true
         },
