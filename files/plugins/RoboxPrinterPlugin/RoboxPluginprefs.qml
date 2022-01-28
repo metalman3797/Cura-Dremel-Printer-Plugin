@@ -13,7 +13,7 @@ UM.Dialog
 
     minimumWidth: Math.floor(UM.Theme.getSize("toolbox_action_button").width * 2.5+3*UM.Theme.getSize("default_margin").width)
     minimumHeight: Math.floor(Math.max(120 * screenScaleFactor,120))
-    title: "Dremel Plugin Preferences"
+    title: "Robox Plugin Preferences"
 
     function checkBooleanVals(val) {
         if(val == "True") {
@@ -40,18 +40,6 @@ UM.Dialog
         id: colLayout
         anchors.fill: parent
         anchors.margins: margin
-
-        CheckBox {
-            id: screenshotCB
-            height: UM.Theme.getSize("checkbox").height
-            width: UM.Theme.getSize("checkbox").width
-            text: "Select Screenshot Manually"
-            checked: checkBooleanVals(UM.Preferences.getValue("DremelPrinterPlugin/select_screenshot"))
-            onClicked: manager.setSelectScreenshot(checked)
-            ToolTip.timeout: 5000
-            ToolTip.visible: hovered
-            ToolTip.text: "Check this box to allow you when saving a\ng3drem file to manually select a screenshot\nfrom an image stored on your hard drive"
-        } //end CheckBox
 
         Row {
             id: buttonRow

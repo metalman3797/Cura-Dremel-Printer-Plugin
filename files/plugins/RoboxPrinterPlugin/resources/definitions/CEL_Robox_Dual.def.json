@@ -11,8 +11,8 @@
         "platform": "Robox.stl",
         "platform_offset": [0, -3, 0],
         "machine_extruder_trains": {
-            "0": "CEL_Robox_Extruder_1",
-            "1": "CEL_Robox_Extruder_2"
+            "0": "CEL_Robox_Dual_Extruder_1",
+            "1": "CEL_Robox_Dual_Extruder_2"
         }
     },
     "overrides": {
