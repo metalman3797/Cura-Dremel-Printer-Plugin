@@ -94,32 +94,11 @@ class RoboxPrinterPlugin(QObject, MeshWriter, Extension):
         self.this_plugin_path = os.path.join(Resources.getStoragePath(Resources.Resources), "plugins",
                                              "RoboxPrinterPlugin", "RoboxPrinterPlugin")
 
-        # move the select_screenshot preference to a shared value
-        oldScreenshotPref = self._application.getPreferences().getValue("Dremel_3D20/select_screenshot")
-        if oldScreenshotPref is not None:
-            self._application.getPreferences().addPreference("RoboxPrinterPlugin/select_screenshot", oldScreenshotPref)
-            self._application.getPreferences().removePreference("Dremel_3D20/select_screenshot")
-
-        if self._application.getPreferences().getValue("RoboxPrinterPlugin/select_screenshot") is None:
-            self._application.getPreferences().addPreference("RoboxPrinterPlugin/select_screenshot", False)
-
-        # move value of last_screenshot_folder
-        oldLastScreenshotFolder = self._application.getPreferences().getValue("Dremel3D20/last_screenshot_folder")
-        if oldLastScreenshotFolder is not None:
-            self._application.getPreferences().addPreference("RoboxPrinterPlugin/last_screenshot_folder",
-                                                             oldLastScreenshotFolder)
-            self._application.getPreferences().removePreference("Dremel_3D20/last_screenshot_folder")
-
-        if self._application.getPreferences().getValue("RoboxPrinterPlugin/last_screenshot_folder") is None:
-            self._application.getPreferences().addPreference("RoboxPrinterPlugin/last_screenshot_folder",
-                                                             str(os.path.expanduser('~')))
-        Logger.log("i", "Robox Plugin adding menu item for screenshot toggling")
-
         Logger.log("i", "Robox Plugin setting up")
         # Prompt user to uninstall the old plugin, as this one supercedes it
         self.PromptToUninstallOldPluginFiles()
 
-        needsToBeInstalled = False
+        needs_to_be_installed = False
 
         if self.isInstalled():
             Logger.log("i", "All Dremel files are installed")
@@ -127,14 +106,14 @@ class RoboxPrinterPlugin(QObject, MeshWriter, Extension):
             # if the version isn't the same, then force installation
             if not self.versionsMatch():
                 Logger.log("i", "Robox Plugin detected that plugin needs to be upgraded")
-                needsToBeInstalled = True
+                needs_to_be_installed = True
 
         else:
             Logger.log("i", "Some Robox Plugin files are NOT installed")
-            needsToBeInstalled = True
+            needs_to_be_installed = True
 
         # if we need to install the files, then do so
-        if needsToBeInstalled:
+        if needs_to_be_installed:
             self.installPluginFiles()
 
         self.addMenuItem(catalog.i18nc("@item:inmenu", "Preferences"), self.showPreferences)
@@ -180,10 +159,10 @@ class RoboxPrinterPlugin(QObject, MeshWriter, Extension):
     ######################################################################
     @pyqtSlot()
     def openPluginWebsite(self):
-        url = QUrl('https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/releases', QUrl.TolerantMode)
+        url = QUrl('https://github.com/Automaker-Unofficial/Cura-Robox-Printer-Plugin/releases', QUrl.TolerantMode)
         if not QDesktopServices.openUrl(url):
             message = Message(catalog.i18nc("@info:status",
-                                            "Robox Plugin could not navigate to https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/releases"))
+                                            "Robox Plugin could not navigate to https://github.com/Automaker-Unofficial/Cura-Robox-Printer-Plugin/releases"))
             message.show()
         return
 
@@ -197,11 +176,11 @@ class RoboxPrinterPlugin(QObject, MeshWriter, Extension):
         try:
             if not QDesktopServices.openUrl(QUrl("file:///" + url, QUrl.TolerantMode)):
                 message = Message(catalog.i18nc("@info:status",
-                                                "Robox Plugin could not open help document.\n Please download it from here: https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/raw/cura-3.4/README.pdf"))
+                                                "Robox Plugin could not open help document.\n Please download it from here: https://github.com/Automaker-Unofficial/Cura-Robox-Printer-Plugin/raw/cura-3.4/README.pdf"))
                 message.show()
         except:
             message = Message(catalog.i18nc("@info:status",
-                                            "Robox Plugin could not open help document.\n Please download it from here: https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/raw/cura-3.4/README.pdf"))
+                                            "Robox Plugin could not open help document.\n Please download it from here: https://github.com/Automaker-Unofficial/Cura-Robox-Printer-Plugin/raw/cura-3.4/README.pdf"))
             message.show()
         return
 
@@ -211,16 +190,16 @@ class RoboxPrinterPlugin(QObject, MeshWriter, Extension):
     @pyqtSlot()
     def reportIssue(self):
         Logger.log("i",
-                   "Robox Plugin opening issue page: https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/issues/new")
+                   "Robox Plugin opening issue page: https://github.com/Automaker-Unofficial/Cura-Robox-Printer-Plugin/issues/new")
         try:
             if not QDesktopServices.openUrl(
-                    QUrl("https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/issues/new")):
+                    QUrl("https://github.com/Automaker-Unofficial/Cura-Robox-Printer-Plugin/issues/new")):
                 message = Message(catalog.i18nc("@info:status",
-                                                "Robox Plugin could not open https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/issues/new please navigate to the page and report an issue"))
+                                                "Robox Plugin could not open https://github.com/Automaker-Unofficial/Cura-Robox-Printer-Plugin/issues/new please navigate to the page and report an issue"))
                 message.show()
         except:
             message = Message(catalog.i18nc("@info:status",
-                                            "Robox Plugin could not open https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/issues/new please navigate to the page and report an issue"))
+                                            "Robox Plugin could not open https://github.com/Automaker-Unofficial/Cura-Robox-Printer-Plugin/issues/new please navigate to the page and report an issue"))
             message.show()
         return
 
@@ -250,10 +229,12 @@ class RoboxPrinterPlugin(QObject, MeshWriter, Extension):
     ## Return True if all files are installed, false if they are not
     ######################################################################
     def isInstalled(self):
-
-        robox_dual_def_file = os.path.join( Resources.getStoragePathForType(Resources.Resources), "definitions", "CEL_Robox_Dual.def.json")
-        robox_dual_extruder1 = os.path.join(Resources.getStoragePathForType(Resources.Resources), "extruders", "CEL_Robox_Dual_Extruder_1.def.json")
-        robox_dual_extruder2 = os.path.join(Resources.getStoragePathForType(Resources.Resources), "extruders", "CEL_Robox_Dual_Extruder_2.def.json")
+        robox_dual_def_file = os.path.join(Resources.getStoragePathForType(Resources.Resources), "definitions",
+                                           "CEL_Robox_Dual.def.json")
+        robox_dual_extruder1 = os.path.join(Resources.getStoragePathForType(Resources.Resources), "extruders",
+                                            "CEL_Robox_Dual_Extruder_1.def.json")
+        robox_dual_extruder2 = os.path.join(Resources.getStoragePathForType(Resources.Resources), "extruders",
+                                            "CEL_Robox_Dual_Extruder_2.def.json")
 
         # if some files are missing then return that this plugin as not installed
         if not os.path.isfile(robox_dual_def_file):
@@ -311,20 +292,20 @@ class RoboxPrinterPlugin(QObject, MeshWriter, Extension):
                     Logger.log("e", "Robox Plugin could not set curr_version preference ")
 
         except:  # Installing a new plugin should never crash the application so catch any random errors and show a message.
-            Logger.logException("w", "An exception occurred in Dremel Printer Plugin while installing the files")
+            Logger.logException("w", "An exception occurred in Robox Printer Plugin while installing the files")
             message = Message(catalog.i18nc("@warning:status",
-                                            "Dremel Printer Plugin experienced an error installing the necessary files"))
+                                            "Robox Printer Plugin experienced an error installing the necessary files"))
             message.show()
 
     ######################################################################
-    ## Prompt the user that the old 3D20 plugin is installed
+    ## Prompt the user that the old  plugin is installed
     ######################################################################
     def PromptToUninstallOldPluginFiles(self):
-        # currently this will prompt the user to uninstall the Dremel3D20 plugin, but not actually uninstall anything
+        # currently this will prompt the user to uninstall the old plugin, but not actually uninstall anything
         dremel3D20PluginDir = os.path.join(Resources.getStoragePath(Resources.Resources), "plugins", "Dremel3D20")
         if os.path.isdir(dremel3D20PluginDir):
             message = Message(catalog.i18nc("@warning:status",
-                                            "Please uninstall the Dremel 3D20 plugin.\n\t• The Dremel Printer Plugin replaces the older Dremel3D20 plugin.\n\t• Currently both are installed. "))
+                                            "Please uninstall the Robox old plugin.\n\t• The Robox Printer Plugin replaces the older Robox plugin.\n\t• Currently both are installed. "))
             message.show()
 
     ######################################################################
