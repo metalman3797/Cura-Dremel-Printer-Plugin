@@ -1,9 +1,9 @@
-ame: Pack Plugin
+name: Pack Plugin
 on:
   push:
   pull_request:
 jobs:
-  composer-install:
+  pack:
     runs-on: ubuntu-latest
     env:
       RELEASE_DIR: RELEASE
