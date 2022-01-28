@@ -34,10 +34,10 @@ jobs:
       - name: Archive Release
         uses: thedoctor0/zip-release@master
         with:
-          filename: 'Cura-Robox-Plugin-${{ steps.get_version.outputs.VERSION }}.curapackage'
+          filename: Cura-Robox-Plugin-${{ steps.get_version.outputs.VERSION }}.curapackage'
           path: RELEASE
       - uses: actions/upload-artifact@v2
         with:
           name: Cura-Robox-Plugin-${{ steps.get_version.outputs.VERSION }}.curapackage
-          path: RELEASE/Cura-Robox-Plugin-${{ steps.get_version.outputs.VERSION }}.curapackage
+          path: Cura-Robox-Plugin-${{ steps.get_version.outputs.VERSION }}.curapackage
   
