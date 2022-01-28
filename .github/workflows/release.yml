@@ -36,6 +36,8 @@ jobs:
         with:
           filename: Cura-Robox-Plugin-${{ steps.get_version.outputs.VERSION }}.curapackage'
           path: RELEASE
+      - name: embed version into python code
+        run: find . | sed -e "s/[^-][^\/]*\// |/g" -e "s/|\([^ ]\)/|-\1/"
       - uses: actions/upload-artifact@v2
         with:
           name: Cura-Robox-Plugin-${{ steps.get_version.outputs.VERSION }}.curapackage
