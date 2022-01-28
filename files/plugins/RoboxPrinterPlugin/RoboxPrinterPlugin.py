@@ -27,6 +27,8 @@ import copy
 import struct
 import time
 
+import _version
+
 from distutils.version import StrictVersion # for upgrade installations
 
 from UM.i18n import i18nCatalog
@@ -57,7 +59,7 @@ from . import G3DremHeader
 catalog = i18nCatalog("cura")
 
 
-class DremelPrinterPlugin(QObject, MeshWriter, Extension):
+class RoboxPrinterPlugin(QObject, MeshWriter, Extension):
     ######################################################################
     ##  The version number of this plugin
     ##  Please ensure that the version number is the same match in all
@@ -66,7 +68,7 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
     ##    2) .\plugin.json
     ##    3) ..\..\resources\package.json
     ######################################################################
-    version = "0.7.1"
+    version = _version.__version__
 
     ######################################################################
     ##  Dictionary that defines how characters are escaped when embedded in
@@ -90,25 +92,25 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
         if self.getPreferenceValue("curr_version") is None:
             self.setPreferenceValue("curr_version","0.0.0")
 
-        self.this_plugin_path=os.path.join(Resources.getStoragePath(Resources.Resources), "plugins","DremelPrinterPlugin","DremelPrinterPlugin")
+        self.this_plugin_path=os.path.join(Resources.getStoragePath(Resources.Resources), "plugins","RoboxPrinterPlugin","RoboxPrinterPlugin")
 
         # move the select_screenshot preference to a shared value
         oldScreenshotPref = self._application.getPreferences().getValue("Dremel_3D20/select_screenshot")
         if oldScreenshotPref is not None:
-            self._application.getPreferences().addPreference("DremelPrinterPlugin/select_screenshot", oldScreenshotPref)
+            self._application.getPreferences().addPreference("RoboxPrinterPlugin/select_screenshot", oldScreenshotPref)
             self._application.getPreferences().removePreference("Dremel_3D20/select_screenshot")
 
-        if self._application.getPreferences().getValue("DremelPrinterPlugin/select_screenshot") is None:
-            self._application.getPreferences().addPreference("DremelPrinterPlugin/select_screenshot", False)
+        if self._application.getPreferences().getValue("RoboxPrinterPlugin/select_screenshot") is None:
+            self._application.getPreferences().addPreference("RoboxPrinterPlugin/select_screenshot", False)
 
         # move value of last_screenshot_folder
         oldLastScreenshotFolder = self._application.getPreferences().getValue("Dremel3D20/last_screenshot_folder")
         if oldLastScreenshotFolder is not None:
-            self._application.getPreferences().addPreference("DremelPrinterPlugin/last_screenshot_folder",oldLastScreenshotFolder)
+            self._application.getPreferences().addPreference("RoboxPrinterPlugin/last_screenshot_folder",oldLastScreenshotFolder)
             self._application.getPreferences().removePreference("Dremel_3D20/last_screenshot_folder")
 
-        if self._application.getPreferences().getValue("DremelPrinterPlugin/last_screenshot_folder") is None:
-            self._application.getPreferences().addPreference("DremelPrinterPlugin/last_screenshot_folder",str(os.path.expanduser('~')))
+        if self._application.getPreferences().getValue("RoboxPrinterPlugin/last_screenshot_folder") is None:
+            self._application.getPreferences().addPreference("RoboxPrinterPlugin/last_screenshot_folder",str(os.path.expanduser('~')))
         Logger.log("i", "Dremel Plugin adding menu item for screenshot toggling")
 
         self._preferences_window = None
@@ -150,7 +152,7 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
         self.addMenuItem(catalog.i18nc("@item:inmenu", "Preferences"), self.showPreferences)
         self.addMenuItem(catalog.i18nc("@item:inmenu", "Report Issue"), self.reportIssue)
         self.addMenuItem(catalog.i18nc("@item:inmenu", "Help "), self.showHelp)
-        self.addMenuItem(catalog.i18nc("@item:inmenu", "Dremel Printer Plugin Version "+DremelPrinterPlugin.version), self.openPluginWebsite)
+        self.addMenuItem(catalog.i18nc("@item:inmenu", "Dremel Printer Plugin Version "+RoboxPrinterPlugin.version), self.openPluginWebsite)
 
         # finally save the cura.cfg file
         Logger.log("i","Dremel Plugin - Writing to "+str(Resources.getStoragePath(Resources.Preferences, self._application.getApplicationName() + ".cfg")))
@@ -170,7 +172,7 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
 
     def createPreferencesWindow(self):
         path = os.path.join(PluginRegistry.getInstance().getPluginPath(self.getPluginId()), "DremelPluginprefs.qml")
-        Logger.log("i", "Creating DremelPrinterPlugin preferences UI "+path)
+        Logger.log("i", "Creating RoboxPrinterPlugin preferences UI "+path)
         self._preferences_window = self._application.createQmlComponent(path, {"manager": self})
 
     def showPreferences(self):
@@ -233,14 +235,14 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
             self.setPreferenceValue("curr_version","0.0.0")
             #self._application.getPreferences().writeToFile(Resources.getStoragePath(Resources.Preferences, self._application.getApplicationName() + ".cfg"))
 
-        installedVersion = self._application.getPreferences().getValue("DremelPrinterPlugin/curr_version")
+        installedVersion = self._application.getPreferences().getValue("RoboxPrinterPlugin/curr_version")
 
-        if StrictVersion(installedVersion) == StrictVersion(DremelPrinterPlugin.version):
+        if StrictVersion(installedVersion) == StrictVersion(RoboxPrinterPlugin.version):
             # if the version numbers match, then return true
-            Logger.log("i", "Dremel Plugin versions match: "+installedVersion+" matches "+DremelPrinterPlugin.version)
+            Logger.log("i", "Dremel Plugin versions match: "+installedVersion+" matches "+RoboxPrinterPlugin.version)
             return True
         else:
-            Logger.log("i", "Dremel Plugin - The currently installed version: " +installedVersion+ " doesn't match this version: "+DremelPrinterPlugin.version)
+            Logger.log("i", "Dremel Plugin - The currently installed version: " +installedVersion+ " doesn't match this version: "+RoboxPrinterPlugin.version)
             return False
 
 
@@ -318,7 +320,7 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
     ##  Gets a value from Cura's preferences
     ######################################################################
     def getPreferenceValue(self, preferenceName):
-        return self._application.getPreferences().getValue("DremelPrinterPlugin/"+str(preferenceName))
+        return self._application.getPreferences().getValue("RoboxPrinterPlugin/"+str(preferenceName))
 
     ######################################################################
     ## Sets a value to be stored in Cura's preferences file
@@ -326,7 +328,7 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
     def setPreferenceValue(self, preferenceName, preferenceValue):
         if preferenceValue is None:
             return False
-        name = "DremelPrinterPlugin/"+str(preferenceName)
+        name = "RoboxPrinterPlugin/"+str(preferenceName)
         Logger.log("i", "Dremel Plugin: setting preference "+name+" to "+str(preferenceValue))
         if self.getPreferenceValue(preferenceName) is None:
             Logger.log("i","Adding preference "+name);
@@ -343,7 +345,7 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
 
         try:
             restartRequired = False
-            zipdata = os.path.join(self.this_plugin_path,"DremelPrinterPlugin.zip")
+            zipdata = os.path.join(self.this_plugin_path,"RoboxPrinterPlugin.zip")
             #zipdata = os.path.join(self._application.getPluginRegistry().getPluginPath(self.getPluginId()), "Dremel3D20.zip")
             Logger.log("i", "Dremel Plugin: found zipfile: " + zipdata)
             with zipfile.ZipFile(zipdata, "r") as zip_ref:
@@ -379,7 +381,7 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
             # now that we've unzipped everything, check again to see if everything exists
             if self.isInstalled():
                 # The files are now installed, so set the curr_version prefrences value
-                if not self.setPreferenceValue("curr_version",DremelPrinterPlugin.version):
+                if not self.setPreferenceValue("curr_version",RoboxPrinterPlugin.version):
                     Logger.log("e", "Dremel Plugin could not set curr_version preference ")
 
         except: # Installing a new plugin should never crash the application so catch any random errors and show a message.
@@ -659,7 +661,7 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
                 message = Message(catalog.i18nc("@warning:status", "WARNING: Printing Ultra quality with Dremel PETG is currently unreliable"))
                 message.show()
 
-            stream.write("\n;Cura-Dremel-Printer-Plugin version {}\n;Printing on: {}\n;Using material: \"{}\"\n;Quality: \"{}\"\n".format(DremelPrinterPlugin.version,active_printer,materialName,quality_name).encode())
+            stream.write("\n;Cura-Dremel-Printer-Plugin version {}\n;Printing on: {}\n;Using material: \"{}\"\n;Quality: \"{}\"\n".format(RoboxPrinterPlugin.version,active_printer,materialName,quality_name).encode())
 
             # after the plugin info - write the gcode from Cura
             active_build_plate = self._application.getMultiBuildPlateModel().activeBuildPlate
@@ -732,7 +734,7 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
     def _serialiseSettings(self, stack):
         container_registry = self._application.getContainerRegistry()
 
-        prefix = self._setting_keyword + str(DremelPrinterPlugin.version) + " "  # The prefix to put before each line.
+        prefix = self._setting_keyword + str(RoboxPrinterPlugin.version) + " "  # The prefix to put before each line.
         prefix_length = len(prefix)
 
         quality_type = stack.quality.getMetaDataEntry("quality_type")
@@ -809,10 +811,10 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
         json_string = json.dumps(data)
 
         # Escape characters that have a special meaning in g-code comments.
-        pattern = re.compile("|".join(DremelPrinterPlugin.escape_characters.keys()))
+        pattern = re.compile("|".join(RoboxPrinterPlugin.escape_characters.keys()))
 
         # Perform the replacement with a regular expression.
-        escaped_string = pattern.sub(lambda m: DremelPrinterPlugin.escape_characters[re.escape(m.group(0))], json_string)
+        escaped_string = pattern.sub(lambda m: RoboxPrinterPlugin.escape_characters[re.escape(m.group(0))], json_string)
 
         # Introduce line breaks so that each comment is no longer than 80 characters. Prepend each line with the prefix.
         result = ""

@@ -13,15 +13,29 @@ jobs:
         id: get_version
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
       - run: |
-          mkdr -p ${RELEASE_DIR}/files/plugins/RoboxPrinterPlugin
-      
-      # - name: Set version in plugin.json
-      #   run: // todo run the scrip that sets version to ${{ steps.get_version.outputs.VERSION }}
-      - run: composer install --ansi --no-progress --no-interaction --prefer-dist
+          mkdr -p ${RELEASE_DIR}
+          cp -a files ${RELEASE_DIR}
+          cp -a icon.png ${RELEASE_DIR}
+          cp -a LICENSE ${RELEASE_DIR}
+          cp -a package.json ${RELEASE_DIR}
+      - name: Set version of package
+        uses: jossef/action-set-json-field@v1
+        with:
+          file: ${RELEASE_DIR}/package.json
+          field: package_version
+          value: ${{ steps.get_version.outputs.VERSION }}
+      - name: Set version of plugin
+        uses: jossef/action-set-json-field@v1
+        with:
+          file: ${RELEASE_DIR}/files/plugins/RoboxPrinterPlugin/plugin.json
+          field: version
+          value: ${{ steps.get_version.outputs.VERSION }}   
+      - name: embed version into python code
+        run: echo "__version__ = '${{ steps.get_version.outputs.VERSION }}'" > ${RELEASE_DIR}/files/plugins/RoboxPrinterPlugin/_version.py
       - uses: montudor/action-zip@v1
         with:
-          args: zip -qq -r plugin.zip vendor
-      # - uses: actions/upload-artifact@v2
-      #   with:
-      #     name: vendor.zip
+          args: zip -qq -r Cura-Dremel-Plugin-${{ steps.get_version.outputs.VERSION }}.curapackage vendor
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Cura-Dremel-Plugin-${{ steps.get_version.outputs.VERSION }}.curapackage
   

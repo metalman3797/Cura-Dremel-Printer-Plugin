@@ -9,7 +9,7 @@
     "display_name": "Robox Printer Plugin",
     "package_id": "RoboxPrinterPlugin",
     "package_type": "plugin",
-    "package_version": "0.1.0",
+    "package_version": "development",
     "sdk_version": 5,
     "tags": [
         "CEL",
