@@ -5,37 +5,38 @@ on:
 jobs:
   pack:
     runs-on: ubuntu-latest
-    env:
-      RELEASE_DIR: RELEASE
     steps:
       - uses: actions/checkout@v1
       - name: Get the version
         id: get_version
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
       - run: |
-          mkdr -p ${RELEASE_DIR}
-          cp -a files ${RELEASE_DIR}
-          cp -a icon.png ${RELEASE_DIR}
-          cp -a LICENSE ${RELEASE_DIR}
-          cp -a package.json ${RELEASE_DIR}
+          mkdir -p RELEASE
+          cp -R files RELEASE
+          cp -R icon.png RELEASE
+          cp -R LICENSE RELEASE
+          cp -R package.json RELEASE
+          find RELEASE | sed -e "s/[^-][^\/]*\// |/g" -e "s/|\([^ ]\)/|-\1/"
       - name: Set version of package
         uses: jossef/action-set-json-field@v1
         with:
-          file: ${RELEASE_DIR}/package.json
+          file: RELEASE/package.json
           field: package_version
           value: ${{ steps.get_version.outputs.VERSION }}
       - name: Set version of plugin
         uses: jossef/action-set-json-field@v1
         with:
-          file: ${RELEASE_DIR}/files/plugins/RoboxPrinterPlugin/plugin.json
+          file: RELEASE/files/plugins/RoboxPrinterPlugin/plugin.json
           field: version
           value: ${{ steps.get_version.outputs.VERSION }}   
       - name: embed version into python code
-        run: echo "__version__ = '${{ steps.get_version.outputs.VERSION }}'" > ${RELEASE_DIR}/files/plugins/RoboxPrinterPlugin/_version.py
+        run: echo "__version__ = '${{ steps.get_version.outputs.VERSION }}'" > RELEASE/files/plugins/RoboxPrinterPlugin/_version.py
       - uses: montudor/action-zip@v1
         with:
-          args: zip -qq -r Cura-Dremel-Plugin-${{ steps.get_version.outputs.VERSION }}.curapackage vendor
+          args: zip -qq -r Cura-Robox-Plugin-test.curapackage .
+        working-directory: RELEASE
       - uses: actions/upload-artifact@v2
         with:
-          name: Cura-Dremel-Plugin-${{ steps.get_version.outputs.VERSION }}.curapackage
+          name: Cura-Robox-Plugin-test.curapackage
+          path: RELEASE/Cura-Robox-Plugin-test.curapackage
   
