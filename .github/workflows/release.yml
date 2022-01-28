@@ -36,8 +36,8 @@ jobs:
       - name: Archive Release
         uses: thedoctor0/zip-release@master
         with:
-          filename: artifact/Cura-Robox-Plugin-${{ steps.get_version.outputs.VERSION }}.curapackage'
-          path: RELEASE
+          filename: artifact/Cura-Robox-Plugin-${{ steps.get_version.outputs.VERSION }}.curapackage
+          path: RELEASE/*
       - name: embed version into python code
         run: find . | sed -e "s/[^-][^\/]*\// |/g" -e "s/|\([^ ]\)/|-\1/"
       - uses: actions/upload-artifact@v2
