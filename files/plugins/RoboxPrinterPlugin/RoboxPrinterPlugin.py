@@ -279,12 +279,10 @@ class RoboxPrinterPlugin(QObject, MeshWriter, Extension):
         Logger.log("i", "Robox Plugin installing printer files")
 
         try:
-            restartRequired = False
-            resourcesPath = os.path.join(self.this_plugin_path, "resources")
-            resourcesDestinationPath =
-            Logger.log("i", "Robox Plugin installing " + resourcesPath + " to " + resourcesDestinationPath)
-            shutil.copy(resourcesPath, resourcesDestinationPath)
-            restartRequired = True
+            resources_path = os.path.join(self.this_plugin_path, "resources")
+            resources_destination_path = Resources.getStoragePathForType(Resources.Resources)
+            Logger.log("i", "Robox Plugin installing " + resources_path + " to " + resources_destination_path)
+            shutil.copy(resources_path, resources_destination_path)
 
             if self.isInstalled():
                 # The files are now installed, so set the curr_version prefrences value
