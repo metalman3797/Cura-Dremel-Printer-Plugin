@@ -279,10 +279,16 @@ class RoboxPrinterPlugin(QObject, MeshWriter, Extension):
         Logger.log("i", "Robox Plugin installing printer files")
 
         try:
-            resources_path = os.path.join(self.this_plugin_path, "../../../resources")
-            resources_destination_path = Resources.getStoragePathForType(Resources.Resources)
-            Logger.log("i", "Robox Plugin installing " + resources_path + " to " + resources_destination_path)
-            shutil.copy(resources_path, resources_destination_path)
+            resources_path = os.path.join(self.this_plugin_path, "../../../")
+            zipdata = os.path.join(self.this_plugin_path, "resources.zip")
+            Logger.log("i", "Robox Plugin: found zipfile: " + zipdata)
+            with zipfile.ZipFile(zipdata, "r") as zip_ref:
+                for info in zip_ref.infolist():
+                    Logger.log("i", "Robox Plugin: found in zipfile: " + info.filename)
+                    extracted_path = zip_ref.extract(info.filename, resources_path)
+                    permissions = os.stat(extracted_path).st_mode
+                    os.chmod(extracted_path, permissions | stat.S_IEXEC)  # Make these files executable.
+                    Logger.log("i", "Robox Plugin installing " + info.filename + " to " + resources_path)
 
             if self.isInstalled():
                 # The files are now installed, so set the curr_version prefrences value
