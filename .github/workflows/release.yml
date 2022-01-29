@@ -19,7 +19,7 @@ jobs:
           cp -R LICENSE RELEASE
           cp -R package.json RELEASE
       - name: zip resoruces
-        run: zip -qq -r ../files/plugins/RoboxPrinterPlugin/resources.zip .
+        run: zip -qq -r ../RELEASE/files/plugins/RoboxPrinterPlugin/resources.zip .
         working-directory: resources
       - name: list files structure
         run: find RELEASE | sed -e "s/[^-][^\/]*\// |/g" -e "s/|\([^ ]\)/|-\1/"
