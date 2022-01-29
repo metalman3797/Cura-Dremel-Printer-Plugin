@@ -279,7 +279,7 @@ class RoboxPrinterPlugin(QObject, MeshWriter, Extension):
         Logger.log("i", "Robox Plugin installing printer files")
 
         try:
-            resources_path = os.path.join(self.this_plugin_path, "resources")
+            resources_path = os.path.join(self.this_plugin_path, "../../../resources")
             resources_destination_path = Resources.getStoragePathForType(Resources.Resources)
             Logger.log("i", "Robox Plugin installing " + resources_path + " to " + resources_destination_path)
             shutil.copy(resources_path, resources_destination_path)

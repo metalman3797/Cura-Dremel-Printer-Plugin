@@ -10,13 +10,19 @@ jobs:
       - name: Get the version
         id: get_version
         run: echo ::set-output name=VERSION::${GITHUB_REF##*/}
+      - name: Install zip
+        uses: montudor/action-zip@v1
       - run: |
           mkdir -p RELEASE
           cp -R files RELEASE
           cp -R icon.png RELEASE
           cp -R LICENSE RELEASE
           cp -R package.json RELEASE
-          find RELEASE | sed -e "s/[^-][^\/]*\// |/g" -e "s/|\([^ ]\)/|-\1/"
+      - name: zip resoruces
+        run: zip -qq -r ../files/plugins/RoboxPrinterPlugin/resources.zip .
+        working-directory: resources
+      - name: list files structure
+        run: find RELEASE | sed -e "s/[^-][^\/]*\// |/g" -e "s/|\([^ ]\)/|-\1/"
       - name: Set version of package
         uses: jossef/action-set-json-field@v1
         with:
@@ -33,8 +39,6 @@ jobs:
         run: echo "__version__ = '${{ steps.get_version.outputs.VERSION }}'" > RELEASE/files/plugins/RoboxPrinterPlugin/_version.py
       - name: embed version into python code
         run: mkdir -p artifact
-      - name: Install zip
-        uses: montudor/action-zip@v1
       - name: Zip output
         run: zip -qq -r ../artifact/Cura-Robox-Plugin-${{ steps.get_version.outputs.VERSION }}.curapackage . 
         working-directory: RELEASE
