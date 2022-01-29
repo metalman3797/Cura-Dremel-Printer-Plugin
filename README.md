@@ -2,7 +2,8 @@
 
 # This is the fork of Cura-Dremel-Printer-Plugin that planned to be adapted for robox printers
 
-![Plugin Icon](./docs/header.png)
+## The plugin is under development and does not work yet!
+
 
 
 # Cura-Dremel-Printer-Plugin
