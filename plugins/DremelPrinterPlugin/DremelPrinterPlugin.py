@@ -34,11 +34,9 @@ from UM.Extension import Extension
 from UM.Message import Message
 from UM.Resources import Resources
 from UM.Logger import Logger
-from UM.Preferences import Preferences
 from UM.Mesh.MeshWriter import MeshWriter
 from UM.Settings.InstanceContainer import InstanceContainer
 from UM.Qt.Duration import DurationFormat
-from UM.Qt.Bindings.Theme import Theme
 from UM.PluginRegistry import PluginRegistry
 
 from UM.Application import Application
@@ -47,11 +45,14 @@ from cura.Machines.ContainerTree import ContainerTree
 from cura.Utils.Threading import call_on_qt_thread
 from cura.Snapshot import Snapshot
 
-from PyQt5.QtWidgets import QApplication, QFileDialog
-from PyQt5.QtGui import QPixmap, QScreen, QColor, qRgb, QImageReader, QImage, QDesktopServices
-from PyQt5.QtCore import QByteArray, QBuffer, QIODevice, QRect, Qt, QSize, pyqtSlot, QObject, QUrl, pyqtSlot
+from PyQt5.QtWidgets import QFileDialog
+from PyQt5.QtGui import QImageReader, QImage, QDesktopServices
+from PyQt5.QtCore import QByteArray, QBuffer, QIODevice, QSize, pyqtSlot, QObject, QUrl, pyqtSlot
 
+# for the camera viewer
+from .CameraGrabber import CameraViewWindow
 
+# g3drem header
 from . import G3DremHeader
 
 catalog = i18nCatalog("cura")
@@ -66,7 +67,7 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
     ##    2) .\plugin.json
     ##    3) ..\..\resources\package.json
     ######################################################################
-    version = "0.7.1"
+    version = "0.7.2"
 
     ######################################################################
     ##  Dictionary that defines how characters are escaped when embedded in
@@ -109,6 +110,8 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
 
         if self._application.getPreferences().getValue("DremelPrinterPlugin/last_screenshot_folder") is None:
             self._application.getPreferences().addPreference("DremelPrinterPlugin/last_screenshot_folder",str(os.path.expanduser('~')))
+
+
         Logger.log("i", "Dremel Plugin adding menu item for screenshot toggling")
 
         self._preferences_window = None
@@ -118,6 +121,12 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
         self.local_materials_path = None
         self.local_quality_path = None
         self.local_extruder_path = None
+        
+
+        self._camera_window = None
+        self.CameraIpAddress = self.getPreferenceValue("ip_address")
+        if self.CameraIpAddress is None:
+            self.setPreferenceValue("ip_address","XXX.XXX.XXX.XXX")
 
         Logger.log("i", "Dremel Plugin setting up")
         self.local_meshes_path = os.path.join(Resources.getStoragePathForType(Resources.Resources), "meshes")
@@ -148,6 +157,7 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
             self.installPluginFiles()
 
         self.addMenuItem(catalog.i18nc("@item:inmenu", "Preferences"), self.showPreferences)
+        self.addMenuItem(catalog.i18nc("@item:inmenu", "View Camera"), self.showCamera)
         self.addMenuItem(catalog.i18nc("@item:inmenu", "Report Issue"), self.reportIssue)
         self.addMenuItem(catalog.i18nc("@item:inmenu", "Help "), self.showHelp)
         self.addMenuItem(catalog.i18nc("@item:inmenu", "Dremel Printer Plugin Version "+DremelPrinterPlugin.version), self.openPluginWebsite)
@@ -155,6 +165,10 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
         # finally save the cura.cfg file
         Logger.log("i","Dremel Plugin - Writing to "+str(Resources.getStoragePath(Resources.Preferences, self._application.getApplicationName() + ".cfg")))
         self._application.getPreferences().writeToFile(Resources.getStoragePath(Resources.Preferences, self._application.getApplicationName() + ".cfg"))
+
+        # the Camera UI
+        self.DremelCameraViewer = None
+
 
     ######################################################################
     ## Taking snapshot needs to be called on QT thread
@@ -181,6 +195,39 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
     def hidePreferences(self):
         if self._preferences_window is not None:
             self._preferences_window.hide()
+
+
+    def createCameraWindow(self):
+        # create the UI
+        self.DremelCameraViewer = CameraViewWindow()
+        Logger.log("i", "Creating DremelPrinterPlugin Camera UI")
+    
+    @pyqtSlot(str)
+    def SetIpAddress(self,ipString):
+        if type(ipString) is not str:
+            return
+        Logger.log("i", "SetIpAddress: Setting IP Address "+ipString)
+
+        self.setPreferenceValue("ip_address",ipString)
+
+        self.CameraIpAddress = ipString
+
+
+    def showCamera(self):
+        if self.CameraIpAddress is None:
+            message = Message(catalog.i18nc("@info:warning", "Dremel Printer does not have an IP address set"))
+            message.show()
+            return
+        if self.DremelCameraViewer is None:
+             self.createCameraWindow()
+        self.DremelCameraViewer.resize(640, 480)
+        
+        self.DremelCameraViewer.setIpAddress(self.CameraIpAddress)
+        self.DremelCameraViewer.StartCameraGrabbing()
+
+    def hideCamera(self):
+        if self.DremelCameraViewer is not None:
+            self.DremelCameraViewer.hide()
 
     ######################################################################
     ##  function so that the preferences menu can open website

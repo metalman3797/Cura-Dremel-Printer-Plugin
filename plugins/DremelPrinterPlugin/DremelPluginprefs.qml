@@ -12,7 +12,7 @@ UM.Dialog
     property string installStatusText
 
     minimumWidth: Math.floor(UM.Theme.getSize("toolbox_action_button").width * 2.5+3*UM.Theme.getSize("default_margin").width)
-    minimumHeight: Math.floor(Math.max(120 * screenScaleFactor,120))
+    minimumHeight: Math.floor(Math.max(240 * screenScaleFactor,240))
     title: "Dremel Plugin Preferences"
 
     function checkBooleanVals(val) {
@@ -25,16 +25,15 @@ UM.Dialog
         }
     }
 
-    function checkInstallStatus(prefVal) {
-        if(prefVal == "installed") {
-            return true
-        } else if(val == "uninstalled" || val == undefined ) {
-            return false
-        } else {
+    function getIPAddress(val) {
+        if(val == undefined)
+        {
+            return "XXX.XXX.XXX.XXX"
+        }else
+        {
             return val
         }
     }
-
 
     ColumnLayout {
         id: colLayout
@@ -52,6 +51,24 @@ UM.Dialog
             ToolTip.visible: hovered
             ToolTip.text: "Check this box to allow you when saving a\ng3drem file to manually select a screenshot\nfrom an image stored on your hard drive"
         } //end CheckBox
+
+        Row{
+            width: Math.round(parent.width)
+            TextField
+            {
+                id: ipAddress
+                focus: true
+                text: getIPAddress(UM.Preferences.getValue("DremelPrinterPlugin/ip_address"))
+                onAccepted: manager.SetIpAddress(text)
+                ToolTip.timeout: 1000
+                ToolTip.visible: hovered
+                ToolTip.text: "Enter the IP address of your Dremel Printer here in order to enable the camera view"
+                validator:RegExpValidator
+                {
+                    regExp:/^(([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))\.){3}([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))$/
+                }
+            }
+        }
 
         Row {
             id: buttonRow
