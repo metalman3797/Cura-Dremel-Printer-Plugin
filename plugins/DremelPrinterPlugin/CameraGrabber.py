@@ -35,6 +35,9 @@ class CameraGrabThread(QThread):
         self.stopThread()
         self.start()
 
+    def isRunning(self):
+        return self.isRunning
+
     def run(self):
         # if we're already running just return
         if self.running:
@@ -92,6 +95,11 @@ class CameraViewWindow(QWidget):
         self.cameraGrabThread.startThread()
         self.show()
 
+    def IsGrabbing(self):
+        if self.cameraGrabThread is not None:
+            return self.cameraGrabThread.isRunning()
+        return False
+
     def StopCameraGrabbing(self):
         Logger.log("i", "Stopping Camera Grab Thread")
         if self.cameraGrabThread is not None:
@@ -105,7 +113,10 @@ class CameraViewWindow(QWidget):
 
     @pyqtSlot(QImage)
     def setImage(self, image):
-        self.label.setPixmap(QPixmap.fromImage(image))
+        if image is not None:
+            self.label.setPixmap(QPixmap.fromImage(image))
+        else:
+            self.label.setText("Connecting...")
 
     def initUI(self):
         self.setWindowTitle(self.title)
@@ -113,4 +124,6 @@ class CameraViewWindow(QWidget):
         
         self.label.resize(640, 480)
         self.label.setText("Connecting...")
+        #TODO - add a qtimer and check the connection status after a bit to change the label text
+        #       to something helpful if the connection fails.
 
