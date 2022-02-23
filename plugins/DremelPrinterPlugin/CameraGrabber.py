@@ -14,23 +14,50 @@ from PyQt5.QtGui import QImage, QPixmap, QDesktopServices
 from PyQt5.QtWidgets import QWidget, QLabel, QPushButton
 from PyQt5.QtCore import pyqtSignal, QThread, pyqtSlot, QTimer, QUrl
 
+from enum import Enum
+
 from time import time, sleep
 
 from UM.Logger import Logger
+from UM.Message import Message
+
+class CameraGrabThreadState(Enum):
+    ERRORED = -1
+    DISCONNECTED = 0
+    STOPPING = 1
+    STARTING = 2
+    CONNECTING = 3
+    CONNECTED = 4
+    GRABBING = 5
+
+    # for comparing
+    def __ge__(self, other):
+        if self.__class__ is other.__class__:
+            return self.value >= other.value
+        return NotImplemented
+    def __gt__(self, other):
+        if self.__class__ is other.__class__:
+            return self.value > other.value
+        return NotImplemented
+    def __le__(self, other):
+        if self.__class__ is other.__class__:
+            return self.value <= other.value
+        return NotImplemented
+    def __lt__(self, other):
+        if self.__class__ is other.__class__:
+            return self.value < other.value
+        return NotImplemented
 
 class CameraGrabThread(QThread):
     updateImage = pyqtSignal(QImage)
 
-    stopRequested = False
-    connecting = False
-    connected = False
-    running = False
+    threadState = CameraGrabThreadState.DISCONNECTED
 
     ipAddr = None
     _checkConnectionTimer = None
     last_image_grabbed_time = None
 
-    MAX_TIME_TIMEOUT = 5 #seconds
+    MAX_TIME_TIMEOUT = 5.0 #seconds
 
     def setWindow(self,window):
         self.window = window
@@ -39,16 +66,13 @@ class CameraGrabThread(QThread):
         self.ipAddr = ip
 
     def stopThread(self):
-        self.stopRequested = True
+        self.threadState = CameraGrabThreadState.STOPPING
         self._checkConnectionTimer = None
 
     # TODO - make this more robust - 
     def startThread(self):
         self.stopThread()
-        self.stopRequested = False
-        self.connecting = False
-        self.connected = False
-        self.running = False
+        self.connectedState = CameraGrabThreadState.DISCONNECTED
         # timer
         if self._checkConnectionTimer is None:
             self._checkConnectionTimer = QTimer()
@@ -58,17 +82,19 @@ class CameraGrabThread(QThread):
         self.start()
 
     def isRunning(self):
-        return self.running
+        return self.connectedState >= CameraGrabThreadState.STARTING
 
     def _checkConnection(self):
         # if we're running, not connecting, have grabbed an image and the last image was more than 5 seconds ago then stop the thread
-        if self.running and not self.connecting and self.last_image_grabbed_time is not None and (time()-self.last_image_grabbed_time > self.MAX_TIME_TIMEOUT):
+        if self.connectedState>=CameraGrabThreadState.CONNECTED \
+           and self.last_image_grabbed_time is not None\
+           and (time()-self.last_image_grabbed_time > self.MAX_TIME_TIMEOUT):
             self.stopThread()
             Logger.log("i", "Camera Grab Thread did not receive data before timeout")
 
     def run(self):
         # if we're already running just return
-        if self.running:
+        if self.connectedState >= CameraGrabThreadState.STARTING:
             Logger.log("w", "Camera Grab Thread is already running")
             return
 
@@ -78,31 +104,29 @@ class CameraGrabThread(QThread):
             return
 
         Logger.log("i", "Starting Camera Grab Thread")
-        self.running = True
-        self.connecting = True
-        self.connected = False
+        self.connectedState = CameraGrabThreadState.STARTING
 
         port = "10123"
         stream_url = 'http://'+self.ipAddr+':'+port+'/?action=stream'
         try:
             Logger.log("i", "Connecting to camera stream")
-            stream = urllib.request.urlopen(stream_url, timeout=10.0)
+            stream = urllib.request.urlopen(stream_url, timeout=self.MAX_TIME_TIMEOUT)
+            threadState = CameraGrabThreadState.CONNECTED
         except:
-            self.connecting = False
-            self.running = False
+            self.connectedState = CameraGrabThreadState.DISCONNECTED
             Logger.log("i", "Dremel Plugin could not connect to Dremel Camera at ip address "+self.ipAddr)
             return
         Logger.log("i", "Connected to camera stream")
-        self.connecting = False
-        self.connected = True
+
         self.last_image_grabbed_time = None
         abytes =  bytes()
         img = QImage()
-        while not self.stopRequested:
+        self.connectedState = CameraGrabThreadState.GRABBING
+        while self.connectedState > CameraGrabThreadState.STOPPING:
             try:
                 abytes += stream.read(1024)
             except:
-                self.running = False
+                self.connectedState = CameraGrabThreadState.DISCONNECTED
                 return
             a = abytes.find(b'\xff\xd8')
             b = abytes.find(b'\xff\xd9')
@@ -119,8 +143,7 @@ class CameraGrabThread(QThread):
                 self.startThread()
 
         Logger.log("i", "Dremel Plugin Camera Grab Thread is done")
-        self.stopRequested=False
-        self.running = False
+        self.connectedState = CameraGrabThreadState.DISCONNECTED
 
 class CameraViewWindow(QWidget):
     cameraGrabThread = None
@@ -131,14 +154,20 @@ class CameraViewWindow(QWidget):
 
     def __init__(self):
         super().__init__()
+        self.initUI()
+
+    def initUI(self):
         self.title = "Dremel Camera Stream"
+        self.setWindowTitle(self.title)
         self.label = QLabel(self)
         self.openCameraStreamWebsiteButton = QPushButton(self)
         self.openCameraStreamWebsiteButton.visible = False
         self.openCameraStreamWebsiteButton.resize(0,0)
         self.openCameraStreamWebsiteButton.setText("Open Camera in Browser")
         self.openCameraStreamWebsiteButton.clicked.connect(self.openCameraStreamWebsite)
-        self.initUI()
+        # create a label
+        self.label.resize(640, 480)
+        self.label.setText("Connecting...")
 
     def _checkConnection(self):
         # if the thread is created, and not running then change the label and try to start the thread again
@@ -148,9 +177,8 @@ class CameraViewWindow(QWidget):
             self.openCameraStreamWebsiteButton.resize(640,30)
             self.label.setText("Disconnected due to timeout...retyring connection")
 
-            if not self.cameraGrabThread.connecting:
-                Logger.log("i", "CameraViewWindow: Camera Grab Thread is disconnected due to timeout...retyring")
-                self.StartCameraGrabbing()
+            Logger.log("i", "CameraViewWindow: Camera Grab Thread is disconnected due to timeout...retyring")
+            self.StartCameraGrabbing()
 
     def closeEvent(self, evnt):
         Logger.log("i", "Dremel camera window received close event")
@@ -197,24 +225,15 @@ class CameraViewWindow(QWidget):
         else:
             self.label.setText("Connecting...")
 
-    def initUI(self):
-        self.setWindowTitle(self.title)
-        # create a label
-        
-        self.label.resize(640, 480)
-        self.label.setText("Connecting...")
-        #TODO - add a qtimer and check the connection status after a bit to change the label text
-        #       to something helpful if the connection fails.
-
     @pyqtSlot()
     def openCameraStreamWebsite(self):
         if  self.IpAddress is not None:
             url = QUrl("http://"+self.IpAddress+":10123/?action=stream", QUrl.TolerantMode)
             if not QDesktopServices.openUrl(url):
-                message = Message(catalog.i18nc("@info:status","Could not open http://"+self.IpAddress+":10123/?action=stream"))
+                message = Message("Could not open http://"+self.IpAddress+":10123/?action=stream")
                 message.show()
         else:
-            message = Message(catalog.i18nc("@info:status","Camera IP address not set - please open Dremel Printer Plugin preferences"))
+            message = Message("Camera IP address not set - please open Dremel Printer Plugin preferences")
             message.show()
         return
 
