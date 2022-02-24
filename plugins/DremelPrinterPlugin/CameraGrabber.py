@@ -189,8 +189,6 @@ class CameraViewWindow(QWidget):
             Logger.log("i", "CameraViewWindow: Camera Grab Thread is disconnected due to timeout...retyring")
             self.StartCameraGrabbing()
         elif self.cameraGrabThread is not None and self.cameraGrabThread.isCurrentlyGrabbing():
-            self.label.resize(640, 480)
-            self.openCameraStreamWebsiteButton.resize(0,0)
             self.connectionAttempt = 0
 
     def closeEvent(self, evnt):
@@ -199,9 +197,7 @@ class CameraViewWindow(QWidget):
 
     def StartCameraGrabbing(self):
         self.connectionAttempt += 1
-        self.label.resize(640, 480)
         self.label.setText("Connecting...Attempt # "+str(self.connectionAttempt))
-        self.openCameraStreamWebsiteButton.visible = False
         self.openCameraStreamWebsiteButton.resize(300,30)
         if self.cameraGrabThread is None:
             self.cameraGrabThread = CameraGrabThread(self)
@@ -236,8 +232,12 @@ class CameraViewWindow(QWidget):
     @pyqtSlot(QImage)
     def setImage(self, image):
         if image is not None:
+            self.label.resize(640, 480)
+            self.openCameraStreamWebsiteButton.resize(0,0)
             self.label.setPixmap(QPixmap.fromImage(image))
         else:
+            self.label.resize(640, 120)
+            self.openCameraStreamWebsiteButton.resize(300,30)
             self.label.setText("Connecting...")
 
     @pyqtSlot()
