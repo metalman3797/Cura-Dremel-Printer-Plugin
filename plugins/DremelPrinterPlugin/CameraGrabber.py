@@ -84,6 +84,13 @@ class CameraGrabThread(QThread):
     def isRunning(self):
         return self.connectedState >= CameraGrabThreadState.STARTING
 
+    def isCurrentlyGrabbing(self):
+        if self.connectedState>=CameraGrabThreadState.CONNECTED \
+           and self.last_image_grabbed_time is not None\
+           and (time()-self.last_image_grabbed_time <= self.MAX_TIME_TIMEOUT):
+            return True
+        return False
+
     def _checkConnection(self):
         # if we're running, not connecting, have grabbed an image and the last image was more than 5 seconds ago then stop the thread
         if self.connectedState>=CameraGrabThreadState.CONNECTED \
@@ -152,6 +159,8 @@ class CameraViewWindow(QWidget):
     openCameraStreamWebsiteButton = None
     _checkConnectionTimer = None
 
+    connectionAttempt = 0
+
     def __init__(self):
         super().__init__()
         self.initUI()
@@ -163,7 +172,7 @@ class CameraViewWindow(QWidget):
         self.openCameraStreamWebsiteButton = QPushButton(self)
         self.openCameraStreamWebsiteButton.visible = False
         self.openCameraStreamWebsiteButton.resize(0,0)
-        self.openCameraStreamWebsiteButton.setText("Open Camera in Browser")
+        self.openCameraStreamWebsiteButton.setText("Open Camera Stream in Web Browser")
         self.openCameraStreamWebsiteButton.clicked.connect(self.openCameraStreamWebsite)
         # create a label
         self.label.resize(640, 480)
@@ -174,21 +183,26 @@ class CameraViewWindow(QWidget):
         if self.cameraGrabThread is not None and not self.cameraGrabThread.isRunning():
             self.label.resize(640, 120)
             self.openCameraStreamWebsiteButton.visible = True
-            self.openCameraStreamWebsiteButton.resize(640,30)
+            self.openCameraStreamWebsiteButton.resize(300,30)
             self.label.setText("Disconnected due to timeout...retyring connection")
 
             Logger.log("i", "CameraViewWindow: Camera Grab Thread is disconnected due to timeout...retyring")
             self.StartCameraGrabbing()
+        elif self.cameraGrabThread is not None and self.cameraGrabThread.isCurrentlyGrabbing():
+            self.label.resize(640, 480)
+            self.openCameraStreamWebsiteButton.resize(0,0)
+            self.connectionAttempt = 0
 
     def closeEvent(self, evnt):
         Logger.log("i", "Dremel camera window received close event")
         self.StopCameraGrabbing()
 
     def StartCameraGrabbing(self):
+        self.connectionAttempt += 1
         self.label.resize(640, 480)
-        self.label.setText("Connecting...")
+        self.label.setText("Connecting...Attempt # "+str(self.connectionAttempt))
         self.openCameraStreamWebsiteButton.visible = False
-        self.openCameraStreamWebsiteButton.resize(0,0)
+        self.openCameraStreamWebsiteButton.resize(300,30)
         if self.cameraGrabThread is None:
             self.cameraGrabThread = CameraGrabThread(self)
         self.cameraGrabThread.setIPAddress(self.IpAddress)
@@ -218,6 +232,7 @@ class CameraViewWindow(QWidget):
             self.cameraGrabThread = CameraGrabThread(self)
         self.cameraGrabThread.setIPAddress(self.IpAddress)
 
+    # slot to get the image from the camera grab thread
     @pyqtSlot(QImage)
     def setImage(self, image):
         if image is not None:
