@@ -13,6 +13,7 @@ This is a plugin for [Cura version 4.4 and onward](https://ultimaker.com/en/prod
 - [Installation Instructions](#Installation)
 - [Using the Plugin](#Using_the_Plugin)
 - [Preview Image Options](#Preview_Image_Options)
+- [Dremel 3D45 Camera](#Dremel_3D45_Camera)
 - [Current State of the Settings](#MaterialSettings)
 - [Note](#Note)
 - [Frequently Asked Questions (FAQ)](#FAQ)
@@ -132,9 +133,30 @@ preview image on the Dremel:
 ([llama photo](https://en.wikipedia.org/wiki/Llama#/media/File:Llama_lying_down.jpg) by Johann "nojhan" Dréo, distributed under a CC BY-SA 2.0 FR license.)
 
 
-3.   If a screenshot has not been found after steps 1 and 2, then the plugin attempts to take a screenshot of the main Cura window and save it to the file.  This is the default behavior of the plugin, and is what will happen normally if the user doesn't perform the actions listed in Steps 1 and 2.
+3.  If a screenshot has not been found after steps 1 and 2, then the plugin attempts to take a screenshot of the main Cura window and save it to the file.  This is the default behavior of the plugin, and is what will happen normally if the user doesn't perform the actions listed in Steps 1 and 2.
 
 4.  If the screenshot fails for some reason then the plugin's icon will be selected as the preview image.
+
+---
+# <a name="Dremel_3D45_Camera"></a>Dremel 3D45 Camera
+The Dremel 3D45 is equipped with a camera that can be used to monitor the printer.  In order to use the camera with this plugin follow the instructions below:
+1.  Determine the IP address of the Dremel3D45 by turning on the printer and clicking on Tools->About.  The IP address of the printer will be displayed on the screen.
+
+2.  Open the Preferences dialog and enter the IP address of the printer and press enter or the "Set IP Address" button 
+![Dremel Set IP address in Preferences](./docs/camera/set_ip_preferences.png)
+
+3.  A message should be displayed on the main Cura window
+![Success Setting IP Address](./docs/camera/ip_set_successful.png)
+
+4.  Open the plugin's menu page and select "View Camera"
+![View Camera Menu](./docs/camera/view_camera.png)
+
+5.  A new window should be displayed showing the camera view.
+![Camera Streaming](./docs/camera/streaming.png)
+
+**Troubleshooting Camera Connections:**
+1.  While the camera window is open the plugin will try to connect to the camera at the IP address that was set.  While the plugin is connecting the window shows the number of attempts that it has made to connect to the camera stream, along with a button that allows you to open the website that the Dremel is using to connect to the camera.  If connection fails, click the button and a web browser will be opened allowing the user to try to connect to the Dremel via the browser.  If the browser cannot connect, then the plugin will not be able to connect either.  Check that the printer is on, that the printer's IP address is set correctly in the plugin, and that the computer is on the same network as the printer.
+![Camera Streaming](./docs/camera/connecting.png)
 
 
 ---
