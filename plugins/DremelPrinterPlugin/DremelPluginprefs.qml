@@ -8,10 +8,11 @@ import UM 1.1 as UM
 
 UM.Dialog
 {
+
     id: base
     property string installStatusText
 
-    minimumWidth: Math.floor(UM.Theme.getSize("toolbox_action_button").width * 2.5+3*UM.Theme.getSize("default_margin").width)
+    minimumWidth: Math.floor(UM.Theme.getSize("toolbox_action_button").width * 3.5 +3*UM.Theme.getSize("default_margin").width)
     minimumHeight: Math.floor(Math.max(240 * screenScaleFactor,240))
     title: "Dremel Plugin Preferences"
 
@@ -54,11 +55,18 @@ UM.Dialog
 
         Row{
             width: Math.round(parent.width)
+            spacing: UM.Theme.getSize("default_margin").width
+            Label
+            {
+                text:"IP Address"
+                width: Math.floor(parent.width * 0.25)
+            }
             TextField
             {
                 id: ipAddress
                 focus: true
                 text: getIPAddress(UM.Preferences.getValue("DremelPrinterPlugin/ip_address"))
+                width: Math.floor(UM.Theme.getSize("toolbox_action_button").width*1.5)
                 onAccepted: manager.SetIpAddress(text)
                 ToolTip.timeout: 1000
                 ToolTip.visible: hovered
@@ -68,6 +76,14 @@ UM.Dialog
                     regExp:/^(([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))\.){3}([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))$/
                 }
             }
+            Button
+            {
+                id: setIPButton
+                width: Math.floor(UM.Theme.getSize("toolbox_action_button").width)
+                property int renderType: Text.NativeRendering
+                text: "Set IP Address"
+                onClicked: manager.SetIpAddress(ipAddress.text)
+            } // end Button
         }
 
         Row {
@@ -77,7 +93,7 @@ UM.Dialog
 
             Button
             {
-                id: button1
+                id: openWebsiteButton
                 width: Math.floor(UM.Theme.getSize("toolbox_action_button").width * 1.25)
                 property int renderType: Text.NativeRendering
                 text: "Open plugin website"

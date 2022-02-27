@@ -12,7 +12,7 @@ import urllib.request
 
 from PyQt5.QtGui import QImage, QPixmap, QDesktopServices
 from PyQt5.QtWidgets import QWidget, QLabel, QPushButton
-from PyQt5.QtCore import pyqtSignal, QThread, pyqtSlot, QTimer, QUrl
+from PyQt5.QtCore import pyqtSignal, QThread, pyqtSlot, QTimer, QUrl, QSize
 
 from enum import Enum
 
@@ -126,28 +126,43 @@ class CameraGrabThread(QThread):
         Logger.log("i", "Connected to camera stream")
 
         self.last_image_grabbed_time = None
-        abytes =  bytes()
+        streamBufferBytes =  bytes()
         img = QImage()
         self.connectedState = CameraGrabThreadState.GRABBING
+
         while self.connectedState > CameraGrabThreadState.STOPPING:
             try:
-                abytes += stream.read(1024)
+                # try to read the image data from the stream adding the newly read data to a buffer
+                streamBufferBytes += stream.read(1024)
             except:
+                # if there was a timeout reading the stream then set the state to disconnected & return
                 self.connectedState = CameraGrabThreadState.DISCONNECTED
                 return
-            a = abytes.find(b'\xff\xd8')
-            b = abytes.find(b'\xff\xd9')
-            if a != -1 and b != -1:
-                jpg = abytes[a:b+2]
-                abytes = abytes[b+2:]
+
+            # look for the starting and ending markers of the mjpeg
+            imgStart = streamBufferBytes.find(b'\xff\xd8')
+            imgEnd = streamBufferBytes.find(b'\xff\xd9')
+
+            # if we found them
+            if imgStart != -1 and imgEnd != -1:
+                # section out the jpg bytes
+                jpg = streamBufferBytes[imgStart:imgEnd+2]
+
+                #  and remove those jpg bytes from the stored buffer
+                streamBufferBytes = streamBufferBytes[imgEnd+2:]
+
+                # if we can successfully load this data into a jpg then emit a signal
+                # which will cause the window to refresh the image
                 if(img.loadFromData(jpg, "JPG")):
                     self.last_image_grabbed_time = time()
                     self.updateImage.emit(img)
 
-            if len(abytes) > 5000000:
+            # if the buffer gets too big (5 MB) then reset the thread
+            if len(streamBufferBytes) > 5000000:
                 Logger.log("i", "Camera grab thread buffer too big - restarting")
-                self.stopThread()  # stops the thread
-                self.startThread()
+                self.stopThread()  # sets a flag to stop the thread
+                self.startThread() # starts a new thread
+                return             # returns from this thread
 
         Logger.log("i", "Dremel Plugin Camera Grab Thread is done")
         self.connectedState = CameraGrabThreadState.DISCONNECTED
@@ -158,7 +173,7 @@ class CameraViewWindow(QWidget):
     label = None
     openCameraStreamWebsiteButton = None
     _checkConnectionTimer = None
-
+    labelSize = QSize(640,480)
     connectionAttempt = 0
 
     def __init__(self):
@@ -169,13 +184,15 @@ class CameraViewWindow(QWidget):
         self.title = "Dremel Camera Stream"
         self.setWindowTitle(self.title)
         self.label = QLabel(self)
+        self.label.setScaledContents(True)
         self.openCameraStreamWebsiteButton = QPushButton(self)
         self.openCameraStreamWebsiteButton.visible = False
         self.openCameraStreamWebsiteButton.resize(0,0)
         self.openCameraStreamWebsiteButton.setText("Open Camera Stream in Web Browser")
         self.openCameraStreamWebsiteButton.clicked.connect(self.openCameraStreamWebsite)
         # create a label
-        self.label.resize(640, 480)
+        self.windowSize = QSize(640,480)
+        self.label.resize(self.windowSize)
         self.label.setText("Connecting...")
 
     def _checkConnection(self):
@@ -191,9 +208,15 @@ class CameraViewWindow(QWidget):
         elif self.cameraGrabThread is not None and self.cameraGrabThread.isCurrentlyGrabbing():
             self.connectionAttempt = 0
 
+    # catches the close event and stops the camera grabbing thread
     def closeEvent(self, evnt):
         Logger.log("i", "Dremel camera window received close event")
         self.StopCameraGrabbing()
+
+    def resizeEvent(self,sizeEvent):
+        #Logger.log("i", "Dremel camera window received resize event")
+        self.windowSize = sizeEvent.size()
+        self.label.resize(self.windowSize)
 
     def StartCameraGrabbing(self):
         self.connectionAttempt += 1
@@ -232,9 +255,12 @@ class CameraViewWindow(QWidget):
     @pyqtSlot(QImage)
     def setImage(self, image):
         if image is not None:
-            self.label.resize(640, 480)
+            self.label.resize(self.windowSize)
             self.openCameraStreamWebsiteButton.resize(0,0)
-            self.label.setPixmap(QPixmap.fromImage(image))
+            try:
+                self.label.setPixmap(QPixmap.fromImage(image))
+            except:
+                self.label.setText("There was a problem with the image")
         else:
             self.label.resize(640, 120)
             self.openCameraStreamWebsiteButton.resize(300,30)
