@@ -269,7 +269,7 @@ class CameraViewWindow(QWidget):
     @pyqtSlot()
     def openCameraStreamWebsite(self):
         if  self.IpAddress is not None:
-            url = QUrl("http://"+self.IpAddress+":10123/?action=stream", QUrl.TolerantMode)
+            url = QUrl("http://"+self.IpAddress+":10123/stream.html", QUrl.TolerantMode)
             if not QDesktopServices.openUrl(url):
                 message = Message("Could not open http://"+self.IpAddress+":10123/?action=stream")
                 message.show()
