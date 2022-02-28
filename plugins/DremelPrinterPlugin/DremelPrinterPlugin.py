@@ -202,8 +202,9 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
     ######################################################################
     def createCameraWindow(self):
         # create the UI
-        self.DremelCameraViewer = CameraViewWindow()
-        Logger.log("i", "Creating DremelPrinterPlugin Camera UI")
+        if self.DremelCameraViewer is None:
+            self.DremelCameraViewer = CameraViewWindow()
+            Logger.log("i", "Creating DremelPrinterPlugin Camera UI")
     
     @pyqtSlot(str)
     def SetIpAddress(self,ipString):
