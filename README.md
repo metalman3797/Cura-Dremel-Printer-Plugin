@@ -143,15 +143,19 @@ The Dremel 3D45 is equipped with a camera that can be used to monitor the printe
 1.  Determine the IP address of the Dremel3D45 by turning on the printer and clicking on Tools->About.  The IP address of the printer will be displayed on the screen.
 
 2.  Open the Preferences dialog and enter the IP address of the printer and press enter or the "Set IP Address" button 
+
 ![Dremel Set IP address in Preferences](./docs/camera/set_ip_preferences.png)
 
 3.  A message should be displayed on the main Cura window
+
 ![Success Setting IP Address](./docs/camera/ip_set_successful.png)
 
 4.  Open the plugin's menu page and select "View Camera"
+
 ![View Camera Menu](./docs/camera/view_camera.png)
 
 5.  A new window should be displayed showing the camera view.
+
 ![Camera Streaming](./docs/camera/streaming.png)
 
 **Troubleshooting Camera Connections:**
