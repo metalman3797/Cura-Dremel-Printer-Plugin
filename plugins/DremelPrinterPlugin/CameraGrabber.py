@@ -12,7 +12,7 @@ import urllib.request
 
 from PyQt5.QtGui import QImage, QPixmap, QDesktopServices
 from PyQt5.QtWidgets import QWidget, QLabel, QPushButton
-from PyQt5.QtCore import pyqtSignal, QThread, pyqtSlot, QTimer, QUrl, QSize
+from PyQt5.QtCore import pyqtSignal, QThread, pyqtSlot, QTimer, QUrl, QSize, Qt
 
 from enum import Enum
 
@@ -184,7 +184,8 @@ class CameraViewWindow(QWidget):
         self.title = "Dremel Camera Stream"
         self.setWindowTitle(self.title)
         self.label = QLabel(self)
-        self.label.setScaledContents(True)
+        self.label.setScaledContents(False)
+        self.label.setAlignment(Qt.AlignCenter)
         self.openCameraStreamWebsiteButton = QPushButton(self)
         self.openCameraStreamWebsiteButton.visible = False
         self.openCameraStreamWebsiteButton.resize(0,0)
@@ -258,7 +259,9 @@ class CameraViewWindow(QWidget):
             self.label.resize(self.windowSize)
             self.openCameraStreamWebsiteButton.resize(0,0)
             try:
-                self.label.setPixmap(QPixmap.fromImage(image))
+                w = self.label.width()
+                h = self.label.height()
+                self.label.setPixmap(QPixmap.fromImage(image).scaled(w,h,Qt.KeepAspectRatio,Qt.SmoothTransformation))
             except:
                 self.label.setText("There was a problem with the image")
         else:
