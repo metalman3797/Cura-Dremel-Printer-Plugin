@@ -229,13 +229,8 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
             # and restart the thread
             self.CameraIpAddress = ipMatch.group()
             if self.DremelCameraViewer is not None:
-                #wasGrabbing = self.DremelCameraViewer.IsGrabbing()
-                #self.DremelCameraViewer.StopCameraGrabbing()
-                self.DremelCameraViewer.setImage(None)
                 self.DremelCameraViewer.setIpAddress(self.CameraIpAddress)
-                #if wasGrabbing:
-                #    self.DremelCameraViewer.setIpAddress(self.CameraIpAddress)
-                #    self.DremelCameraViewer.StartCameraGrabbing()
+
 
     # shows the camera window
     def showCamera(self):

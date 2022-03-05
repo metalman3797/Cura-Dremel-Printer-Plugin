@@ -21,25 +21,8 @@ from UM.Message import Message
 
 class ConnectedState(Enum):
     DISCONNECTED = 0
-    CONNECTING = 1
-    CONNECTED = 2
-    # for comparing
-    def __ge__(self, other):
-        if self.__class__ is other.__class__:
-            return self.value >= other.value
-        return NotImplemented
-    def __gt__(self, other):
-        if self.__class__ is other.__class__:
-            return self.value > other.value
-        return NotImplemented
-    def __le__(self, other):
-        if self.__class__ is other.__class__:
-            return self.value <= other.value
-        return NotImplemented
-    def __lt__(self, other):
-        if self.__class__ is other.__class__:
-            return self.value < other.value
-        return NotImplemented
+    CONNECTED = 1
+
 
 class CameraGrabThreadState(Enum):
     ERRORED = -2
@@ -76,20 +59,34 @@ class CameraGrabThread(QThread):
     stream = None
     ipAddr = None
 
-    MAX_TIME_TIMEOUT = 5.0 #seconds
+    MAX_TIME_TIMEOUT = 2.0 #seconds
 
     def setIPAddress(self, ip: str):
         if self.ipAddr is not None and self.ipAddr == ip:
             Logger.log("i", "Camera Grab Thread - IP addresses are the same")
             return
         self.ipAddr = ip
-        self.connectedState = ConnectedState.DISCONNECTED
-        self.grabbingState = CameraGrabThreadState.STOPPED
+        self.setDisconnected()
         self.stream = None
-        Logger.log("i", "Camera Grab Thread - IP Address set to "+ip)
 
     def stop(self):
-        self.grabbingState = CameraGrabThreadState.STOPPING
+        Logger.log("i", "Camera Grab Thread - Setting grab state to STOPPING")
+        self.setGrabbingState(CameraGrabThreadState.STOPPING)
+        self.setConnectedState(ConnectedState.DISCONNECTED)
+
+    def setGrabbingState(self, state: CameraGrabThreadState):
+        # if we're stopping then we don't want to set the state
+        if self.grabbingState == CameraGrabThreadState.STOPPING:
+            return
+        else:
+            self.grabbingState = state
+
+    def setConnectedState(self, state: ConnectedState):
+        self.connectedState = state
+
+    def setDisconnected(self):
+        self.setConnectedState(ConnectedState.DISCONNECTED)
+        self.setGrabbingState(CameraGrabThreadState.STOPPED)
 
     def isConnected(self):
         return self.connectedState == ConnectedState.CONNECTED
@@ -99,24 +96,25 @@ class CameraGrabThread(QThread):
 
     def isGrabbing(self):
         return self.grabbingState >= CameraGrabThreadState.STARTING
-    
+
     def getConnectionAttemptNumber(self):
         return self.connectionAttempt
 
     # loops until the IP address is connected to
     def connect(self):
-        while self.connectedState == ConnectedState.DISCONNECTED and self.grabbingState != CameraGrabThreadState.STOPPING:
+        # while we're disconnected and not stopping then try to connect
+        while not self.isConnected() and not self.isStopping():
             self.connectionAttempt +=1
             Logger.log("i", "Camera Grab Thread: Camera Disconnected...connection attempt: "+str(self.connectionAttempt))
             port = "10123"
             stream_url = 'http://'+self.ipAddr+':'+port+'/?action=stream'
             try:
                 self.stream = urllib.request.urlopen(stream_url, timeout=self.MAX_TIME_TIMEOUT)
-                self.connectedState = ConnectedState.CONNECTED
+                self.setConnectedState(ConnectedState.CONNECTED)
                 Logger.log("i", "Camera Grab Thread: Connected to camera stream at: "+stream_url)
                 return True
             except:
-                self.connectedState = ConnectedState.DISCONNECTED
+                self.setConnectedState(ConnectedState.DISCONNECTED)
                 Logger.log("i", "Dremel Plugin could not connect to Dremel Camera at ip address "+self.ipAddr)
                 return False
 
@@ -125,20 +123,20 @@ class CameraGrabThread(QThread):
         streamBufferBytes =  bytes()
         img = QImage()
 
-        # grab
-        while self.connectedState != ConnectedState.DISCONNECTED and self.grabbingState != CameraGrabThreadState.STOPPING:
+        # while we're connected and not stopping, grab frames
+        while self.isConnected() and not self.isStopping():
             try:
                 # try to read the image data from the stream adding the newly read data to a buffer
                 streamBufferBytes += self.stream.read(1024)
             except:
                 # if there was a timeout reading the stream then set the state to disconnected & return
-                self.connectedState = ConnectedState.DISCONNECTED
+                self.setConnectedState(ConnectedState.DISCONNECTED)
                 continue
 
             # look for the starting and ending markers of the mjpeg
             imgStart = streamBufferBytes.find(b'\xff\xd8')
             imgEnd = streamBufferBytes.find(b'\xff\xd9')
-            # if we found them
+            # if we found the start and end bytes
             if imgStart != -1 and imgEnd != -1:
                 # section out the jpg bytes
                 jpg = streamBufferBytes[imgStart:imgEnd+2]
@@ -150,38 +148,42 @@ class CameraGrabThread(QThread):
                 # which will cause the window to refresh the image
                 if(img.loadFromData(jpg, "JPG")):
                     self.connectionAttempt = 0
-                    self.grabbingState = CameraGrabThreadState.GRABBING
+                    self.setGrabbingState(CameraGrabThreadState.GRABBING)
                     self.last_image_grabbed_time = time()
                     self.updateImage.emit(img)
 
             # if the buffer gets too big (5 MB) then reset the thread
             if len(streamBufferBytes) > 5000000:
                 Logger.log("i", "Camera grab thread buffer too big - restarting")
-                self.connectedState = ConnectedState.DISCONNECTED
-                self.grabbingState = CameraGrabThreadState.STOPPED
-        Logger.log("i", "Returning from Camera Grab Loop")
+                self.setDisconnected()
 
     def run(self):
         Logger.log("i", "Starting Camera Grab Thread")
 
-         # if the IP address hasn't been set, return
+         # if the IP address hasn't been set, return immediately
         if self.ipAddr is None:
             Logger.log("w", "Camera Grab Thread cannot start - No IP address")
             return
 
+        # reset the connection attempt counter
+        self.connectionAttempt = 0
+
+        # manually set the grabbing state here to ensure that we enter the loop below
+        # at least once (don't call the setGrabbingState function)
         self.grabbingState = CameraGrabThreadState.STARTING
 
         # loop while we're not stopping and try to connect & grab frames
-        while self.grabbingState != CameraGrabThreadState.STOPPING:
+        while not self.isStopping():
 
-            # if we haven't received an image in a while then we're disconnected and stopped
+            # if we haven't received an image in a while then we're disconnected
             if self.last_image_grabbed_time is not None and (time()-self.last_image_grabbed_time > self.MAX_TIME_TIMEOUT):
-                self.connectedState = ConnectedState.DISCONNECTED
-                self.grabbingState = CameraGrabThreadState.STOPPED
+                self.setDisconnected()
 
+            # try to connect (this will loop until connection or the thread is set to stopping)
             if not self.connect():
                 continue
 
+            # now grab frames (will loop until connection lost or the thread is set to stopping)
             self.grabFrames()
 
         Logger.log("i", "Dremel Plugin Camera Grab Thread is done")
@@ -265,7 +267,6 @@ class CameraViewWindow(QWidget):
     def setIpAddress(self,ip: str):
         self.IpAddress = ip
         if self.cameraGrabThread is not None:
-            Logger.log("i", "Dremel Camera UI setting IP address")
             self.cameraGrabThread.setIPAddress(self.IpAddress)
 
     # slot to get the image from the camera grab thread
