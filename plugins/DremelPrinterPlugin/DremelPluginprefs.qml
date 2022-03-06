@@ -12,7 +12,7 @@ UM.Dialog
     id: base
     property string installStatusText
 
-    minimumWidth: Math.floor(UM.Theme.getSize("toolbox_action_button").width * 3.5 +3*UM.Theme.getSize("default_margin").width)
+    minimumWidth: Math.floor(UM.Theme.getSize("toolbox_action_button").width * 3 + 5 * UM.Theme.getSize("default_margin").width)
     minimumHeight: Math.floor(Math.max(280 * screenScaleFactor,280))
     title: "Dremel Plugin Preferences"
 
@@ -91,13 +91,10 @@ UM.Dialog
         GroupBox {
             width: Math.round(parent.width)
             spacing: UM.Theme.getSize("default_margin").width
-            title: "Dremel 3D45 Camera"
+            title: "Dremel 3D45 Camera IP Address"
             Row{
-                Label
-                {
-                    text:"IP Address"
-                    width: Math.floor(parent.width * 0.25)
-                }
+                spacing: UM.Theme.getSize("default_margin").width
+
                 TextField
                 {
                     id: ipAddress
@@ -116,7 +113,7 @@ UM.Dialog
                 Button
                 {
                     id: setIPButton
-                    width: Math.floor(UM.Theme.getSize("toolbox_action_button").width)
+                    width: Math.floor(UM.Theme.getSize("toolbox_action_button").width*1.5)
                     property int renderType: Text.NativeRendering
                     text: "Set IP Address"
                     onClicked: manager.SetIpAddress(ipAddress.text)

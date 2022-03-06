@@ -18,6 +18,7 @@ from enum import Enum
 from time import time, sleep
 from UM.Logger import Logger
 from UM.Message import Message
+from cura.CuraApplication import CuraApplication
 
 class ConnectedState(Enum):
     DISCONNECTED = 0
@@ -63,14 +64,14 @@ class CameraGrabThread(QThread):
 
     def setIPAddress(self, ip: str):
         if self.ipAddr is not None and self.ipAddr == ip:
-            Logger.log("i", "Camera Grab Thread - IP addresses are the same")
+            Logger.log("i", "Dremel Printer Plugin: Camera Grab Thread: IP addresses are the same")
             return
         self.ipAddr = ip
         self.setDisconnected()
         self.stream = None
 
     def stop(self):
-        Logger.log("i", "Camera Grab Thread - Setting grab state to STOPPING")
+        Logger.log("i", "Dremel Printer Plugin:Camera Grab Thread: Setting grab state to STOPPING")
         self.setGrabbingState(CameraGrabThreadState.STOPPING)
         self.setConnectedState(ConnectedState.DISCONNECTED)
 
@@ -105,17 +106,17 @@ class CameraGrabThread(QThread):
         # while we're disconnected and not stopping then try to connect
         while not self.isConnected() and not self.isStopping():
             self.connectionAttempt +=1
-            Logger.log("i", "Camera Grab Thread: Camera Disconnected...connection attempt: "+str(self.connectionAttempt))
+            Logger.log("i", "Dremel Printer Plugin: Camera Grab Thread: Camera Disconnected...connection attempt: "+str(self.connectionAttempt))
             port = "10123"
             stream_url = 'http://'+self.ipAddr+':'+port+'/?action=stream'
             try:
                 self.stream = urllib.request.urlopen(stream_url, timeout=self.MAX_TIME_TIMEOUT)
                 self.setConnectedState(ConnectedState.CONNECTED)
-                Logger.log("i", "Camera Grab Thread: Connected to camera stream at: "+stream_url)
+                Logger.log("i", "Dremel Printer Plugin: Camera Grab Thread: Connected to camera stream at: "+stream_url)
                 return True
             except:
                 self.setConnectedState(ConnectedState.DISCONNECTED)
-                Logger.log("i", "Dremel Plugin could not connect to Dremel Camera at ip address "+self.ipAddr)
+                Logger.log("i", "Dremel Printer Plugin: Camera Grab Thread: Could not connect to Dremel Camera at ip address "+self.ipAddr)
                 return False
 
     def grabFrames(self):
@@ -154,15 +155,15 @@ class CameraGrabThread(QThread):
 
             # if the buffer gets too big (5 MB) then reset the thread
             if len(streamBufferBytes) > 5000000:
-                Logger.log("i", "Camera grab thread buffer too big - restarting")
+                Logger.log("i", "Dremel Printer Plugin: Camera Grab Thread:  Buffer too big - restarting")
                 self.setDisconnected()
 
     def run(self):
-        Logger.log("i", "Starting Camera Grab Thread")
+        Logger.log("i", "Dremel Printer Plugin: Camera Grab Thread: Starting Camera Grab Thread")
 
          # if the IP address hasn't been set, return immediately
         if self.ipAddr is None:
-            Logger.log("w", "Camera Grab Thread cannot start - No IP address")
+            Logger.log("w", "Dremel Printer Plugin: Camera Grab Thread: Camera Grab Thread cannot start - No IP address")
             return
 
         # reset the connection attempt counter
@@ -186,7 +187,7 @@ class CameraGrabThread(QThread):
             # now grab frames (will loop until connection lost or the thread is set to stopping)
             self.grabFrames()
 
-        Logger.log("i", "Dremel Plugin Camera Grab Thread is done")
+        Logger.log("i", "Dremel Printer Plugin: Camera Grab Thread: Dremel Plugin Camera Grab Thread is done")
 
 class CameraViewWindow(QWidget):
     cameraGrabThread = None
@@ -201,6 +202,7 @@ class CameraViewWindow(QWidget):
     def __init__(self):
         super().__init__()
         self.initUI()
+        CuraApplication.getInstance().getOnExitCallbackManager().addCallback(self._closeUIAndStopGrabbing)
 
     def initUI(self):
         self.title = "Dremel Camera Stream"
@@ -218,6 +220,13 @@ class CameraViewWindow(QWidget):
         self.label.resize(self.windowSize)
         self.label.setText("Connecting...")
 
+    def _closeUIAndStopGrabbing(self):
+        Logger.log("i", "Dremel Printer Plugin: Camera UI: Dremel Camera window closing due to application exit")
+        self.StopCameraGrabbing()
+        self.close()
+        CuraApplication.getInstance().triggerNextExitCheck()
+        return
+
     def _checkConnection(self):
         # if the thread is created, and not running then change the label
         if self.cameraGrabThread is not None and not self.cameraGrabThread.isConnected():
@@ -228,7 +237,7 @@ class CameraViewWindow(QWidget):
 
     # catches the close event and stops the camera grabbing thread
     def closeEvent(self, evnt):
-        Logger.log("i", "Dremel camera window received close event")
+        Logger.log("i", "Dremel Printer Plugin: Camera UI: Dremel camera window received close event")
         self.StopCameraGrabbing()
 
     def resizeEvent(self,sizeEvent):
@@ -257,9 +266,10 @@ class CameraViewWindow(QWidget):
         return False
 
     def StopCameraGrabbing(self):
-        Logger.log("i", "Stopping Camera Grab Thread")
+        Logger.log("i", "Dremel Printer Plugin: Camera UI: Stopping Camera Grab Thread")
         if self.cameraGrabThread is not None:
             self.cameraGrabThread.stop()
+            self.cameraGrabThread.wait()
         if self._checkConnectionTimer is not None:
             self._checkConnectionTimer.stop()
             self._checkConnectionTimer = None
