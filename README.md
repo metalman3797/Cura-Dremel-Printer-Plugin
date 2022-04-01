@@ -262,6 +262,8 @@ Many thanks to the following users, who have contributed to the plugin in variou
 * [LipuFei](https://github.com/LipuFei)
 * [diegopradogesto](https://github.com/diegopradogesto)
 * Tijs Kooij
+* [takacsa](https://github.com/takacsa)
+* [lenigma1](https://github.com/lenigma1)
 * The rest of the engineering team at [Ultimaker](https://ultimaker.com/)
 
 ---
