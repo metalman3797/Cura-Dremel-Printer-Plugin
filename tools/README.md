@@ -8,6 +8,8 @@ Download [7zip standalone console version](https://www.7-zip.org/download.html) 
 
  Install [wkhtmltopdf](https://wkhtmltopdf.org/downloads.html) to `c:/Program Files/wkhtmltopdf/`
 
+ Install the python grip package with `python3 -m pip install grip`
+
 Run the make_release.py script by typing
 
 `python make_release.py`
