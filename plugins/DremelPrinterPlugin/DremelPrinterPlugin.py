@@ -256,7 +256,7 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
     def openPluginWebsite(self):
         url = QUrl('https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/releases', QUrl.ParsingMode.TolerantMode)
         if not QDesktopServices.openUrl(url):
-            message = Message(catalog.i18nc("@info:status", "Dremel Plugin could not navigate to https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/releases"))
+            message = Message(catalog.i18nc("@info:warning", "Dremel Plugin could not navigate to https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/releases"))
             message.show()
         return
 
@@ -269,10 +269,10 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
         Logger.log("i", "Dremel Plugin opening help document: "+url)
         try:
             if not QDesktopServices.openUrl(QUrl("file:///"+url, QUrl.TolerantMode)):
-                message = Message(catalog.i18nc("@info:status", "Dremel Plugin could not open help document.\n Please download it from here: https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/raw/cura-3.4/README.pdf"))
+                message = Message(catalog.i18nc("@info:warning", "Dremel Plugin could not open help document.\n Please download it from here: https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/raw/stable/README.pdf"))
                 message.show()
         except:
-            message = Message(catalog.i18nc("@info:status", "Dremel Plugin could not open help document.\n Please download it from here: https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/raw/cura-3.4/README.pdf"))
+            message = Message(catalog.i18nc("@info:warning", "Dremel Plugin could not open help document.\n Please download it from here: https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/raw/stable/README.pdf"))
             message.show()
         return
 
@@ -550,7 +550,7 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
                     # now prepare to write the bitmap
                     ba = QByteArray()
                     bmpData = QBuffer(ba)
-                    if not bmpData.open(QIODevice.WriteOnly):
+                    if not bmpData.open(QIODevice.OpenModeFlag.WriteOnly):
                         Logger.log("d", "Dremel Plugin - Could not open qbuffer - using generic icon instead")
                         bmpError = True
                     if bmpData is None:
@@ -574,7 +574,7 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
             # now prepare to write the bitmap
             ba = QByteArray()
             bmpData = QBuffer(ba)
-            if not bmpData.open(QIODevice.WriteOnly):
+            if not bmpData.open(QIODevice.OpenModeFlag.WriteOnly):
                 Logger.log("e", "Dremel Plugin - Could not open qbuffer - using generic icon instead")
                 bmpError = True
             if bmpData is None or self._snapshot is None:
