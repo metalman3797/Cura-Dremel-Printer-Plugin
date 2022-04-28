@@ -1,8 +1,7 @@
-import QtQuick 2.1
+import QtQuick 2.15
 import QtQuick.Controls 2.1
 import QtQuick.Layouts 1.1
 import QtQuick.Window 2.1
-import QtQuick.Controls.Styles 1.1
 
 import UM 1.1 as UM
 
@@ -105,9 +104,9 @@ UM.Dialog
                     ToolTip.timeout: 1000
                     ToolTip.visible: hovered
                     ToolTip.text: "Enter the IP address of your Dremel Printer here in order to enable the camera view"
-                    validator:RegExpValidator
+                    validator: RegularExpressionValidator
                     {
-                        regExp:/^(([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))\.){3}([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))$/
+                        regularExpression:/^(([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))\.){3}([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))$/
                     }
                 }
                 Button

@@ -45,9 +45,9 @@ from cura.Machines.ContainerTree import ContainerTree
 from cura.Utils.Threading import call_on_qt_thread
 from cura.Snapshot import Snapshot
 
-from PyQt5.QtWidgets import QFileDialog
-from PyQt5.QtGui import QImageReader, QImage, QDesktopServices
-from PyQt5.QtCore import QByteArray, QBuffer, QIODevice, QSize, pyqtSlot, QObject, QUrl, pyqtSlot
+from PyQt6.QtWidgets import QFileDialog
+from PyQt6.QtGui import QImageReader, QImage, QDesktopServices
+from PyQt6.QtCore import QByteArray, QBuffer, QIODevice, QSize, pyqtSlot, QObject, QUrl, pyqtSlot
 
 # for the camera viewer
 from .CameraGrabber import CameraViewWindow
@@ -67,7 +67,7 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
     ##    2) .\plugin.json
     ##    3) ..\..\resources\package.json
     ######################################################################
-    version = "0.7.2"
+    version = "0.7.3"
 
     ######################################################################
     ##  Dictionary that defines how characters are escaped when embedded in
@@ -254,7 +254,7 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
     ######################################################################
     @pyqtSlot()
     def openPluginWebsite(self):
-        url = QUrl('https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/releases', QUrl.TolerantMode)
+        url = QUrl('https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/releases', QUrl.ParsingMode.TolerantMode)
         if not QDesktopServices.openUrl(url):
             message = Message(catalog.i18nc("@info:status", "Dremel Plugin could not navigate to https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/releases"))
             message.show()
