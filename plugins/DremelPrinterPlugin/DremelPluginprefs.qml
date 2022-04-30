@@ -3,16 +3,17 @@ import QtQuick.Controls 2.1
 import QtQuick.Layouts 1.1
 import QtQuick.Window 2.1
 
-import UM 1.1 as UM
+import UM 1.5 as UM
 
 UM.Dialog
 {
 
     id: base
     property string installStatusText
-
-    minimumWidth: Math.floor(UM.Theme.getSize("toolbox_action_button").width * 3 + 5 * UM.Theme.getSize("default_margin").width)
-    minimumHeight: Math.floor(Math.max(280 * screenScaleFactor,280))
+    height: minimumHeight
+    width: minimumWidth
+    minimumWidth: 400 * screenScaleFactor
+    minimumHeight: 180 * screenScaleFactor
     title: "Dremel Plugin Preferences"
 
     function checkBooleanVals(val) {
@@ -35,18 +36,23 @@ UM.Dialog
         }
     }
 
-    ColumnLayout {
-        id: colLayout
+
+    Column  {
         anchors.fill: parent
         anchors.margins: margin
+        anchors.top: parent.top
+        anchors.left: parent.left
+        height: parent.height
+        width: parent.width
         GroupBox {
-            anchors.margins: margin
-            spacing: UM.Theme.getSize("default_margin").width
-            title: "General Preferences"
+            title: "General Settings"
             width: Math.round(parent.width)
-            ColumnLayout {
-                height: UM.Theme.getSize("checkbox").height*2
+            height: 85*screenScaleFactor
+            Row {
+                id: checkBoxRow
+                spacing: UM.Theme.getSize("default_margin").height
                 width: Math.round(parent.width)
+                anchors.top: parent.top
                 CheckBox {
                     id: screenshotCB
                     height: UM.Theme.getSize("checkbox").height
@@ -54,52 +60,54 @@ UM.Dialog
                     text: "Select Screenshot Manually"
                     checked: checkBooleanVals(UM.Preferences.getValue("DremelPrinterPlugin/select_screenshot"))
                     onClicked: manager.setSelectScreenshot(checked)
+                    spacing: UM.Theme.getSize("default_margin").width
                     ToolTip.timeout: 5000
                     ToolTip.visible: hovered
                     ToolTip.text: "Check this box to allow you when saving a\ng3drem file to manually select a screenshot\nfrom an image stored on your hard drive"
                 } //end CheckBox
+            } // end Row
+            Row {
+                id: buttonRow
+                spacing: UM.Theme.getSize("default_margin").height
+                width: Math.round(parent.width)
+                anchors.bottom: parent.bottom
 
-                Row {
-                    id: buttonRow
-                    spacing: UM.Theme.getSize("default_margin").width
-                    width: Math.round(parent.width)
+                Button
+                {
+                    id: openWebsiteButton
+                    width: 150*screenScaleFactor
+                    property int renderType: Text.NativeRendering
+                    text: "Open plugin website"
+                    onClicked: manager.openPluginWebsite()
+                } // end Button
 
-                    Button
-                    {
-                        id: openWebsiteButton
-                        width: Math.floor(UM.Theme.getSize("toolbox_action_button").width * 1.25)
-                        property int renderType: Text.NativeRendering
-                        text: "Open plugin website"
-                        onClicked: manager.openPluginWebsite()
-                    } // end Button
+                Button
+                {
+                    id: helpButton
+                    width: 100*screenScaleFactor
+                    property int renderType: Text.NativeRendering
+                    text: "Help"
+                    ToolTip.timeout: 1000
+                    ToolTip.visible: hovered
+                    ToolTip.text: "Open documentation"
+                    onClicked: manager.showHelp()
+                } // end Button
+            } // end Row
+        } // end GroupBox`
 
-                    Button
-                    {
-                        id: helpButton
-                        width: Math.floor(UM.Theme.getSize("toolbox_action_button").width * 1.25)
-                        property int renderType: Text.NativeRendering
-                        text: "Help"
-                        ToolTip.timeout: 1000
-                        ToolTip.visible: hovered
-                        ToolTip.text: "Open documentation"
-                        onClicked: manager.showHelp()
-                    } // end Button
-                } // end Row
-            } // end ColumnLayout
-        } // end GroupBox
         GroupBox {
             width: Math.round(parent.width)
-            spacing: UM.Theme.getSize("default_margin").width
-            title: "Dremel 3D45 Camera IP Address"
+            height: 60*screenScaleFactor
+            title: "Dremel 3D45 IP Address (for camera viewing only)"
             Row{
                 spacing: UM.Theme.getSize("default_margin").width
-
+                width: Math.round(parent.width)
                 TextField
                 {
                     id: ipAddress
                     focus: true
                     text: getIPAddress(UM.Preferences.getValue("DremelPrinterPlugin/ip_address"))
-                    width: Math.floor(UM.Theme.getSize("toolbox_action_button").width*1.5)
+                    width: 150*screenScaleFactor
                     onAccepted: manager.SetIpAddress(text)
                     ToolTip.timeout: 1000
                     ToolTip.visible: hovered
@@ -111,8 +119,10 @@ UM.Dialog
                 }
                 Button
                 {
+                    Layout.alignment: Qt.AlignRight
+                    //anchors.right: parent.right
                     id: setIPButton
-                    width: Math.floor(UM.Theme.getSize("toolbox_action_button").width*1.5)
+                    width: 100*screenScaleFactor
                     property int renderType: Text.NativeRendering
                     text: "Set IP Address"
                     onClicked: manager.SetIpAddress(ipAddress.text)
