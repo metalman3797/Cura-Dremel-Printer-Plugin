@@ -64,7 +64,7 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
     ##    2) .\plugin.json
     ##    3) ..\..\resources\package.json
     ######################################################################
-    version = "0.7.3"
+    version = "0.8.0"
 
     ######################################################################
     ##  Dictionary that defines how characters are escaped when embedded in
@@ -91,19 +91,19 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
         self.this_plugin_path=os.path.join(Resources.getStoragePath(Resources.Resources), "plugins","DremelPrinterPlugin","DremelPrinterPlugin")
 
         # move the select_screenshot preference to a shared value
-        oldScreenshotPref = self._application.getPreferences().getValue("Dremel_3D20/select_screenshot")
-        if oldScreenshotPref is not None:
-            self._application.getPreferences().addPreference("DremelPrinterPlugin/select_screenshot", oldScreenshotPref)
-            self._application.getPreferences().removePreference("Dremel_3D20/select_screenshot")
+        # oldScreenshotPref = self._application.getPreferences().getValue("Dremel_3D20/select_screenshot")
+        # if oldScreenshotPref is not None:
+        #     self._application.getPreferences().addPreference("DremelPrinterPlugin/select_screenshot", oldScreenshotPref)
+        #     self._application.getPreferences().removePreference("Dremel_3D20/select_screenshot")
 
         if self._application.getPreferences().getValue("DremelPrinterPlugin/select_screenshot") is None:
             self._application.getPreferences().addPreference("DremelPrinterPlugin/select_screenshot", False)
 
-        # move value of last_screenshot_folder
-        oldLastScreenshotFolder = self._application.getPreferences().getValue("Dremel3D20/last_screenshot_folder")
-        if oldLastScreenshotFolder is not None:
-            self._application.getPreferences().addPreference("DremelPrinterPlugin/last_screenshot_folder",oldLastScreenshotFolder)
-            self._application.getPreferences().removePreference("Dremel_3D20/last_screenshot_folder")
+        # # move value of last_screenshot_folder
+        # oldLastScreenshotFolder = self._application.getPreferences().getValue("Dremel3D20/last_screenshot_folder")
+        # if oldLastScreenshotFolder is not None:
+        #     self._application.getPreferences().addPreference("DremelPrinterPlugin/last_screenshot_folder",oldLastScreenshotFolder)
+        #     self._application.getPreferences().removePreference("Dremel_3D20/last_screenshot_folder")
 
         if self._application.getPreferences().getValue("DremelPrinterPlugin/last_screenshot_folder") is None:
             self._application.getPreferences().addPreference("DremelPrinterPlugin/last_screenshot_folder",str(os.path.expanduser('~')))
