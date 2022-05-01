@@ -288,7 +288,7 @@ class CameraViewWindow(QWidget):
             try:
                 w = self.label.width()
                 h = self.label.height()
-                self.label.setPixmap(QPixmap.fromImage(image).scaled(w,h,Qt.KeepAspectRatio,Qt.SmoothTransformation))
+                self.label.setPixmap(QPixmap.fromImage(image).scaled(w,h,Qt.AspectRatioMode.KeepAspectRatio,Qt.TransformationMode.SmoothTransformation))
             except:
                 self.label.setText("There was a problem with the image")
         else:
