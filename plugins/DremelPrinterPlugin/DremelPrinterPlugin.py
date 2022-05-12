@@ -15,17 +15,14 @@
 ####################################################################
 
 import os # for listdir
-import platform # for platform.system
 import os.path  # for isfile and join and path
 import sys
 import zipfile  # For unzipping the printer files
-import shutil   # For deleting plugin directories
 import stat     # For setting file permissions correctly
 import re       # For escaping characters in the settings.
 import json
 import copy
 import struct
-import time
 
 from distutils.version import StrictVersion # for upgrade installations
 
@@ -45,9 +42,9 @@ from cura.Machines.ContainerTree import ContainerTree
 from cura.Utils.Threading import call_on_qt_thread
 from cura.Snapshot import Snapshot
 
-from PyQt5.QtWidgets import QFileDialog
-from PyQt5.QtGui import QImageReader, QImage, QDesktopServices
-from PyQt5.QtCore import QByteArray, QBuffer, QIODevice, QSize, pyqtSlot, QObject, QUrl, pyqtSlot
+from PyQt6.QtWidgets import QFileDialog
+from PyQt6.QtGui import QImageReader, QImage, QDesktopServices
+from PyQt6.QtCore import QByteArray, QBuffer, QIODevice, QSize, pyqtSlot, QObject, QUrl, pyqtSlot
 
 # for the camera viewer
 from .CameraGrabber import CameraViewWindow
@@ -67,7 +64,7 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
     ##    2) .\plugin.json
     ##    3) ..\..\resources\package.json
     ######################################################################
-    version = "0.7.2"
+    version = "0.8.0"
 
     ######################################################################
     ##  Dictionary that defines how characters are escaped when embedded in
@@ -94,23 +91,22 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
         self.this_plugin_path=os.path.join(Resources.getStoragePath(Resources.Resources), "plugins","DremelPrinterPlugin","DremelPrinterPlugin")
 
         # move the select_screenshot preference to a shared value
-        oldScreenshotPref = self._application.getPreferences().getValue("Dremel_3D20/select_screenshot")
-        if oldScreenshotPref is not None:
-            self._application.getPreferences().addPreference("DremelPrinterPlugin/select_screenshot", oldScreenshotPref)
-            self._application.getPreferences().removePreference("Dremel_3D20/select_screenshot")
+        # oldScreenshotPref = self._application.getPreferences().getValue("Dremel_3D20/select_screenshot")
+        # if oldScreenshotPref is not None:
+        #     self._application.getPreferences().addPreference("DremelPrinterPlugin/select_screenshot", oldScreenshotPref)
+        #     self._application.getPreferences().removePreference("Dremel_3D20/select_screenshot")
 
         if self._application.getPreferences().getValue("DremelPrinterPlugin/select_screenshot") is None:
             self._application.getPreferences().addPreference("DremelPrinterPlugin/select_screenshot", False)
 
-        # move value of last_screenshot_folder
-        oldLastScreenshotFolder = self._application.getPreferences().getValue("Dremel3D20/last_screenshot_folder")
-        if oldLastScreenshotFolder is not None:
-            self._application.getPreferences().addPreference("DremelPrinterPlugin/last_screenshot_folder",oldLastScreenshotFolder)
-            self._application.getPreferences().removePreference("Dremel_3D20/last_screenshot_folder")
+        # # move value of last_screenshot_folder
+        # oldLastScreenshotFolder = self._application.getPreferences().getValue("Dremel3D20/last_screenshot_folder")
+        # if oldLastScreenshotFolder is not None:
+        #     self._application.getPreferences().addPreference("DremelPrinterPlugin/last_screenshot_folder",oldLastScreenshotFolder)
+        #     self._application.getPreferences().removePreference("Dremel_3D20/last_screenshot_folder")
 
         if self._application.getPreferences().getValue("DremelPrinterPlugin/last_screenshot_folder") is None:
             self._application.getPreferences().addPreference("DremelPrinterPlugin/last_screenshot_folder",str(os.path.expanduser('~')))
-
 
         Logger.log("i", "Dremel Plugin adding menu item for screenshot toggling")
 
@@ -121,9 +117,8 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
         self.local_materials_path = None
         self.local_quality_path = None
         self.local_extruder_path = None
-        
-
         self._camera_window = None
+
         self.CameraIpAddress = self.getPreferenceValue("ip_address")
         if self.CameraIpAddress is None:
             self.setPreferenceValue("ip_address","XXX.XXX.XXX.XXX")
@@ -134,9 +129,6 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
         self.local_materials_path = os.path.join(Resources.getStoragePath(Resources.Resources), "materials")
         self.local_quality_path = os.path.join(Resources.getStoragePath(Resources.Resources), "quality")
         self.local_extruder_path = os.path.join(Resources.getStoragePath(Resources.Resources),"extruders")
-
-        # Prompt user to uninstall the 3D20 plugin, as this one supercedes it
-        self.PromptToUninstallOldPluginFiles()
 
         needsToBeInstalled = False
 
@@ -158,7 +150,7 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
 
         self.addMenuItem(catalog.i18nc("@item:inmenu", "Preferences"), self.showPreferences)
         self.addMenuItem(catalog.i18nc("@item:inmenu", "View Camera"), self.showCamera)
-        self.addMenuItem(catalog.i18nc("@item:inmenu", "Report Issue"), self.reportIssue)
+        #self.addMenuItem(catalog.i18nc("@item:inmenu", "Report Issue"), self.reportIssue)
         self.addMenuItem(catalog.i18nc("@item:inmenu", "Help "), self.showHelp)
         self.addMenuItem(catalog.i18nc("@item:inmenu", "Dremel Printer Plugin Version "+DremelPrinterPlugin.version), self.openPluginWebsite)
 
@@ -177,10 +169,17 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
     ######################################################################
     @call_on_qt_thread
     def _createSnapshot(self, w=80, h=60):
-        # must be called from the main thread because of OpenGL
-        Logger.log("d", "Creating thumbnail image with size (",w,",",h,")")
-        self._snapshot = Snapshot.snapshot(width = w, height = h)
-        Logger.log("d","Thumbnail taken")
+        if not self._application.isVisible:
+            Logger.log("w", "Can't create snapshot when renderer not initialized.")
+            self._snapshot = None
+        try:
+            # must be called from the main thread because of OpenGL
+            Logger.log("d", "Creating thumbnail image with size (",w,",",h,")")
+            self._snapshot = Snapshot.snapshot(width = w, height = h)
+            Logger.log("d","Thumbnail taken")
+        except:
+            Logger.logException("w", "Failed to create snapshot image")
+            self._snapshot = None
 
     def createPreferencesWindow(self):
         path = os.path.join(PluginRegistry.getInstance().getPluginPath(self.getPluginId()), "DremelPluginprefs.qml")
@@ -206,7 +205,6 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
             Logger.log("i", "Creating DremelPrinterPlugin Camera UI")
             self.DremelCameraViewer = CameraViewWindow()
 
-    
     @pyqtSlot(str)
     def SetIpAddress(self,ipString):
         if type(ipString) is not str:
@@ -231,7 +229,6 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
             if self.DremelCameraViewer is not None:
                 self.DremelCameraViewer.setIpAddress(self.CameraIpAddress)
 
-
     # shows the camera window
     def showCamera(self):
         if self.CameraIpAddress is None:
@@ -254,9 +251,9 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
     ######################################################################
     @pyqtSlot()
     def openPluginWebsite(self):
-        url = QUrl('https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/releases', QUrl.TolerantMode)
+        url = QUrl('https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/releases', QUrl.ParsingMode.TolerantMode)
         if not QDesktopServices.openUrl(url):
-            message = Message(catalog.i18nc("@info:status", "Dremel Plugin could not navigate to https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/releases"))
+            message = Message(catalog.i18nc("@info:warning", "Dremel Plugin could not navigate to https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/releases"))
             message.show()
         return
 
@@ -268,11 +265,11 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
         url = os.path.join(PluginRegistry.getInstance().getPluginPath(self.getPluginId()), "README.pdf")
         Logger.log("i", "Dremel Plugin opening help document: "+url)
         try:
-            if not QDesktopServices.openUrl(QUrl("file:///"+url, QUrl.TolerantMode)):
-                message = Message(catalog.i18nc("@info:status", "Dremel Plugin could not open help document.\n Please download it from here: https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/raw/cura-3.4/README.pdf"))
+            if not QDesktopServices.openUrl(QUrl("file:///"+url, QUrl.ParsingMode.TolerantMode)):
+                message = Message(catalog.i18nc("@info:warning", "Dremel Plugin could not open help document.\n Please download it from here: https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/raw/stable/README.pdf"))
                 message.show()
         except:
-            message = Message(catalog.i18nc("@info:status", "Dremel Plugin could not open help document.\n Please download it from here: https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/raw/cura-3.4/README.pdf"))
+            message = Message(catalog.i18nc("@info:warning", "Dremel Plugin could not open help document.\n Please download it from here: https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/raw/stable/README.pdf"))
             message.show()
         return
 
@@ -298,7 +295,6 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
         # get the currently installed plugin version number
         if self.getPreferenceValue("curr_version") is None:
             self.setPreferenceValue("curr_version","0.0.0")
-            #self._application.getPreferences().writeToFile(Resources.getStoragePath(Resources.Preferences, self._application.getApplicationName() + ".cfg"))
 
         installedVersion = self._application.getPreferences().getValue("DremelPrinterPlugin/curr_version")
 
@@ -309,7 +305,6 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
         else:
             Logger.log("i", "Dremel Plugin - The currently installed version: " +installedVersion+ " doesn't match this version: "+DremelPrinterPlugin.version)
             return False
-
 
     ######################################################################
     ## Check to see if the plugin files are all installed
@@ -409,9 +404,7 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
         Logger.log("i", "Dremel Plugin installing printer files")
 
         try:
-            restartRequired = False
             zipdata = os.path.join(self.this_plugin_path,"DremelPrinterPlugin.zip")
-            #zipdata = os.path.join(self._application.getPluginRegistry().getPluginPath(self.getPluginId()), "Dremel3D20.zip")
             Logger.log("i", "Dremel Plugin: found zipfile: " + zipdata)
             with zipfile.ZipFile(zipdata, "r") as zip_ref:
                 for info in zip_ref.infolist():
@@ -441,7 +434,6 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
                         permissions = os.stat(extracted_path).st_mode
                         os.chmod(extracted_path, permissions | stat.S_IEXEC) #Make these files executable.
                         Logger.log("i", "Dremel Plugin installing " + info.filename + " to " + extracted_path)
-                        restartRequired = True
 
             # now that we've unzipped everything, check again to see if everything exists
             if self.isInstalled():
@@ -452,16 +444,6 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
         except: # Installing a new plugin should never crash the application so catch any random errors and show a message.
             Logger.logException("w", "An exception occurred in Dremel Printer Plugin while installing the files")
             message = Message(catalog.i18nc("@warning:status", "Dremel Printer Plugin experienced an error installing the necessary files"))
-            message.show()
-
-    ######################################################################
-    ## Prompt the user that the old 3D20 plugin is installed
-    ######################################################################
-    def PromptToUninstallOldPluginFiles(self):
-        # currently this will prompt the user to uninstall the Dremel3D20 plugin, but not actually uninstall anything
-         dremel3D20PluginDir = os.path.join(Resources.getStoragePath(Resources.Resources), "plugins","Dremel3D20")
-         if os.path.isdir(dremel3D20PluginDir):
-            message = Message(catalog.i18nc("@warning:status", "Please uninstall the Dremel 3D20 plugin.\n\t• The Dremel Printer Plugin replaces the older Dremel3D20 plugin.\n\t• Currently both are installed. "))
             message.show()
 
     ######################################################################
@@ -550,7 +532,7 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
                     # now prepare to write the bitmap
                     ba = QByteArray()
                     bmpData = QBuffer(ba)
-                    if not bmpData.open(QIODevice.WriteOnly):
+                    if not bmpData.open(QIODevice.OpenModeFlag.WriteOnly):
                         Logger.log("d", "Dremel Plugin - Could not open qbuffer - using generic icon instead")
                         bmpError = True
                     if bmpData is None:
@@ -574,7 +556,7 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
             # now prepare to write the bitmap
             ba = QByteArray()
             bmpData = QBuffer(ba)
-            if not bmpData.open(QIODevice.WriteOnly):
+            if not bmpData.open(QIODevice.OpenModeFlag.WriteOnly):
                 Logger.log("e", "Dremel Plugin - Could not open qbuffer - using generic icon instead")
                 bmpError = True
             if bmpData is None or self._snapshot is None:

@@ -10,9 +10,9 @@
 
 import urllib.request
 
-from PyQt5.QtGui import QImage, QPixmap, QDesktopServices
-from PyQt5.QtWidgets import QWidget, QLabel, QPushButton
-from PyQt5.QtCore import pyqtSignal, QThread, pyqtSlot, QTimer, QUrl, QSize, Qt
+from PyQt6.QtGui import QImage, QPixmap, QDesktopServices
+from PyQt6.QtWidgets import QWidget, QLabel, QPushButton
+from PyQt6.QtCore import pyqtSignal, QThread, pyqtSlot, QTimer, QUrl, QSize, Qt
 from enum import Enum
 
 from time import time, sleep
@@ -209,7 +209,7 @@ class CameraViewWindow(QWidget):
         self.setWindowTitle(self.title)
         self.label = QLabel(self)
         self.label.setScaledContents(False)
-        self.label.setAlignment(Qt.AlignCenter)
+        self.label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.openCameraStreamWebsiteButton = QPushButton(self)
         self.openCameraStreamWebsiteButton.visible = False
         self.openCameraStreamWebsiteButton.resize(0,0)
@@ -288,7 +288,7 @@ class CameraViewWindow(QWidget):
             try:
                 w = self.label.width()
                 h = self.label.height()
-                self.label.setPixmap(QPixmap.fromImage(image).scaled(w,h,Qt.KeepAspectRatio,Qt.SmoothTransformation))
+                self.label.setPixmap(QPixmap.fromImage(image).scaled(w,h,Qt.AspectRatioMode.KeepAspectRatio,Qt.TransformationMode.SmoothTransformation))
             except:
                 self.label.setText("There was a problem with the image")
         else:
@@ -299,7 +299,7 @@ class CameraViewWindow(QWidget):
     @pyqtSlot()
     def openCameraStreamWebsite(self):
         if  self.IpAddress is not None:
-            url = QUrl("http://"+self.IpAddress+":10123/stream.html", QUrl.TolerantMode)
+            url = QUrl("http://"+self.IpAddress+":10123/stream.html", QUrl.ParsingMode.TolerantMode)
             if not QDesktopServices.openUrl(url):
                 message = Message("Could not open http://"+self.IpAddress+":10123/?action=stream")
                 message.show()
