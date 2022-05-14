@@ -39,7 +39,7 @@ This plugin is available within the Cura marketplace.  Users are encouraged to u
 
 | Cura Version | Last version of the 3D20 plugin that works with the version of Cura         | Supported Printers |
 |--------------|------------------------------------------------------------------------|-----|
-5.0 | [version 0.8.0](https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/releases/tag/0.7.3) | 3D20, 3D40<sup>[*FAQ1](#FAQ)</sup>, 3D45|
+5.0 | [version 0.8.0](https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/releases/tag/0.8.0) | 3D20, 3D40<sup>[*FAQ1](#FAQ)</sup>, 3D45|
 4.4 through 4.13.1 | [version 0.7.2](https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/releases/tag/0.7.2) | 3D20, 3D40<sup>[*FAQ1](#FAQ)</sup>, 3D45|
 3.5 through 4.3  | [version 0.5.9](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.5.9) | 3D20 |
 3.4 or 3.4.1   | [version 0.4.8](https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/releases/tag/0.4.8) | 3D20 |
