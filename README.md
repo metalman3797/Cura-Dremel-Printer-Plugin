@@ -6,7 +6,7 @@
 
 https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/
 
-This is a plugin for [Cura version 4.4 and onward](https://ultimaker.com/en/products/ultimaker-cura-software) that adds the Dremel Ideabuilder 3D20, 3D40<sup>[*FAQ1](#FAQ)</sup>, and 3D45 printer to Cura and enables Cura to export to the proprietary Dremel .g3drem file format.
+This is a plugin for [Cura](https://ultimaker.com/en/products/ultimaker-cura-software) that adds the Dremel Ideabuilder 3D20, 3D40<sup>[*FAQ1](#FAQ)</sup>, and 3D45 printer to Cura and enables Cura to export to the proprietary Dremel .g3drem file format.
 
 # <a name="Table_Of_Contents"></a>Table Of Contents
 - [Introduction](#Introduction)
