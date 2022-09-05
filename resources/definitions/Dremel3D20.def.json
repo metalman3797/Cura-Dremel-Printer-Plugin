@@ -146,7 +146,7 @@
             "verbatim_bvoh_175",
             "zyyx_pro_flex"
         ],
-        "file_formats": "application/x-g3drem",
+        "file_formats": "application/x-g3drem;text/x-gcode",
         "has_machine_quality": true,
         "has_materials": true,
         "machine_extruder_trains": {
