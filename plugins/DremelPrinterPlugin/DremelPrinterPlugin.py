@@ -79,8 +79,8 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
         re.escape("\r"): "\\r"    # Carriage return. Windows users may need this for visualisation in their editors.
     }
 
-    exclude_gcode = ['M117']      # if Cura attempts to write any of the gcodes in this list they will be skipped
-                                  # i.e. the 3D45 doesn't support the M117 gcode
+    exclude_gcode = ['M117', ]      # if Cura attempts to write any of the gcodes in this list they will be skipped
+                                    # i.e. the 3D45 doesn't support the M117 gcode
 
     _setting_keyword = ";SETTING_"
 
@@ -726,14 +726,22 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
             #Logger.log("i", "Got active build plate")
             if gcode_list is not None:
                 has_settings = False
-                for gcode in gcode_list:
+                # the gcode_layer contains an entire layer of gcode the gcode_list is a list of all the layers.
+                for gcode_layer in gcode_list:
                     try:
-                        if gcode[:len(self._setting_keyword)] == self._setting_keyword:
+                        if gcode_layer[:len(self._setting_keyword)] == self._setting_keyword:
                              has_settings = True
-                        # exclude unsupported commands here
-                        if bool([ele for ele in self.exclude_gcode if(ele in gcode)]):
-                            continue
-                        stream.write(gcode.encode())
+                        # skip unsupported commands here - first we split the layer
+                        # into individual lines
+                        gcode_lines = gcode_layer.split('\n')
+                        for single_gcode in gcode_lines:
+                            # check to see if the gcode starts with an unsupported gcode element
+                            if bool([ele for ele in self.exclude_gcode if(single_gcode.startswith(ele))]):
+                                Logger.log("w", f"Dremel Plugin - Skipping unsupported gcode: {single_gcode}")
+                                continue
+                            # add back in the newline that was removed during the split and write the individual element
+                            single_gcode +='\n'
+                            stream.write(single_gcode.encode())
                     except:
                         Logger.logException("w", "Dremel Plugin - Error writing gcode to file.")
                         return False
