@@ -64,7 +64,7 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
     ##    2) .\plugin.json
     ##    3) ..\..\resources\package.json
     ######################################################################
-    version = "0.8.1"
+    version = "0.8.2"
 
     ######################################################################
     ##  Dictionary that defines how characters are escaped when embedded in
@@ -78,6 +78,9 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
         re.escape("\n"): "\\n",   # Newlines. They break off the comment.
         re.escape("\r"): "\\r"    # Carriage return. Windows users may need this for visualisation in their editors.
     }
+
+    exclude_gcode = ['M117']      # if Cura attempts to write any of the gcodes in this list they will be skipped
+                                  # i.e. the 3D45 doesn't support the M117 gcode
 
     _setting_keyword = ";SETTING_"
 
@@ -727,6 +730,9 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
                     try:
                         if gcode[:len(self._setting_keyword)] == self._setting_keyword:
                              has_settings = True
+                        # exclude unsupported commands here
+                        if bool([ele for ele in self.exclude_gcode if(ele in gcode)]):
+                            continue
                         stream.write(gcode.encode())
                     except:
                         Logger.logException("w", "Dremel Plugin - Error writing gcode to file.")
