@@ -266,6 +266,7 @@ Many thanks to the following users, who have contributed to the plugin:
 * [takacsa](https://github.com/takacsa)
 * [lenigma1](https://github.com/lenigma1)
 * [Troy McFarland](https://pacificsciencecenter.org/)
+* [Fishhooks1945](https://github.com/Fishhooks1945)
 * The rest of the engineering team at [Ultimaker](https://ultimaker.com/)
 
 ---
