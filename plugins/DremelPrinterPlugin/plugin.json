@@ -1,8 +1,8 @@
 {
     "name": "Dremel Printer Plugin",
-    "author": "Tim Schoenmackers",
-    "version": "0.8.1",
-    "description": "Enables the user to add the Dremel Ideabuilder 3D20, 3D40, and 3D45 printer to Cura and export the proprietary .g3drem files.",
-    "supported_sdk_versions": ["8.0.0"],
+    "author": "3PI Tech Solutions",
+    "version": "1.0.0",
+    "description": "This plugin adds the Dremel 3D20, 3D40, and 3D45 printers as well as material profiles to Cura and allows exporting in the .g3drem format.",
+    "supported_sdk_versions": ["8.6.0"],
     "i18n-catalog": "cura"
 }

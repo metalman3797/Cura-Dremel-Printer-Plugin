@@ -11,7 +11,7 @@
 #
 # This plugin is released under the terms of the LGPLv3 or higher.
 # The full text of the LGPLv3 License can be found here:
-# https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/blob/master/LICENSE
+# https://github.com/metalman3797/Cura-Dremel-Printer-Plugin/blob/master/LICENSE
 ####################################################################
 
 import os # for listdir
@@ -64,7 +64,7 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
     ##    2) .\plugin.json
     ##    3) ..\..\resources\package.json
     ######################################################################
-    version = "0.8.1"
+    version = "1.0.0"
 
     ######################################################################
     ##  Dictionary that defines how characters are escaped when embedded in
@@ -251,9 +251,9 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
     ######################################################################
     @pyqtSlot()
     def openPluginWebsite(self):
-        url = QUrl('https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/releases', QUrl.ParsingMode.TolerantMode)
+        url = QUrl('https://github.com/metalman3797/Cura-Dremel-Printer-Plugin/releases', QUrl.ParsingMode.TolerantMode)
         if not QDesktopServices.openUrl(url):
-            message = Message(catalog.i18nc("@info:warning", "Dremel Plugin could not navigate to https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/releases"))
+            message = Message(catalog.i18nc("@info:warning", "Dremel Plugin could not navigate to https://github.com/metalman3797/Cura-Dremel-Printer-Plugin/releases"))
             message.show()
         return
 
@@ -266,10 +266,10 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
         Logger.log("i", "Dremel Plugin opening help document: "+url)
         try:
             if not QDesktopServices.openUrl(QUrl("file:///"+url, QUrl.ParsingMode.TolerantMode)):
-                message = Message(catalog.i18nc("@info:warning", "Dremel Plugin could not open help document.\n Please download it from here: https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/raw/stable/README.pdf"))
+                message = Message(catalog.i18nc("@info:warning", "Dremel Plugin could not open help document.\n Please download it from here: https://github.com/metalman3797/Cura-Dremel-Printer-Plugin/raw/stable/README.pdf"))
                 message.show()
         except:
-            message = Message(catalog.i18nc("@info:warning", "Dremel Plugin could not open help document.\n Please download it from here: https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/raw/stable/README.pdf"))
+            message = Message(catalog.i18nc("@info:warning", "Dremel Plugin could not open help document.\n Please download it from here: https://github.com/metalman3797/Cura-Dremel-Printer-Plugin/raw/stable/README.pdf"))
             message.show()
         return
 
@@ -278,13 +278,13 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
     ######################################################################
     @pyqtSlot()
     def reportIssue(self):
-        Logger.log("i", "Dremel Plugin opening issue page: https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/issues/new")
+        Logger.log("i", "Dremel Plugin opening issue page: https://github.com/metalman3797/Cura-Dremel-Printer-Plugin/issues/new")
         try:
-            if not QDesktopServices.openUrl(QUrl("https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/issues/new")):
-                message = Message(catalog.i18nc("@info:status", "Dremel Plugin could not open https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/issues/new please navigate to the page and report an issue"))
+            if not QDesktopServices.openUrl(QUrl("https://github.com/metalman3797/Cura-Dremel-Printer-Plugin/issues/new")):
+                message = Message(catalog.i18nc("@info:status", "Dremel Plugin could not open https://github.com/metalman3797/Cura-Dremel-Printer-Plugin/issues/new please navigate to the page and report an issue"))
                 message.show()
         except:
-            message = Message(catalog.i18nc("@info:status", "Dremel Plugin could not open https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/issues/new please navigate to the page and report an issue"))
+            message = Message(catalog.i18nc("@info:status", "Dremel Plugin could not open https://github.com/metalman3797/Cura-Dremel-Printer-Plugin/issues/new please navigate to the page and report an issue"))
             message.show()
         return
 
@@ -310,71 +310,123 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
     ## Check to see if the plugin files are all installed
     ## Return True if all files are installed, false if they are not
     ######################################################################
+    import os
+from UM.Logger import Logger
+
+class DremelPrinterPlugin:  # Assuming this is part of a class definition
+    # Definitions for local paths and other class methods...
+
+    ######################################################################
+    ## Check for the presence of each specific material and quality file
+    ######################################################################
     def isInstalled(self):
-        dremel3D20DefFile = os.path.join(self.local_printer_def_path,"Dremel3D20.def.json")
-        dremel3D40DefFile = os.path.join(self.local_printer_def_path,"Dremel3D40.def.json")
-        dremel3D45DefFile = os.path.join(self.local_printer_def_path,"Dremel3D45.def.json")
-        dremel3D20ExtruderDefFile = os.path.join(self.local_extruder_path,"dremel_3d20_extruder_0.def.json")
-        dremel3D40ExtruderDefFile = os.path.join(self.local_extruder_path,"Dremel_3D40_extruder_0.def.json")
-        dremel3D45ExtruderDefFile = os.path.join(self.local_extruder_path,"Dremel_3D45_extruder_0.def.json")
-        dremel3D20QualityDir = os.path.join(self.local_quality_path,"dremel_3d20")
-        dremel3D40QualityDir = os.path.join(self.local_quality_path,"Dremel3D40")
-        dremel3D45QualityDir = os.path.join(self.local_quality_path,"Dremel3D45")
+        # Complete list of expected material files
+        expected_material_files = [
+            'dremel_eco_abs.xml.fdm_material',
+            'dremel_eco_abs_white.xml.fdm_material',
+            'dremel_nylon.xml.fdm_material',
+            'dremel_petg.xml.fdm_material',
+            'dremel_pla.xml.fdm_material',
+            'dremel_pla_black.xml.fdm_material',
+            'dremel_pla_gold.xml.fdm_material',
+            'dremel_pla_gray.xml.fdm_material',
+            'dremel_pla_green.xml.fdm_material',
+            'dremel_pla_matte_beige.xml.fdm_material',
+            'dremel_pla_matte_brown.xml.fdm_material',
+            'dremel_pla_matte_navy_blue.xml.fdm_material',
+            'dremel_pla_matte_olive.xml.fdm_material',
+            'dremel_pla_orange.xml.fdm_material',
+            'dremel_pla_pink.xml.fdm_material',
+            'dremel_pla_purple.xml.fdm_material',
+            'dremel_pla_red.xml.fdm_material',
+            'dremel_pla_translucent.xml.fdm_material',
+            'dremel_pla_white.xml.fdm_material',
+            'dremel_pla_yellow.xml.fdm_material',
+            'dremel_silk.xml.fdm_material',
+            'dremel_silk_gold.xml.fdm_material',
+            'dremel_silk_silver.xml.fdm_material',
+            'dremel_tpu.xml.fdm_material',
+        ]
 
-        dremelPLAfile = os.path.join(self.local_materials_path,"dremel_pla.xml.fdm_material")
-        dremeloldPLAfile = os.path.join(self.local_materials_path,"dremel_pla_0.5kg.xml.fdm_material")
-        dremelABSfile = os.path.join(self.local_materials_path,"dremel_eco_abs.xml.fdm_material")
-        dremelPETGfile = os.path.join(self.local_materials_path,"dremel_petg.xml.fdm_material")
-        dremelNylonfile = os.path.join(self.local_materials_path,"dremel_nylon.xml.fdm_material")
+        # Complete list of expected quality files structured by directory
+        expected_quality_files = {
+            "dremel_3d20": [
+                'Dremel_3D20_draft.inst.cfg',
+                'Dremel_3D20_dremel_pla_draft.inst.cfg',
+                'Dremel_3D20_dremel_pla_low.inst.cfg',
+                'Dremel_3D20_dremel_pla_normal.inst.cfg',
+                'Dremel_3D20_dremel_silk_draft.inst.cfg',
+                'Dremel_3D20_dremel_silk_low.inst.cfg',
+                'Dremel_3D20_dremel_silk_normal.inst.cfg',
+                'Dremel_3D20_low.inst.cfg',
+                'Dremel_3D20_normal.inst.cfg',
+            ],
+            "Dremel3D40": [
+                'Dremel3D40_draft.inst.cfg',
+                'Dremel3D40_dremel_pla_draft.inst.cfg',
+                'Dremel3D40_dremel_pla_fast.inst.cfg',
+                'Dremel3D40_dremel_pla_high.inst.cfg',
+                'Dremel3D40_dremel_pla_low.inst.cfg',
+                'Dremel3D40_dremel_pla_normal.inst.cfg',
+                'Dremel3D40_dremel_silk_draft.inst.cfg',
+                'Dremel3D40_dremel_silk_low.inst.cfg',
+                'Dremel3D40_dremel_silk_normal.inst.cfg',
+                'Dremel3D40_fast.inst.cfg',
+                'Dremel3D40_high.inst.cfg',
+                'Dremel3D40_low.inst.cfg',
+                'Dremel3D40_normal.inst.cfg',
+            ],
+            "Dremel3D45": [
+                'Dremel_3D45_draft.inst.cfg',
+                'Dremel_3D45_dremel_eco_abs_draft.inst.cfg',
+                'Dremel_3D45_dremel_eco_abs_fast.inst.cfg',
+                'Dremel_3D45_dremel_eco_abs_high.inst.cfg',
+                'Dremel_3D45_dremel_eco_abs_low.inst.cfg',
+                'Dremel_3D45_dremel_eco_abs_normal.inst.cfg',
+                'Dremel_3D45_dremel_nylon_draft.inst.cfg',
+                'Dremel_3D45_dremel_nylon_fast.inst.cfg',
+                'Dremel_3D45_dremel_nylon_high.inst.cfg',
+                'Dremel_3D45_dremel_nylon_low.inst.cfg',
+                'Dremel_3D45_dremel_nylon_normal.inst.cfg',
+                'Dremel_3D45_dremel_petg_draft.inst.cfg',
+                'Dremel_3D45_dremel_petg_fast.inst.cfg',
+                'Dremel_3D45_dremel_petg_high.inst.cfg',
+                'Dremel_3D45_dremel_petg_low.inst.cfg',
+                'Dremel_3D45_dremel_petg_normal.inst.cfg',
+                'Dremel_3D45_dremel_pla_draft.inst.cfg',
+                'Dremel_3D45_dremel_pla_fast.inst.cfg',
+                'Dremel_3D45_dremel_pla_high.inst.cfg',
+                'Dremel_3D45_dremel_pla_low.inst.cfg',
+                'Dremel_3D45_dremel_pla_normal.inst.cfg',
+                'Dremel_3D45_dremel_silk_draft.inst.cfg',
+                'Dremel_3D45_dremel_silk_low.inst.cfg',
+                'Dremel_3D45_dremel_silk_normal.inst.cfg',
+                'Dremel_3D45_dremel_tpu_low.inst.cfg',
+                'Dremel_3D45_fast.inst.cfg',
+                'Dremel_3D45_high.inst.cfg',
+                'Dremel_3D45_low.inst.cfg',
+                'Dremel_3D45_normal.inst.cfg',
+            ]
+        }
 
+        # Check for each material file
+        for material_file in expected_material_files:
+            material_path = os.path.join(self.local_materials_path, material_file)
+            if not os.path.isfile(material_path):
+                Logger.log("i", f"Dremel Plugin - Material file {material_file} is NOT installed")
+                return False
 
-        # if some files are missing then return that this plugin as not installed
-        if not os.path.isfile(dremel3D20DefFile):
-            Logger.log("i", "Dremel Plugin - Dremel 3D20 definition file is NOT installed ")
-            return False
-        if not os.path.isfile(dremel3D40DefFile):
-            Logger.log("i", "Dremel Plugin - Dremel 3D40 definition file is NOT installed ")
-            return False
-        if not os.path.isfile(dremel3D45DefFile):
-            Logger.log("i", "Dremel Plugin - Dremel 3D45 definition file is NOT installed ")
-            return False
-        if not os.path.isfile(dremel3D20ExtruderDefFile):
-            Logger.log("i", "Dremel Plugin - Dremel 3D20 extruder file is NOT installed ")
-            return False
-        if not os.path.isfile(dremel3D40ExtruderDefFile):
-            Logger.log("i", "Dremel Plugin - Dremel 3D20 extruder file is NOT installed ")
-            return False
-        if not os.path.isfile(dremel3D45ExtruderDefFile):
-            Logger.log("i", "Dremel Plugin - Dremel 3D45 extruder file is NOT installed ")
-            return False
-        if not os.path.isfile(dremelPLAfile):
-            Logger.log("i", "Dremel Plugin - Dremel PLA file is NOT installed ")
-            return False
-        if not os.path.isfile(dremeloldPLAfile):
-            Logger.log("i", "Dremel Plugin - Dremel PLA (0.5kg) file is NOT installed ")
-            return False
-        if not os.path.isfile(dremelABSfile):
-            Logger.log("i", "Dremel Plugin - Dremel ABS file is NOT installed ")
-            return False
-        if not os.path.isfile(dremelPETGfile):
-            Logger.log("i", "Dremel Plugin - Dremel PETG file is NOT installed ")
-            return False
-        if not os.path.isfile(dremelNylonfile):
-            Logger.log("i", "Dremel Plugin - Dremel Nylon file is NOT installed ")
-            return False
-        if not os.path.isdir(dremel3D20QualityDir):
-            Logger.log("i", "Dremel Plugin - Dremel 3D20 quality files are NOT installed ")
-            return False
-        if not os.path.isdir(dremel3D40QualityDir):
-            Logger.log("i", "Dremel 3D40 Plugin dremel quality files are NOT installed ")
-            return False
-        if not os.path.isdir(dremel3D45QualityDir):
-            Logger.log("i", "Dremel 3D45 Plugin dremel quality files are NOT installed ")
-            return False
+        # Check for each quality file within its specific directory
+        for quality_dir, quality_files in expected_quality_files.items():
+            for quality_file in quality_files:
+                quality_file_path = os.path.join(self.local_quality_path, quality_dir, quality_file)
+                if not os.path.isfile(quality_file_path):
+                    Logger.log("i", f"Dremel Plugin - Quality file {quality_file} in {quality_dir} is NOT installed")
+                    return False
 
-        # if everything is there, return True
-        Logger.log("i", "Dremel Plugin all files ARE installed")
+        # If all checks pass, return True
         return True
+
 
     ######################################################################
     ##  Gets a value from Cura's preferences
@@ -586,7 +638,7 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
     ######################################################################
     ##  Performs the writing of the dremel header and gcode - for a technical
     ##  breakdown of the dremel g3drem file format see the following page:
-    ##  https://github.com/timmehtimmeh/Cura-Dremel-3D20-Plugin/blob/master/README.md#technical-details-of-the-g3drem-file-format
+    ##  https://github.com/metalman3797/Cura-Dremel-3D20-Plugin/blob/master/README.md#technical-details-of-the-g3drem-file-format
     ######################################################################
     def write(self, stream, nodes, mode = MeshWriter.OutputMode.BinaryMode):
         try:

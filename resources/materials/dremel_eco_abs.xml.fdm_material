@@ -3,21 +3,23 @@
   <metadata>
     <name>
       <brand>Dremel</brand>
-      <material>ECO_ABS</material>
-      <color>Generic</color>
-      <label>ECO ABS</label>
+      <material>ECO-ABS</material>
+      <color>Black</color>
     </name>
-    <description>Fast, safe and reliable printing material from Dremel. ECO-ABS is ideal for the fast and reliable printing of parts and prototypes with a great surface quality.</description>
+    <version>4</version>
+    <color_code>#231f20</color_code>
     <GUID>7193e86e-00df-46fd-9295-94c96191809d</GUID>
-    <version>2</version>
-    <color_code>#EA526F</color_code>
+    <adhesion_info>Print on bare glass.  Glue sticks can be used to further improve adhesion.</adhesion_info>
+    <description>Fast, safe and reliable printing material from Dremel. ECO-ABS is ideal for the fast and reliable printing of parts and prototypes with a great surface quality.</description>
+    <instruction_link>https://3pitech.com/pages/filament-properties-settings</instruction_link>
   </metadata>
   <properties>
     <density>1.24</density>
     <diameter>1.75</diameter>
+    <weight>750</weight>
   </properties>
   <settings>
-    <setting key="print temperature">205</setting>
+    <setting key="print temperature">230</setting>
     <setting key="print cooling">100.0</setting>
     <setting key="retraction speed">60.0</setting>
     <setting key="heated bed temperature">60</setting>
@@ -27,5 +29,4 @@
       <setting key="hardware compatible">yes</setting>
     </machine>
   </settings>
-
 </fdmmaterial>

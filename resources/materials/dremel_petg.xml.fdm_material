@@ -4,22 +4,22 @@
     <name>
       <brand>Dremel</brand>
       <material>PETG</material>
-      <color>Generic</color>
-      <label>PETG</label>
+      <color>Translucent</color>
     </name>
     <adhesion_info>Print on bare glass. Use tape for cold build plates.</adhesion_info>
     <description>Fast, safe and reliable printing material from Dremel. PETG is ideal for the fast and reliable printing of parts and prototypes with a great surface quality.</description>
     <GUID>7193e86e-00df-46fd-9295-94c96191809d</GUID>
-    <version>2</version>
-    <color_code>#6290C3</color_code>
+    <version>3</version>
+    <color_code>#fbfaf9</color_code>
+    <instruction_link>https://3pitech.com/pages/filament-properties-settings</instruction_link>
   </metadata>
   <properties>
     <density>1.24</density>
     <diameter>1.75</diameter>
   </properties>
   <settings>
-    <setting key="retraction amount">3.0</setting>
-    <setting key="retraction speed">25.0</setting>
+    <setting key="retraction amount">1.0</setting>
+    <setting key="retraction speed">20.0</setting>
     <setting key="print cooling">50.0</setting>
     <setting key="heated bed temperature">70.0</setting>
     <setting key="standby temperature">220.0</setting>
