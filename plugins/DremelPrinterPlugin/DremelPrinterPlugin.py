@@ -310,15 +310,6 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
     ## Check to see if the plugin files are all installed
     ## Return True if all files are installed, false if they are not
     ######################################################################
-    import os
-from UM.Logger import Logger
-
-class DremelPrinterPlugin:  # Assuming this is part of a class definition
-    # Definitions for local paths and other class methods...
-
-    ######################################################################
-    ## Check for the presence of each specific material and quality file
-    ######################################################################
     def isInstalled(self):
         # Complete list of expected material files
         expected_material_files = [

@@ -8,7 +8,7 @@
     "display_name": "Dremel Printer Plugin",
     "package_id": "DremelPrinterPlugin",
     "package_type": "plugin",
-    "package_version": "1.0.0,"
+    "package_version": "1.0.0",
     "sdk_version": 8,
     "tags": [
         "Dremel",
