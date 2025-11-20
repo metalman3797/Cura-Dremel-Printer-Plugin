@@ -1,1 +1,14 @@
+# Ignore backups
 *.bak
+
+# Ignore RELEASE folder
+RELEASE/
+
+# Ignore .vs folder
+.vs/
+
+# Ignore a specific unusual filename, use quotes if needed for special characters
+"et HEAD~1 --hard"
+
+# Ignore docs.zip file
+docs.zip

@@ -24,17 +24,16 @@ import os
 import shutil
 import zipfile
 import json
+import subprocess
 
 with open('../plugins/DremelPrinterPlugin/plugin.json') as json_file:
     plugin_json = json.load(json_file)
-    json_file.close()
 
 RELEASE_DIR = os.path.abspath('../RELEASE/DremelPrinterPlugin')
-CURA_PACKAGE_FILE = os.path.abspath('../RELEASE/Cura-Dremel-Plugin-'+str(plugin_json["version"])+'.curapackage')
+CURA_PACKAGE_FILE = os.path.abspath(f'../RELEASE/Cura-Dremel-Plugin-{plugin_json["version"]}.curapackage')
 ULTIMAKER_ZIP = os.path.abspath('../RELEASE/DremelPrinterPlugin.zip')
-PLUGIN_DIR = os.path.join(RELEASE_DIR,'files/plugins/DremelPrinterPlugin')
-
-WKHTMLTOPDF_DIR = "c:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe"
+PLUGIN_DIR = os.path.join(RELEASE_DIR, 'files/plugins/DremelPrinterPlugin')
+WKHTMLTOPDF_DIR = '"c:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe"'  # Note the quotes around the path
 
 ################################
 ## Step 1
@@ -80,13 +79,14 @@ copyList = ['../resources/definitions/Dremel3D20.def.json',
            '../resources/extruders/Dremel_3D40_extruder_0.def.json',
            '../resources/extruders/Dremel_3D45_extruder_0.def.json',
            '../resources/materials/dremel_pla.xml.fdm_material',
-           '../resources/materials/dremel_pla_0.5kg.xml.fdm_material',
            '../resources/meshes/dremel_3D20_platform.stl',
            '../resources/meshes/Dremel_3D40_platform.stl',
            '../resources/meshes/Dremel_3D45_platform.stl',
            '../resources/materials/dremel_eco_abs.xml.fdm_material',
            '../resources/materials/dremel_nylon.xml.fdm_material',
-           '../resources/materials/dremel_petg.xml.fdm_material']
+           '../resources/materials/dremel_petg.xml.fdm_material',
+           '../resources/materials/dremel_silk.xml.fdm_material',
+           '../resources/materials/dremel_tpu.xml.fdm_material']
 for item in copyList:
     shutil.copy2(os.path.abspath(item),PLUGIN_DIR)
 
@@ -108,7 +108,6 @@ z = zipfile.ZipFile(internal_zip_file_name,'w', zipfile.ZIP_DEFLATED)
 zipList = [os.path.join(PLUGIN_DIR,'Dremel3D20.def.json'),
            os.path.join(PLUGIN_DIR,'dremel_3d20_extruder_0.def.json'),
            os.path.join(PLUGIN_DIR,'dremel_pla.xml.fdm_material'),
-           os.path.join(PLUGIN_DIR,'dremel_pla_0.5kg.xml.fdm_material'),
            os.path.join(PLUGIN_DIR,'dremel_3D20_platform.stl'),
            os.path.join(PLUGIN_DIR,'Dremel3D40.def.json'),
            os.path.join(PLUGIN_DIR,'Dremel_3D40_extruder_0.def.json'),
@@ -118,6 +117,8 @@ zipList = [os.path.join(PLUGIN_DIR,'Dremel3D20.def.json'),
            os.path.join(PLUGIN_DIR,'dremel_eco_abs.xml.fdm_material'),
            os.path.join(PLUGIN_DIR,'dremel_nylon.xml.fdm_material'),
            os.path.join(PLUGIN_DIR,'dremel_petg.xml.fdm_material'),
+           os.path.join(PLUGIN_DIR,'dremel_silk.xml.fdm_material'),
+           os.path.join(PLUGIN_DIR,'dremel_tpu.xml.fdm_material'),
            os.path.join(PLUGIN_DIR,'Dremel_3D45_platform.stl')]
 for item in zipList:
     z.write(item,os.path.basename(item));
@@ -147,14 +148,29 @@ shutil.rmtree(os.path.join(PLUGIN_DIR,'Dremel3D40'))
 shutil.rmtree(os.path.join(PLUGIN_DIR,'Dremel3D45'))
 ################################
 ## Step 5
-## Create the README.pdf file from
-## the markdown
+## Create the README.pdf file from the markdown
 ################################
 currDir = os.getcwd()
 os.chdir('..')
-os.system('python -m grip README.md --export README.html')
-os.system('"{0}" {1} {2} {3}'.format(WKHTMLTOPDF_DIR,'--enable-local-file-access','README.html', os.path.join(PLUGIN_DIR,'README.pdf')))
-shutil.copy2(os.path.join(PLUGIN_DIR,'README.pdf'), '.')
+subprocess.run(['python', '-m', 'grip', 'README.md', '--export', 'README.html'])
+
+# Convert HTML to PDF with specified margins using subprocess for better handling
+pdf_command = [
+    WKHTMLTOPDF_DIR.strip('"'),  # Remove quotes for subprocess list
+    '--enable-local-file-access',
+    '-B', '13', '-L', '13', '-R', '13', '-T', '53',  # Margins
+    'README.html',
+    os.path.join(PLUGIN_DIR, 'README.pdf')
+]
+subprocess.run(pdf_command)
+
+# Copy the generated PDF back to the original directory, if it exists
+pdf_path = os.path.join(PLUGIN_DIR, 'README.pdf')
+if os.path.exists(pdf_path):
+    shutil.copy2(pdf_path, '.')
+else:
+    print(f"Error: The file {pdf_path} was not found.")
+
 os.chdir(currDir)
 
 ################################

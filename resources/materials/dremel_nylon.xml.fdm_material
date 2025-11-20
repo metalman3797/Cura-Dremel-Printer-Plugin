@@ -3,15 +3,15 @@
   <metadata>
     <name>
       <brand>Dremel</brand>
-      <material>Nylon</material>
-      <color>Generic</color>
-      <label>Nylon</label>
+      <material>NYLON</material>
+      <color>Black</color>
     </name>
-    <adhesion_info>Print on bare glass. Use tape for cold build plates.</adhesion_info>
+    <adhesion_info>Print on bare glass.  Glue sticks can be used to further improve adhesion.</adhesion_info>
     <description>Fast, safe and reliable printing material from Dremel. Nylon is ideal for the fast and reliable printing of parts and prototypes with a great surface quality.</description>
     <GUID>d29d5390-6fa1-4794-968c-5397c5b07c85</GUID>
     <version>2</version>
-    <color_code>#BAFF29</color_code>
+    <color_code>#231f20</color_code>
+    <instruction_link>https://3pitech.com/pages/filament-properties-settings</instruction_link>
   </metadata>
   <properties>
     <density>1.24</density>
