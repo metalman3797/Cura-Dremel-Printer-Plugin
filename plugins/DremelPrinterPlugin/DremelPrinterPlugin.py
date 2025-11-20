@@ -64,7 +64,7 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
     ##    2) .\plugin.json
     ##    3) ..\..\resources\package.json
     ######################################################################
-    version = "1.0.0"
+    version = "1.0.1"
 
     ######################################################################
     ##  Dictionary that defines how characters are escaped when embedded in
