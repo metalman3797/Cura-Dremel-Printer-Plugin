@@ -1,6 +1,12 @@
 # How to make a release (Windows)
 
-Install [wkhtmltopdf](https://wkhtmltopdf.org/downloads.html) to `c:/Program Files/wkhtmltopdf/`
+Download [7zip standalone console version](https://www.7-zip.org/download.html) and extract the following three items into this tools directory
+
+ 1. 7za.exe
+ 2. 7za.dll
+ 3. 7zxa.dll
+
+ Install [wkhtmltopdf](https://wkhtmltopdf.org/downloads.html) to `c:/Program Files/wkhtmltopdf/`
 
  Install the python grip package with `python3 -m pip install grip`
 
