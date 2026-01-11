@@ -83,9 +83,28 @@ copyList = ['../resources/definitions/Dremel3D20.def.json',
            '../resources/meshes/Dremel_3D40_platform.stl',
            '../resources/meshes/Dremel_3D45_platform.stl',
            '../resources/materials/dremel_eco_abs.xml.fdm_material',
+           '../resources/materials/dremel_eco_abs_white.xml.fdm_material',
            '../resources/materials/dremel_nylon.xml.fdm_material',
            '../resources/materials/dremel_petg.xml.fdm_material',
+           '../resources/materials/dremel_pla.xml.fdm_material',
+           '../resources/materials/dremel_pla_black.xml.fdm_material',
+           '../resources/materials/dremel_pla_gold.xml.fdm_material',
+           '../resources/materials/dremel_pla_gray.xml.fdm_material',
+           '../resources/materials/dremel_pla_green.xml.fdm_material',
+           '../resources/materials/dremel_pla_matte_beige.xml.fdm_material',
+           '../resources/materials/dremel_pla_matte_brown.xml.fdm_material',
+           '../resources/materials/dremel_pla_matte_navy_blue.xml.fdm_material',
+           '../resources/materials/dremel_pla_matte_olive.xml.fdm_material',
+           '../resources/materials/dremel_pla_orange.xml.fdm_material',
+           '../resources/materials/dremel_pla_pink.xml.fdm_material',
+           '../resources/materials/dremel_pla_purple.xml.fdm_material',
+           '../resources/materials/dremel_pla_red.xml.fdm_material',
+           '../resources/materials/dremel_pla_translucent.xml.fdm_material',
+           '../resources/materials/dremel_pla_white.xml.fdm_material',
+           '../resources/materials/dremel_pla_yellow.xml.fdm_material',
            '../resources/materials/dremel_silk.xml.fdm_material',
+           '../resources/materials/dremel_silk_gold.xml.fdm_material',
+           '../resources/materials/dremel_silk_silver.xml.fdm_material',
            '../resources/materials/dremel_tpu.xml.fdm_material']
 for item in copyList:
     shutil.copy2(os.path.abspath(item),PLUGIN_DIR)
@@ -107,19 +126,38 @@ internal_zip_file_name = os.path.join(PLUGIN_DIR,'DremelPrinterPlugin.zip')
 z = zipfile.ZipFile(internal_zip_file_name,'w', zipfile.ZIP_DEFLATED)
 zipList = [os.path.join(PLUGIN_DIR,'Dremel3D20.def.json'),
            os.path.join(PLUGIN_DIR,'dremel_3d20_extruder_0.def.json'),
-           os.path.join(PLUGIN_DIR,'dremel_pla.xml.fdm_material'),
            os.path.join(PLUGIN_DIR,'dremel_3D20_platform.stl'),
            os.path.join(PLUGIN_DIR,'Dremel3D40.def.json'),
            os.path.join(PLUGIN_DIR,'Dremel_3D40_extruder_0.def.json'),
            os.path.join(PLUGIN_DIR,'Dremel_3D40_platform.stl'),
            os.path.join(PLUGIN_DIR,'Dremel3D45.def.json'),
            os.path.join(PLUGIN_DIR,'Dremel_3D45_extruder_0.def.json'),
+           os.path.join(PLUGIN_DIR,'Dremel_3D45_platform.stl'),
            os.path.join(PLUGIN_DIR,'dremel_eco_abs.xml.fdm_material'),
+           os.path.join(PLUGIN_DIR,'dremel_eco_abs_white.xml.fdm_material'),
            os.path.join(PLUGIN_DIR,'dremel_nylon.xml.fdm_material'),
            os.path.join(PLUGIN_DIR,'dremel_petg.xml.fdm_material'),
+           os.path.join(PLUGIN_DIR,'dremel_pla.xml.fdm_material'),
+
+           os.path.join(PLUGIN_DIR,'dremel_pla_black.xml.fdm_material'),
+           os.path.join(PLUGIN_DIR,'dremel_pla_gold.xml.fdm_material'),
+           os.path.join(PLUGIN_DIR,'dremel_pla_gray.xml.fdm_material'),
+           os.path.join(PLUGIN_DIR,'dremel_pla_green.xml.fdm_material'),
+           os.path.join(PLUGIN_DIR,'dremel_pla_matte_beige.xml.fdm_material'),
+           os.path.join(PLUGIN_DIR,'dremel_pla_matte_brown.xml.fdm_material'),
+           os.path.join(PLUGIN_DIR,'dremel_pla_matte_navy_blue.xml.fdm_material'),
+           os.path.join(PLUGIN_DIR,'dremel_pla_matte_olive.xml.fdm_material'),
+           os.path.join(PLUGIN_DIR,'dremel_pla_orange.xml.fdm_material'),
+           os.path.join(PLUGIN_DIR,'dremel_pla_pink.xml.fdm_material'),
+           os.path.join(PLUGIN_DIR,'dremel_pla_purple.xml.fdm_material'),
+           os.path.join(PLUGIN_DIR,'dremel_pla_red.xml.fdm_material'),
+           os.path.join(PLUGIN_DIR,'dremel_pla_translucent.xml.fdm_material'),
+           os.path.join(PLUGIN_DIR,'dremel_pla_white.xml.fdm_material'),
+           os.path.join(PLUGIN_DIR,'dremel_pla_yellow.xml.fdm_material'),
            os.path.join(PLUGIN_DIR,'dremel_silk.xml.fdm_material'),
-           os.path.join(PLUGIN_DIR,'dremel_tpu.xml.fdm_material'),
-           os.path.join(PLUGIN_DIR,'Dremel_3D45_platform.stl')]
+           os.path.join(PLUGIN_DIR,'dremel_silk_gold.xml.fdm_material'),
+           os.path.join(PLUGIN_DIR,'dremel_silk_silver.xml.fdm_material'),
+           os.path.join(PLUGIN_DIR,'dremel_tpu.xml.fdm_material')]
 for item in zipList:
     z.write(item,os.path.basename(item));
 path = os.path.join(PLUGIN_DIR,'dremel_3d20')
@@ -158,8 +196,7 @@ subprocess.run(['python', '-m', 'grip', 'README.md', '--export', 'README.html'])
 pdf_command = [
     WKHTMLTOPDF_DIR.strip('"'),  # Remove quotes for subprocess list
     '--enable-local-file-access',
-    '--page-size', 'A4',
-    '-B', '20', '-L', '20', '-R', '20', '-T', '20',
+    '-B', '20', '-L', '20', '-R', '20', '-T', '20',  # Margins
     'README.html',
     os.path.join(PLUGIN_DIR, 'README.pdf')
 ]

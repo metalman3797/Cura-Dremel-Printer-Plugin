@@ -25,7 +25,8 @@ import copy
 import struct
 
 from distutils.version import StrictVersion # for upgrade installations
-
+from io import BufferedIOBase #To write the g-code to a temporary buffer, and for typing.
+from typing import cast, List
 from UM.i18n import i18nCatalog
 from UM.Extension import Extension
 from UM.Message import Message
@@ -35,7 +36,7 @@ from UM.Mesh.MeshWriter import MeshWriter
 from UM.Settings.InstanceContainer import InstanceContainer
 from UM.Qt.Duration import DurationFormat
 from UM.PluginRegistry import PluginRegistry
-
+from UM.Scene.SceneNode import SceneNode #For typing.
 from UM.Application import Application
 from UM.Settings.InstanceContainer import InstanceContainer
 from cura.Machines.ContainerTree import ContainerTree
@@ -64,7 +65,7 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
     ##    2) .\plugin.json
     ##    3) ..\..\resources\package.json
     ######################################################################
-    version = "1.0.1"
+    version = "1.0.2"
 
     ######################################################################
     ##  Dictionary that defines how characters are escaped when embedded in
@@ -631,7 +632,7 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
     ##  breakdown of the dremel g3drem file format see the following page:
     ##  https://github.com/metalman3797/Cura-Dremel-3D20-Plugin/blob/master/README.md#technical-details-of-the-g3drem-file-format
     ######################################################################
-    def write(self, stream, nodes, mode = MeshWriter.OutputMode.BinaryMode):
+    def write(self, stream: BufferedIOBase, nodes: List[SceneNode], mode = MeshWriter.OutputMode.BinaryMode, **kwargs) -> bool:
         try:
             if mode != MeshWriter.OutputMode.BinaryMode:
                 Logger.log("e", "Dremel Plugin does not support non-binary mode.")
