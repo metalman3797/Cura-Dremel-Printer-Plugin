@@ -767,7 +767,6 @@ class DremelPrinterPlugin(QObject, MeshWriter, Extension):
             #Logger.log("i", "Got active build plate")
             if gcode_list is not None:
                 has_settings = False
-                # the gcode_layer contains an entire layer of gcode the gcode_list is a list of all the layers.
                 for gcode in gcode_list:
                     try:
                         if gcode[:len(self._setting_keyword)] == self._setting_keyword:
