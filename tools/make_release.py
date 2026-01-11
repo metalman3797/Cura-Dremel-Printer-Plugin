@@ -196,7 +196,7 @@ subprocess.run(['python', '-m', 'grip', 'README.md', '--export', 'README.html'])
 pdf_command = [
     WKHTMLTOPDF_DIR.strip('"'),  # Remove quotes for subprocess list
     '--enable-local-file-access',
-    '-B', '13', '-L', '13', '-R', '13', '-T', '53',  # Margins
+    '-B', '20', '-L', '20', '-R', '20', '-T', '20',  # Margins
     'README.html',
     os.path.join(PLUGIN_DIR, 'README.pdf')
 ]
@@ -260,4 +260,4 @@ for root, dirs, files in os.walk(PLUGIN_DIR):
 ## Step 10
 ## Cleanup the files and directories
 ################################
-#shutil.rmtree(RELEASE_DIR)
+shutil.rmtree(RELEASE_DIR)

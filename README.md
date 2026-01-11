@@ -37,8 +37,8 @@ This plugin is available within the Cura marketplace.  Users are encouraged to u
 
 | Cura Version | Last version of the 3D20 plugin that works with the version of Cura         | Supported Printers |
 |--------------|------------------------------------------------------------------------|-----|
-5.11.0| [version 1.0.2](https://github.com/metalman3797/Cura-Dremel-Printer-Plugin/releases/tag/1.0.2) | 3D20, 3D40, 3D45|
-5.4 through 5.10.2 | [version 1.0.1](https://github.com/metalman3797/Cura-Dremel-Printer-Plugin/releases/tag/1.0.1) | 3D20, 3D40, 3D45|
+5.11.0 | [version 1.0.2](https://github.com/metalman3797/Cura-Dremel-Printer-Plugin/releases/tag/1.0.2) | 3D20, 3D40, 3D45|
+5.4 through 5.9 | [version 1.0.1](https://github.com/metalman3797/Cura-Dremel-Printer-Plugin/releases/tag/1.0.1) | 3D20, 3D40, 3D45|
 5.2 through 5.3 | [version 1.0.0](https://github.com/metalman3797/Cura-Dremel-Printer-Plugin/releases/tag/1.0.0) | 3D20, 3D40, 3D45|
 5.0 through 5.1 | [version 0.8.1](https://github.com/metalman3797/Cura-Dremel-Printer-Plugin/releases/tag/0.8.1) | 3D20, 3D40, 3D45|
 4.4 through 4.13.1 | [version 0.7.2](https://github.com/metalman3797/Cura-Dremel-Printer-Plugin/releases/tag/0.7.2) | 3D20, 3D40, 3D45|
@@ -279,4 +279,4 @@ The Cura-Dremel-Printer-Plugin is licensed under the GNU Lesser General Public L
 
 Permissions of this copyleft license are conditioned on making available complete source code of licensed works and modifications under the same license or the GNU GPLv3. Copyright and license notices must be preserved. Contributors provide an express grant of patent rights. However, a larger work using the licensed work through interfaces provided by the licensed work may be distributed under different terms and without source code for the larger work.
 
-For the complete license text, please see the [LICENSE file](https://github.com/timmehtimmeh/Cura-Dremel-Printer-Plugin/blob/stable/LICENSE)
+For the complete license text, please see the [LICENSE file](https://github.com/metalman3797/Cura-Dremel-Printer-Plugin/blob/stable/LICENSE)
